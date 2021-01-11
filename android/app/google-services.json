@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1003172782232",
+    "project_id": "roomi-775bb",
+    "storage_bucket": "roomi-775bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003172782232:android:baaf7c1cc53d53fcb930ed",
+        "android_client_info": {
+          "package_name": "com.example.roomi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003172782232-fogaibv6cndguoeaceumpoa4bhpoqemq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.roomi",
+            "certificate_hash": "2f22b0a5f00bdcf1e5cbbb8c14fa4de483d70fef"
+          }
+        },
+        {
+          "client_id": "1003172782232-tjio7g006kiof8lo6b9i3c6h2fks0oem.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH0hzmmDZZEbkXi_frCdBLOzi2_nbfQqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003172782232-tjio7g006kiof8lo6b9i3c6h2fks0oem.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
