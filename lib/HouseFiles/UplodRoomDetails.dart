@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,6 +23,21 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   File _image;
   File _image2;
   String imageURI;
+  DocumentReference roomsImages =
+      Firestore.instance.collection('Rooms_Photos').document();
+  Future<String> uploadFile(File _image) async {
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child('Rooms_Photos');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    String returnURL;
+    await storageReference.getDownloadURL().then((fileURL) {
+      returnURL = fileURL;
+    });
+    return returnURL;
+  }
+
   final picker = ImagePicker();
   Future _imgFromCamera() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -29,13 +45,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   _imgFromGallery() async {
-    // ignore: deprecated_member_use
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50);
-
-    setState(() {
-      _image = image;
-    });
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() => _image = File(pickedFile.path));
   }
 
   void _showPicker(context) {
@@ -162,10 +173,12 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   _uplodDetails(String _location, String _price, String _members, String _beds,
-      String _bathroom, String _phoneNo) {
+      String _bathroom, String _phoneNo) async {
+    String imageURL = await uploadFile(_image);
     Firestore.instance
         .collection("RoomDetails")
         .add({
+          "images": FieldValue.arrayUnion([imageURL]),
           'Location': _location,
           'Price': _price,
           'Members': _members,
@@ -308,9 +321,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   Expanded expandedWidgetForFirstRoomImage() {
     return Expanded(
         child: GestureDetector(
-      onTap: () async {
-        final pickedFile1 = await picker.getImage(source: ImageSource.camera);
-        setState(() => _image2 = File(pickedFile1.path));
+      onTap: () {
+        _showPicker(context);
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -376,13 +388,14 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
       children: [
         buildPositionedWidgetForBezierContainer(height, context),
         Container(
+          alignment: Alignment.topCenter,
           child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 70),
+                  //SizedBox(height: 70),
                   _title(),
                   SizedBox(
                     height: 5,
@@ -405,7 +418,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
                   ),
                   _uploadRoomImage(),
                   SizedBox(
-                    height: 15,
+                    height: 50,
                   ),
                   _saveDetailsButton()
                 ],

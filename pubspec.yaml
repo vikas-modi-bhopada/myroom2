@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^0.6.7+21
+  firebase_storage:
   form_field_validator: ^1.0.1
   firebase_core: ^0.4.5
   firebase_auth: ^0.16.0
