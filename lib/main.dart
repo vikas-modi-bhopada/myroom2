@@ -5,6 +5,7 @@ import 'package:roomi/welcomePage.dart';
 import 'HouseFiles/ListofHouses.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

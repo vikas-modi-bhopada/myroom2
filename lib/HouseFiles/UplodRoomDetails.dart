@@ -20,14 +20,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   var beds;
   var phoneNo;
   var bathroom;
-  File _image;
-  File _image2;
+  File image1, image2, image3, image4;
   String imageURI;
+  // ignore: deprecated_member_use
+  List<File> images = List<File>();
+  Future<File> _imageFile;
+
   DocumentReference roomsImages =
       Firestore.instance.collection('Rooms_Photos').document();
-  Future<String> uploadFile(File _image) async {
+
+  Future<String> uploadFile(File _image, i) async {
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('Rooms_Photos');
+        FirebaseStorage.instance.ref().child('Rooms_Photos/$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -39,17 +43,39 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   final picker = ImagePicker();
-  Future _imgFromCamera() async {
+  Future _imgFromCamera(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
-    setState(() => _image = File(pickedFile.path));
+    if (i == 1) {
+      setState(() => image1 = File(pickedFile.path));
+    }
+    if (i == 2) {
+      setState(() => image2 = File(pickedFile.path));
+    }
+    if (i == 3) {
+      setState(() => image3 = File(pickedFile.path));
+    }
+    if (i == 4) {
+      setState(() => image4 = File(pickedFile.path));
+    }
   }
 
-  _imgFromGallery() async {
+  _imgFromGallery(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() => _image = File(pickedFile.path));
+    if (i == 1) {
+      setState(() => image1 = File(pickedFile.path));
+    }
+    if (i == 2) {
+      setState(() => image2 = File(pickedFile.path));
+    }
+    if (i == 3) {
+      setState(() => image3 = File(pickedFile.path));
+    }
+    if (i == 4) {
+      setState(() => image4 = File(pickedFile.path));
+    }
   }
 
-  void _showPicker(context) {
+  void _showPicker(context, i) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -61,14 +87,14 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
                       leading: new Icon(Icons.photo_library),
                       title: new Text('Photo Library'),
                       onTap: () async {
-                        await _imgFromGallery();
+                        await _imgFromGallery(i);
                         Navigator.of(context).pop();
                       }),
                   new ListTile(
                     leading: new Icon(Icons.photo_camera),
                     title: new Text('Camera'),
                     onTap: () {
-                      _imgFromCamera();
+                      _imgFromCamera(i);
                       Navigator.of(context).pop();
                     },
                   ),
@@ -77,6 +103,69 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
             ),
           );
         });
+  }
+
+  GestureDetector listOFimages(i) {
+    File x;
+    if (i == 1) x = image1;
+    if (i == 2) x = image2;
+    if (i == 3) x = image3;
+    if (i == 4) x = image4;
+    return GestureDetector(
+      onTap: () {
+        _showPicker(context, i);
+      },
+      child: Container(
+        width: 120,
+        child: Card(
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: x == null
+                    ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
+                    : Image.file(x),
+              ),
+              Positioned(
+                right: 5,
+                top: 5,
+                child: InkWell(
+                  child: Icon(
+                    Icons.remove_circle,
+                    size: 25,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    setState(() {
+                      if (i == 1) image1 = null;
+                      if (i == 2) image2 = null;
+                      if (i == 3) image3 = null;
+                      if (i == 4) image4 = null;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ignore: deprecated_member_use
+
+  Widget buildGridViewForImages() {
+    return Container(
+      height: 180,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          listOFimages(1),
+          listOFimages(2),
+          listOFimages(3),
+          listOFimages(4)
+        ],
+      ),
+    );
   }
 
   Widget _locationlabel(String data) {
@@ -174,11 +263,17 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
 
   _uplodDetails(String _location, String _price, String _members, String _beds,
       String _bathroom, String _phoneNo) async {
-    String imageURL = await uploadFile(_image);
+    String imageURL1 = await uploadFile(image1, 1);
+    String imageURL2 = await uploadFile(image2, 2);
+    String imageURL3 = await uploadFile(image3, 3);
+    String imageURL4 = await uploadFile(image4, 4);
     Firestore.instance
         .collection("RoomDetails")
         .add({
-          "images": FieldValue.arrayUnion([imageURL]),
+          "image1": imageURL1,
+          "image2": imageURL2,
+          "image3": imageURL3,
+          "image4": imageURL4,
           'Location': _location,
           'Price': _price,
           'Members': _members,
@@ -289,55 +384,10 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         borderRadius: BorderRadius.all(Radius.circular(5.0)));
   }
 
-  Widget _uploadRoomImage() {
-    return Container(
-      child: Row(
-        children: [
-          expandedWidgetForFirstRoomImage(),
-          expandedWIdgetForSecondRoomImage(),
-        ],
-      ),
-    );
-  }
-
-  Expanded expandedWIdgetForSecondRoomImage() {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          _showPicker(context);
-        },
-        child: Container(
-          margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-          padding: EdgeInsets.all(8),
-          decoration: myBoxDecoration(),
-          child: _image == null
-              ? Icon(Icons.upload_file, size: 50, color: Colors.blueGrey)
-              : Image.file(_image),
-        ),
-      ),
-    );
-  }
-
-  Expanded expandedWidgetForFirstRoomImage() {
-    return Expanded(
-        child: GestureDetector(
-      onTap: () {
-        _showPicker(context);
-      },
-      child: Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-        padding: EdgeInsets.all(8),
-        decoration: myBoxDecoration(),
-        child: _image == null
-            ? Icon(Icons.upload_file, size: 50, color: Colors.blueGrey)
-            : Image.file(_image),
-      ),
-    ));
-  }
-
   Widget _saveDetailsButton() {
     return InkWell(
       onTap: () {
+        print("Inside _saveDetailsButton");
         _uplodDetails(location, price, members, beds, bathroom, phoneNo);
         // UserData().getData();
       } //UserData().onPressed(),
@@ -395,7 +445,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //SizedBox(height: 70),
+                  SizedBox(height: 50),
                   _title(),
                   SizedBox(
                     height: 5,
@@ -416,9 +466,9 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
                   SizedBox(
                     height: 15,
                   ),
-                  _uploadRoomImage(),
+                  buildGridViewForImages(),
                   SizedBox(
-                    height: 50,
+                    height: 15,
                   ),
                   _saveDetailsButton()
                 ],
@@ -435,4 +485,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         right: -MediaQuery.of(context).size.width * .4,
         child: BezierContainer());
   }
+}
+
+class ImageUploadModel {
+  bool isUploaded;
+  bool uploading;
+  File imageFile;
+  String imageUrl;
+
+  ImageUploadModel({
+    this.isUploaded,
+    this.uploading,
+    this.imageFile,
+    this.imageUrl,
+  });
 }
