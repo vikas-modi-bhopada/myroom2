@@ -130,8 +130,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
             color: Colors.grey[600],
           ),
           Text(
-            "Mobile",
-            //querySnapshot.documents[index].data['Mobile'],
+            querySnapshot.documents[index].data['Mobile'],
             style: TextStyle(color: Colors.grey[600]),
           )
         ],
@@ -213,7 +212,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
   Row firstRowOfListView(int index) {
     return Row(
       children: [
-        containerOfImageOfRoomInListView(),
+        containerOfImageOfRoomInListView(index),
         SizedBox(
           width: 20,
         ),
@@ -223,14 +222,14 @@ class _ListOfHouseState extends State<ListOfHouse> {
     );
   }
 
-  Container containerOfImageOfRoomInListView() {
+  Container containerOfImageOfRoomInListView(int index) {
     return Container(
       width: 90,
       height: 90,
       child: GestureDetector(
         child: ClipOval(
-          child: Image.asset(
-            'assets/images/splash_screen.png',
+          child: Image.network(
+            querySnapshot.documents[index].data['image1'],
             fit: BoxFit.cover,
           ),
         ),

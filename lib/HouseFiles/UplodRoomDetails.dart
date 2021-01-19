@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,11 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   // ignore: deprecated_member_use
   List<File> images = List<File>();
   Future<File> _imageFile;
+  var i = 1;
 
-  DocumentReference roomsImages =
-      Firestore.instance.collection('Rooms_Photos').document();
-
-  Future<String> uploadFile(File _image, i) async {
+  Future<String> uploadFile(File _image) async {
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('Rooms_Photos/$i');
+        FirebaseStorage.instance.ref().child('image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -39,6 +38,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     await storageReference.getDownloadURL().then((fileURL) {
       returnURL = fileURL;
     });
+    i = i + 1;
     return returnURL;
   }
 
@@ -261,12 +261,15 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     );
   }
 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   _uplodDetails(String _location, String _price, String _members, String _beds,
       String _bathroom, String _phoneNo) async {
-    String imageURL1 = await uploadFile(image1, 1);
-    String imageURL2 = await uploadFile(image2, 2);
-    String imageURL3 = await uploadFile(image3, 3);
-    String imageURL4 = await uploadFile(image4, 4);
+    final FirebaseUser user = await auth.currentUser();
+    String imageURL1 = await uploadFile(image1);
+    String imageURL2 = await uploadFile(image2);
+    String imageURL3 = await uploadFile(image3);
+    String imageURL4 = await uploadFile(image4);
     Firestore.instance
         .collection("RoomDetails")
         .add({
