@@ -33,12 +33,31 @@
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
-  <script>
+ <!-- <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
+  </script>-->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+      apiKey: "AIzaSyA0_45Qtpd4ibqrfa90i1k2tuC8FpzX3R8",
+      authDomain: "roomi-775bb.firebaseapp.com",
+      projectId: "roomi-775bb",
+      storageBucket: "roomi-775bb.appspot.com",
+      messagingSenderId: "1003172782232",
+      appId: "1:1003172782232:web:a2b4f353b6682db5b930ed",
+      measurementId: "G-V4KPLT6LN4"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    //firebase.analytics();
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
