@@ -4,6 +4,7 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roomi/signUp.dart';
+import 'package:roomi/forgotPasswordPage.dart';
 
 import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
@@ -354,13 +355,8 @@ class _LoginPageState extends State<LoginPage> {
                       _emailPasswordWidget(),
                       SizedBox(height: 20),
                       _loginButton(),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.centerRight,
-                        child: Text('Forgot Password ?',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500)),
-                      ),
+                      forgetPasswordContainer(),
+
                       _divider(),
                       _facebookButton(),
                       // SizedBox(height: height * .01),
@@ -373,5 +369,20 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ));
+  }
+
+  Container forgetPasswordContainer() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      alignment: Alignment.centerRight,
+      child: FlatButton(
+        child: Text('Forgot Password ?',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ForgotPassword()));
+        },
+      ),
+    );
   }
 }
