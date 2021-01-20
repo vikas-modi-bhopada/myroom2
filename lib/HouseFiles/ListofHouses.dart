@@ -103,7 +103,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ListOfRoomImages(index1 : index),
+                      builder: (context) => ListOfRoomImages(index1: index),
                       //settings: RouteSettings(arguments: index),
                     ));
               },
@@ -295,22 +295,30 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBarForBuildWidget(),
-      drawer: Theme(
-          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-          child: sideNav()),
-      // body: _userdataWidget(),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          searchBar(),
-          roomList()
-        ],
-      ),
-    );
+    if (querySnapshot != null) {
+      return Scaffold(
+        appBar: buildAppBarForBuildWidget(),
+        drawer: Theme(
+            data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+            child: sideNav()),
+        // body: _userdataWidget(),
+        body: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            searchBar(),
+            roomList()
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 
   AppBar buildAppBarForBuildWidget() {
