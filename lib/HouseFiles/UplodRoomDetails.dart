@@ -19,6 +19,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   var price;
   var members;
   var beds;
+  String _email;
   var phoneNo;
   var bathroom;
   File image1, image2, image3, image4;
@@ -425,6 +426,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         color: Colors.white);
   }
 
+  /*
+  @override
+  void initState() {
+  FirebaseAuth.instance.currentUser().then( (value) {
+  _email = value.email;
+  setState( () {
+  });
+  } );
+  }
+  */
+  
+  
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
