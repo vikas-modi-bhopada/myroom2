@@ -23,12 +23,11 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   var bathroom;
   File image1, image2, image3, image4;
   String imageURI;
-  // ignore: deprecated_member_use
-  List<File> images = List<File>();
-  Future<File> _imageFile;
   var i = 1;
-
+  @override
   Future<String> uploadFile(File _image) async {
+    String _email;
+
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child('image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
@@ -265,7 +264,6 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
 
   _uplodDetails(String _location, String _price, String _members, String _beds,
       String _bathroom, String _phoneNo) async {
-    final FirebaseUser user = await auth.currentUser();
     String imageURL1 = await uploadFile(image1);
     String imageURL2 = await uploadFile(image2);
     String imageURL3 = await uploadFile(image3);
