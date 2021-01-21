@@ -24,13 +24,12 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   var bathroom;
   File image1, image2, image3, image4;
   String imageURI;
+  String userId;
   var i = 1;
   @override
   Future<String> uploadFile(File _image) async {
-    String _email;
-
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('image_NO_$i');
+        FirebaseStorage.instance.ref().child('$_email/image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -271,7 +270,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     String imageURL4 = await uploadFile(image4);
     Firestore.instance
         .collection("RoomDetails")
-        .add({
+        .document(userId)
+        .setData({
           "image1": imageURL1,
           "image2": imageURL2,
           "image3": imageURL3,
@@ -424,18 +424,15 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         color: Colors.white);
   }
 
-  /*
   @override
   void initState() {
-  FirebaseAuth.instance.currentUser().then( (value) {
-  _email = value.email;
-  setState( () {
-  });
-  } );
+    FirebaseAuth.instance.currentUser().then((value) {
+      _email = value.email;
+      userId = value.uid;
+      setState(() {});
+    });
   }
-  */
-  
-  
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
