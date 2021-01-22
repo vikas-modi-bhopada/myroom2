@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
 import 'package:roomi/HouseFiles/listOfRoomImages.dart';
 import 'package:roomi/controllers/authentications.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
@@ -349,6 +350,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return ListView(padding: EdgeInsets.zero, children: <Widget>[
       userAccountsDrawerHeader(),
       uploadRoomDetailsListTileForDrawer(),
+      editRoomDetailsListTileForDrawer(),
       logOutListTileForDrawer()
     ]);
   }
@@ -385,6 +387,21 @@ class _ListOfHouseState extends State<ListOfHouse> {
       onTap: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => UploadRoomDetails()));
+      },
+    );
+  }
+
+  ListTile editRoomDetailsListTileForDrawer() {
+    return ListTile(
+      title: Center(
+        child: Text(
+          "Edit Room Details",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => EditRoomDetails()));
       },
     );
   }
