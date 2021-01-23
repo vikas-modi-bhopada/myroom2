@@ -7,4 +7,8 @@ class UserData {
         .where('Location', isEqualTo: searchbarData)
         .getDocuments();
   }
+
+  Future<QuerySnapshot> getData1() async {
+    return await Firestore.instance.collection("RoomDetails").getDocuments();
+  }
 }
