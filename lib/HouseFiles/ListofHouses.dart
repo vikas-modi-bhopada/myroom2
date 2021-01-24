@@ -315,6 +315,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       );
     } else {
       return Container(
+        color: Colors.white,
         child: Center(
           child: CircularProgressIndicator(),
         ),

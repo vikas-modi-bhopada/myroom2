@@ -15,15 +15,29 @@ class UserData {
         .get();
   }
 
-  updateDetails(String docId, String location, String price, String members,
-      String beds, String bathroom, String phoneNo) {
+  updateDetails(
+      String docId,
+      String location,
+      String price,
+      String members,
+      String beds,
+      String bathroom,
+      String phoneNo,
+      String img1,
+      String img2,
+      String img3,
+      String img4) {
     Firestore.instance.collection("RoomDetails").document(docId).updateData({
       "Location": location,
       "Price": price,
       "Members": members,
       "Beds": beds,
       "BathRooms": bathroom,
-      "Mobile": phoneNo
+      "Mobile": phoneNo,
+      "image1": img1,
+      "image2": img2,
+      "image3": img3,
+      "image4": img4,
     });
   }
 }

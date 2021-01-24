@@ -29,7 +29,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   String imageURI;
   // ignore: deprecated_member_use
   List<File> images = List<File>();
-  Future<File> _imageFile;
   var i = 1;
 
   Future<String> uploadFile(File _image) async {
@@ -115,44 +114,91 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     if (i == 2) x = image2;
     if (i == 3) x = image3;
     if (i == 4) x = image4;
-    return GestureDetector(
-      onTap: () {
-        _showPicker(context, i);
-      },
-      child: Container(
-        width: 120,
-        child: Card(
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: x == null
-                    ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
-                    : Image.file(x),
-              ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: InkWell(
-                  child: Icon(
-                    Icons.remove_circle,
-                    size: 25,
-                    color: Colors.red,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      if (i == 1) image1 = null;
-                      if (i == 2) image2 = null;
-                      if (i == 3) image3 = null;
-                      if (i == 4) image4 = null;
-                    });
-                  },
+    if (image1 != null || image2 != null || image3 != null || image4 != null) {
+      print("inside 1 ef");
+      return GestureDetector(
+        onTap: () {
+          _showPicker(context, i);
+        },
+        child: Container(
+          width: 120,
+          child: Card(
+            child: Stack(
+              children: <Widget>[
+                Center(
+                  child: x == null
+                      ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
+                      : Image.file(x),
                 ),
-              ),
-            ],
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.remove_circle,
+                      size: 25,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        if (i == 1) image1 = null;
+                        if (i == 2) image2 = null;
+                        if (i == 3) image3 = null;
+                        if (i == 4) image4 = null;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      Image img;
+      if (i == 1) img = Image.network(documentSnapshot.data["image1"]);
+      if (i == 2) img = Image.network(documentSnapshot.data["image2"]);
+      if (i == 3) img = Image.network(documentSnapshot.data["image3"]);
+      if (i == 4) img = Image.network(documentSnapshot.data["image4"]);
+      return GestureDetector(
+        onTap: () {
+          _showPicker(context, i);
+        },
+        child: Container(
+          width: 120,
+          child: Card(
+            child: Stack(
+              children: <Widget>[
+                Center(
+                  child: img == null
+                      ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
+                      : img,
+                ),
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.remove_circle,
+                      size: 25,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        if (i == 1) image1 = null;
+                        if (i == 2) image2 = null;
+                        if (i == 3) image3 = null;
+                        if (i == 4) image4 = null;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   // ignore: deprecated_member_use
@@ -173,35 +219,45 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   }
 
   Widget _locationlabel(String data) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          GestureDetector(
-            onTap: () {
-              showDialogForMessage(data);
-            },
-            child: Text(
-              location,
+    if (documentSnapshot != null) {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
             ),
-          )
-          /* TextField(
+            GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(
+                location,
+              ),
+            )
+            /* TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               location = val;
             },
           )*/
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 
   Widget _pricelabel(String data) {
@@ -288,7 +344,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  /* final FirebaseAuth auth = FirebaseAuth.instance;
 
   _uplodDetails(String _location, String _price, String _members, String _beds,
       String _bathroom, String _phoneNo) async {
@@ -313,7 +369,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
         })
         .then((value) => print('User information added'))
         .catchError((e) => print('Failed to add user information'));
-  }
+  }*/
 
   Widget _bathroomslabel(String data) {
     return Container(
@@ -475,10 +531,14 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget _saveDetailsButton() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         print("Inside _saveDetailsButton");
-        UserData().updateDetails(
-            userId, location, price, members, beds, bathroom, phoneNo);
+        String imageURL1 = await uploadFile(image1);
+        String imageURL2 = await uploadFile(image2);
+        String imageURL3 = await uploadFile(image3);
+        String imageURL4 = await uploadFile(image4);
+        UserData().updateDetails(userId, location, price, members, beds,
+            bathroom, phoneNo, imageURL1, imageURL2, imageURL3, imageURL4);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         //_uplodDetails(location, price, members, beds, bathroom, phoneNo);
@@ -518,14 +578,18 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     FirebaseAuth.instance.currentUser().then((value) {
       userId = value.uid;
       setState(() {
-        UserData().getPerticularRoomDetails(userId).then((value) {
-          location = value.data["Location"];
-          bathroom = value.data["BathRooms"];
-          beds = value.data["Beds"];
-          members = value.data["Members"];
-          phoneNo = value.data["Mobile"];
-          price = value.data["Price"];
-          setState(() {});
+        UserData()
+            .getPerticularRoomDetails(userId)
+            .then((DocumentSnapshot value) {
+          setState(() {
+            documentSnapshot = value;
+            location = value.data["Location"];
+            bathroom = value.data["BathRooms"];
+            beds = value.data["Beds"];
+            members = value.data["Members"];
+            phoneNo = value.data["Mobile"];
+            price = value.data["Price"];
+          });
         });
       });
     });
@@ -535,12 +599,21 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-          height: height,
-          child: buildStackForChildOfContainerOfBuildWidget(height, context)),
-    );
+    if (documentSnapshot != null) {
+      final height = MediaQuery.of(context).size.height;
+      return Scaffold(
+        body: Container(
+            height: height,
+            child: buildStackForChildOfContainerOfBuildWidget(height, context)),
+      );
+    } else {
+      return Container(
+        color: Colors.white,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 
   Stack buildStackForChildOfContainerOfBuildWidget(
@@ -553,10 +626,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
           child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50),
+                  SizedBox(height: 70),
                   _title(),
                   SizedBox(
                     height: 5,
