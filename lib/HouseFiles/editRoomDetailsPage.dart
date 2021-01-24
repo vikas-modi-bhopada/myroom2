@@ -30,9 +30,9 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   String imageURI;
   // ignore: deprecated_member_use
   List<File> images = List<File>();
-  var i = 1;
+  //var i = 1;
 
-  Future<String> uploadFile(File _image) async {
+  Future<String> uploadFile(File _image, int i) async {
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child('image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
@@ -42,7 +42,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     await storageReference.getDownloadURL().then((fileURL) {
       returnURL = fileURL;
     });
-    i = i + 1;
+    // i = i + 1;
     return returnURL;
   }
 
@@ -50,32 +50,62 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   Future _imgFromCamera(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (i == 1) {
-      setState(() => image1 = File(pickedFile.path));
+      setState(() async {
+        image1 = File(pickedFile.path);
+        imageUrl1 = await uploadFile(image1, i);
+      });
     }
     if (i == 2) {
-      setState(() => image2 = File(pickedFile.path));
+      // setState(() => image2 = File(pickedFile.path));
+      setState(() async {
+        image2 = File(pickedFile.path);
+        imageUrl2 = await uploadFile(image1, i);
+      });
     }
     if (i == 3) {
-      setState(() => image3 = File(pickedFile.path));
+      // setState(() => image3 = File(pickedFile.path));
+      setState(() async {
+        image3 = File(pickedFile.path);
+        imageUrl3 = await uploadFile(image1, i);
+      });
     }
     if (i == 4) {
-      setState(() => image4 = File(pickedFile.path));
+      setState(() async {
+        image4 = File(pickedFile.path);
+        imageUrl4 = await uploadFile(image1, i);
+      });
+      //setState(() => image4 = File(pickedFile.path));
     }
   }
 
   _imgFromGallery(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     if (i == 1) {
-      setState(() => image1 = File(pickedFile.path));
+      setState(() async {
+        image1 = File(pickedFile.path);
+        imageUrl1 = await uploadFile(image1, i);
+      });
     }
     if (i == 2) {
-      setState(() => image2 = File(pickedFile.path));
+      // setState(() => image2 = File(pickedFile.path));
+      setState(() async {
+        image2 = File(pickedFile.path);
+        imageUrl2 = await uploadFile(image1, i);
+      });
     }
     if (i == 3) {
-      setState(() => image3 = File(pickedFile.path));
+      // setState(() => image3 = File(pickedFile.path));
+      setState(() async {
+        image3 = File(pickedFile.path);
+        imageUrl3 = await uploadFile(image1, i);
+      });
     }
     if (i == 4) {
-      setState(() => image4 = File(pickedFile.path));
+      setState(() async {
+        image4 = File(pickedFile.path);
+        imageUrl4 = await uploadFile(image1, i);
+      });
+      //setState(() => image4 = File(pickedFile.path));
     }
   }
 
@@ -464,12 +494,12 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     return InkWell(
       onTap: () async {
         print("Inside _saveDetailsButton");
-        String imageURL1 = await uploadFile(image1);
-        String imageURL2 = await uploadFile(image2);
-        String imageURL3 = await uploadFile(image3);
-        String imageURL4 = await uploadFile(image4);
-        UserData().updateDetails(userId, location, price, members, beds,
-            bathroom, phoneNo, imageURL1, imageURL2, imageURL3, imageURL4);
+        // String imageURL1 = await uploadFile(image1);
+        // String imageURL2 = await uploadFile(image2);
+        // String imageURL3 = await uploadFile(image3);
+        // String imageURL4 = await uploadFile(image4);
+        UserData().updateDetails(
+            userId, location, price, members, beds, bathroom, phoneNo);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         //_uplodDetails(location, price, members, beds, bathroom, phoneNo);
