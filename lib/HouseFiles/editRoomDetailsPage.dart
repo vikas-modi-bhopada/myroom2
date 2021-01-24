@@ -24,6 +24,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   String phoneNo;
   String bathroom;
   String userId;
+  String imageUrl1, imageUrl2, imageUrl3, imageUrl4;
   DocumentSnapshot documentSnapshot;
   File image1, image2, image3, image4;
   String imageURI;
@@ -109,96 +110,53 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   }
 
   GestureDetector listOFimages(i) {
-    File x;
-    if (i == 1) x = image1;
-    if (i == 2) x = image2;
-    if (i == 3) x = image3;
-    if (i == 4) x = image4;
-    if (image1 != null || image2 != null || image3 != null || image4 != null) {
-      print("inside 1 ef");
-      return GestureDetector(
-        onTap: () {
-          _showPicker(context, i);
-        },
-        child: Container(
-          width: 120,
-          child: Card(
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: x == null
-                      ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
-                      : Image.file(x),
-                ),
-                Positioned(
-                  right: 5,
-                  top: 5,
-                  child: InkWell(
-                    child: Icon(
-                      Icons.remove_circle,
-                      size: 25,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        if (i == 1) image1 = null;
-                        if (i == 2) image2 = null;
-                        if (i == 3) image3 = null;
-                        if (i == 4) image4 = null;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else {
-      Image img;
-      if (i == 1) img = Image.network(documentSnapshot.data["image1"]);
-      if (i == 2) img = Image.network(documentSnapshot.data["image2"]);
-      if (i == 3) img = Image.network(documentSnapshot.data["image3"]);
-      if (i == 4) img = Image.network(documentSnapshot.data["image4"]);
-      return GestureDetector(
-        onTap: () {
-          _showPicker(context, i);
-        },
-        child: Container(
-          width: 120,
-          child: Card(
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: img == null
-                      ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
-                      : img,
-                ),
-                Positioned(
-                  right: 5,
-                  top: 5,
-                  child: InkWell(
-                    child: Icon(
-                      Icons.remove_circle,
-                      size: 25,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        if (i == 1) image1 = null;
-                        if (i == 2) image2 = null;
-                        if (i == 3) image3 = null;
-                        if (i == 4) image4 = null;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
+    String str;
+    switch (i) {
+      case 1:
+        str = imageUrl1;
+        break;
+      case 2:
+        str = imageUrl2;
+        break;
+      case 3:
+        str = imageUrl3;
+        break;
+      case 4:
+        str = imageUrl4;
+        break;
     }
+    return GestureDetector(
+      onTap: () {
+        _showPicker(context, i);
+      },
+      child: Container(
+        width: 120,
+        child: Card(
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: Image.network(str),
+                /* child: x == null
+                      ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
+                      : Image.file(x),*/
+              ),
+              Positioned(
+                right: 5,
+                top: 5,
+                child: InkWell(
+                  child: Icon(
+                    Icons.remove_circle,
+                    size: 25,
+                    color: Colors.red,
+                  ),
+                  onTap: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   // ignore: deprecated_member_use
@@ -343,33 +301,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       ),
     );
   }
-
-  /* final FirebaseAuth auth = FirebaseAuth.instance;
-
-  _uplodDetails(String _location, String _price, String _members, String _beds,
-      String _bathroom, String _phoneNo) async {
-    final FirebaseUser user = await auth.currentUser();
-    String imageURL1 = await uploadFile(image1);
-    String imageURL2 = await uploadFile(image2);
-    String imageURL3 = await uploadFile(image3);
-    String imageURL4 = await uploadFile(image4);
-    Firestore.instance
-        .collection("RoomDetails")
-        .add({
-          "image1": imageURL1,
-          "image2": imageURL2,
-          "image3": imageURL3,
-          "image4": imageURL4,
-          'Location': _location,
-          'Price': _price,
-          'Members': _members,
-          'BathRooms': _bathroom,
-          'Beds': _beds,
-          'Mobile': _phoneNo
-        })
-        .then((value) => print('User information added'))
-        .catchError((e) => print('Failed to add user information'));
-  }*/
 
   Widget _bathroomslabel(String data) {
     return Container(
@@ -589,6 +520,10 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
             members = value.data["Members"];
             phoneNo = value.data["Mobile"];
             price = value.data["Price"];
+            imageUrl1 = value.data["image1"];
+            imageUrl2 = value.data["image2"];
+            imageUrl3 = value.data["image3"];
+            imageUrl4 = value.data["image4"];
           });
         });
       });
