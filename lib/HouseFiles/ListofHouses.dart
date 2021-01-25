@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
 import 'package:roomi/HouseFiles/listOfRoomImages.dart';
 import 'package:roomi/controllers/authentications.dart';
+import 'package:roomi/loginPage.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
 
@@ -289,7 +290,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
     UserData().getData(searchbarData).then((QuerySnapshot results) {
       setState(() {
         querySnapshot = results;
-        
       });
     });
     super.initState();
@@ -353,7 +353,8 @@ class _ListOfHouseState extends State<ListOfHouse> {
       userAccountsDrawerHeader(),
       uploadRoomDetailsListTileForDrawer(),
       editRoomDetailsListTileForDrawer(),
-      logOutListTileForDrawer()
+      logOutListTileForDrawer(),
+      deleteAccountListTileForDrawer()
     ]);
   }
 
@@ -404,6 +405,23 @@ class _ListOfHouseState extends State<ListOfHouse> {
       onTap: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => EditRoomDetails()));
+      },
+    );
+  }
+
+  ListTile deleteAccountListTileForDrawer() {
+    return ListTile(
+      title: Center(
+        child: Text(
+          "Delete Account",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      onTap: () {
+        UserData().deleteUserAccountInformation();
+        deleteAccount();
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserData {
   Future<QuerySnapshot> getData(dynamic searchbarData) async {
@@ -32,5 +33,13 @@ class UserData {
       "BathRooms": bathroom,
       "Mobile": phoneNo,
     });
+  }
+
+  deleteUserAccountInformation() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    String str = user.uid;
+
+    Firestore.instance.collection("users").document(str).delete();
+    Firestore.instance.collection("RoomDetails").document(str).delete();
   }
 }
