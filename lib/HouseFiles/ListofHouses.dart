@@ -289,6 +289,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
     UserData().getData(searchbarData).then((QuerySnapshot results) {
       setState(() {
         querySnapshot = results;
+        
       });
     });
     super.initState();
