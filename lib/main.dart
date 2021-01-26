@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomi/welcomePage.dart';
 
 import 'HouseFiles/ListofHouses.dart';
+import 'welcomePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

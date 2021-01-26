@@ -53,6 +53,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       setState(() async {
         image1 = File(pickedFile.path);
         imageUrl1 = await uploadFile(image1, i);
+        setState(() {});
       });
     }
     if (i == 2) {
@@ -60,6 +61,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       setState(() async {
         image2 = File(pickedFile.path);
         imageUrl2 = await uploadFile(image1, i);
+        setState(() {});
       });
     }
     if (i == 3) {
@@ -67,12 +69,14 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       setState(() async {
         image3 = File(pickedFile.path);
         imageUrl3 = await uploadFile(image1, i);
+        setState(() {});
       });
     }
     if (i == 4) {
       setState(() async {
         image4 = File(pickedFile.path);
         imageUrl4 = await uploadFile(image1, i);
+        setState(() {});
       });
       //setState(() => image4 = File(pickedFile.path));
     }
@@ -84,6 +88,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       setState(() async {
         image1 = File(pickedFile.path);
         imageUrl1 = await uploadFile(image1, i);
+        setState(() {});
       });
     }
     if (i == 2) {
@@ -91,6 +96,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       setState(() async {
         image2 = File(pickedFile.path);
         imageUrl2 = await uploadFile(image1, i);
+        setState(() {});
       });
     }
     if (i == 3) {
@@ -98,12 +104,14 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       setState(() async {
         image3 = File(pickedFile.path);
         imageUrl3 = await uploadFile(image1, i);
+        setState(() {});
       });
     }
     if (i == 4) {
       setState(() async {
         image4 = File(pickedFile.path);
         imageUrl4 = await uploadFile(image1, i);
+        setState(() {});
       });
       //setState(() => image4 = File(pickedFile.path));
     }
@@ -120,8 +128,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                   new ListTile(
                       leading: new Icon(Icons.photo_library),
                       title: new Text('Photo Library'),
-                      onTap: () async {
-                        await _imgFromGallery(i);
+                      onTap: () {
+                        _imgFromGallery(i);
                         Navigator.of(context).pop();
                       }),
                   new ListTile(
@@ -498,9 +506,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
         // String imageURL2 = await uploadFile(image2);
         // String imageURL3 = await uploadFile(image3);
         // String imageURL4 = await uploadFile(image4);
-        UserData().updateDetails(
-            userId, location, price, members, beds, bathroom, phoneNo,
-            imageUrl1 ,imageUrl2,imageUrl3,imageUrl4);
+        UserData().updateDetails(userId, location, price, members, beds,
+            bathroom, phoneNo, imageUrl1, imageUrl2, imageUrl3, imageUrl4);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         //_uplodDetails(location, price, members, beds, bathroom, phoneNo);
