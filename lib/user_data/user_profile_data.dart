@@ -24,6 +24,10 @@ class UserData {
     String beds,
     String bathroom,
     String phoneNo,
+    String imageUrl1,
+    String imageUrl2,
+    String imageUrl3,
+    String imageUrl4,
   ) {
     Firestore.instance.collection("RoomDetails").document(docId).updateData({
       "Location": location,
@@ -32,6 +36,10 @@ class UserData {
       "Beds": beds,
       "BathRooms": bathroom,
       "Mobile": phoneNo,
+      "image1": imageUrl1,
+      "image2": imageUrl2,
+      "image3": imageUrl3,
+      "image4": imageUrl4,
     });
   }
 

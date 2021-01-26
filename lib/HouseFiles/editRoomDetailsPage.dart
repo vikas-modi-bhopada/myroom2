@@ -499,7 +499,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
         // String imageURL3 = await uploadFile(image3);
         // String imageURL4 = await uploadFile(image4);
         UserData().updateDetails(
-            userId, location, price, members, beds, bathroom, phoneNo);
+            userId, location, price, members, beds, bathroom, phoneNo,
+            imageUrl1 ,imageUrl2,imageUrl3,imageUrl4);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         //_uplodDetails(location, price, members, beds, bathroom, phoneNo);
