@@ -21,6 +21,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   var beds;
   var phoneNo;
   var bathroom;
+  String userId;
   File image1, image2, image3, image4;
   String imageURI;
   // ignore: deprecated_member_use
@@ -272,7 +273,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     String imageURL4 = await uploadFile(image4);
     Firestore.instance
         .collection("RoomDetails")
-        .add({
+        .document(userId)
+        .setData({
           "image1": imageURL1,
           "image2": imageURL2,
           "image3": imageURL3,
@@ -425,6 +427,17 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         color: Colors.white);
   }
 
+  @override 
+  void initState() {
+    FirebaseAuth.instance.currentUser().then((value) {
+      userId = value.uid;
+      setState(() {
+        
+      });
+    });
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
