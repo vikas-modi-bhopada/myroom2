@@ -24,7 +24,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   String phoneNo;
   String bathroom;
   String userId;
-  String imageUrl1, imageUrl2, imageUrl3, imageUrl4;
+  String imageUrl1, imageUrl2, imageUrl3, imageUrl4, _email;
   DocumentSnapshot documentSnapshot;
   File image1, image2, image3, image4;
   String imageURI;
@@ -35,7 +35,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   Future<String> uploadFile(File _image, int i) async {
     print("inside uplodefile $i");
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('image_NO_$i');
+        FirebaseStorage.instance.ref().child('$_email/image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -547,6 +547,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
       userId = value.uid;
+      _email = value.email;
       setState(() {
         UserData()
             .getPerticularRoomDetails(userId)

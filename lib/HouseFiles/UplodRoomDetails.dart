@@ -25,7 +25,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   String userId;
   File image1, image2, image3, image4;
   String imageURI;
-  String userId;
+
   var i = 1;
   @override
   Future<String> uploadFile(File _image) async {
@@ -425,24 +425,14 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         color: Colors.white);
   }
 
-  @override 
-  void initState() {
-    FirebaseAuth.instance.currentUser().then((value) {
-      userId = value.uid;
-      setState(() {
-        
-      });
-    });
-    super.initState();
-  }
-  
   @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
-      _email = value.email;
       userId = value.uid;
+      _email = value.email;
       setState(() {});
     });
+    super.initState();
   }
 
   @override
