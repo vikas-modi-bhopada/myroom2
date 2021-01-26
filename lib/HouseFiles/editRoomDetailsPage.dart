@@ -33,6 +33,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   //var i = 1;
 
   Future<String> uploadFile(File _image, int i) async {
+    print("inside uplodefile $i");
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child('image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
@@ -60,7 +61,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       // setState(() => image2 = File(pickedFile.path));
       setState(() async {
         image2 = File(pickedFile.path);
-        imageUrl2 = await uploadFile(image1, i);
+        imageUrl2 = await uploadFile(image2, i);
         setState(() {});
       });
     }
@@ -68,14 +69,14 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       // setState(() => image3 = File(pickedFile.path));
       setState(() async {
         image3 = File(pickedFile.path);
-        imageUrl3 = await uploadFile(image1, i);
+        imageUrl3 = await uploadFile(image3, i);
         setState(() {});
       });
     }
     if (i == 4) {
       setState(() async {
         image4 = File(pickedFile.path);
-        imageUrl4 = await uploadFile(image1, i);
+        imageUrl4 = await uploadFile(image4, i);
         setState(() {});
       });
       //setState(() => image4 = File(pickedFile.path));
@@ -95,7 +96,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       // setState(() => image2 = File(pickedFile.path));
       setState(() async {
         image2 = File(pickedFile.path);
-        imageUrl2 = await uploadFile(image1, i);
+        imageUrl2 = await uploadFile(image2, i);
         setState(() {});
       });
     }
@@ -103,14 +104,14 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       // setState(() => image3 = File(pickedFile.path));
       setState(() async {
         image3 = File(pickedFile.path);
-        imageUrl3 = await uploadFile(image1, i);
+        imageUrl3 = await uploadFile(image3, i);
         setState(() {});
       });
     }
     if (i == 4) {
       setState(() async {
         image4 = File(pickedFile.path);
-        imageUrl4 = await uploadFile(image1, i);
+        imageUrl4 = await uploadFile(image4, i);
         setState(() {});
       });
       //setState(() => image4 = File(pickedFile.path));
