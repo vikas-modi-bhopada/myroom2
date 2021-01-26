@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roomi/signUp.dart';
 import 'package:roomi/forgotPasswordPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
@@ -36,6 +37,13 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(
                 builder: (context) => ListOfHouse(),
               ));
+        }else{
+         Fluttertoast.showToast(
+           msg: "Wrong Password or Check our internet connection",
+           toastLength: Toast.LENGTH_SHORT,
+           gravity: ToastGravity.BOTTOM,
+           
+         );
         }
       });
     }

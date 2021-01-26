@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
 import 'package:roomi/HouseFiles/listOfRoomImages.dart';
 import 'package:roomi/controllers/authentications.dart';
+import 'package:roomi/loginPage.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
 
@@ -314,6 +316,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       );
     } else {
       return Container(
+        color: Colors.white,
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -349,7 +352,9 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return ListView(padding: EdgeInsets.zero, children: <Widget>[
       userAccountsDrawerHeader(),
       uploadRoomDetailsListTileForDrawer(),
-      logOutListTileForDrawer()
+      editRoomDetailsListTileForDrawer(),
+      logOutListTileForDrawer(),
+      deleteAccountListTileForDrawer()
     ]);
   }
 
@@ -385,6 +390,38 @@ class _ListOfHouseState extends State<ListOfHouse> {
       onTap: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => UploadRoomDetails()));
+      },
+    );
+  }
+
+  ListTile editRoomDetailsListTileForDrawer() {
+    return ListTile(
+      title: Center(
+        child: Text(
+          "Edit Room Details",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => EditRoomDetails()));
+      },
+    );
+  }
+
+  ListTile deleteAccountListTileForDrawer() {
+    return ListTile(
+      title: Center(
+        child: Text(
+          "Delete Account",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      onTap: () {
+        UserData().deleteUserAccountInformation();
+        deleteAccount();
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       },
     );
   }

@@ -7,30 +7,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roomi/HouseFiles/ListofHouses.dart';
 import 'package:roomi/Widget/bezierContainer.dart';
+import 'package:roomi/user_data/user_profile_data.dart';
 
-class UploadRoomDetails extends StatefulWidget {
+class EditRoomDetails extends StatefulWidget {
   @override
-  _UploadRoomDetailsState createState() => _UploadRoomDetailsState();
+  _EditRoomDetailsState createState() => _EditRoomDetailsState();
 }
 
-class _UploadRoomDetailsState extends State<UploadRoomDetails> {
-  var location;
-  var price;
-  var members;
-  var beds;
-  String _email;
-  var phoneNo;
-  var bathroom;
+class _EditRoomDetailsState extends State<EditRoomDetails> {
+  String location;
+  String price;
+  String members;
+  String beds;
+  String phoneNo;
+  String bathroom;
   String userId;
+  String imageUrl1, imageUrl2, imageUrl3, imageUrl4;
+  DocumentSnapshot documentSnapshot;
   File image1, image2, image3, image4;
   String imageURI;
-  String userId;
-  var i = 1;
-  @override
-  Future<String> uploadFile(File _image) async {
+  // ignore: deprecated_member_use
+  List<File> images = List<File>();
+  //var i = 1;
+
+  Future<String> uploadFile(File _image, int i) async {
+    print("inside uplodefile $i");
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('$_email/image_NO_$i');
+        FirebaseStorage.instance.ref().child('image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -38,7 +43,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     await storageReference.getDownloadURL().then((fileURL) {
       returnURL = fileURL;
     });
-    i = i + 1;
+    // i = i + 1;
     return returnURL;
   }
 
@@ -46,32 +51,70 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   Future _imgFromCamera(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (i == 1) {
-      setState(() => image1 = File(pickedFile.path));
+      setState(() async {
+        image1 = File(pickedFile.path);
+        imageUrl1 = await uploadFile(image1, i);
+        setState(() {});
+      });
     }
     if (i == 2) {
-      setState(() => image2 = File(pickedFile.path));
+      // setState(() => image2 = File(pickedFile.path));
+      setState(() async {
+        image2 = File(pickedFile.path);
+        imageUrl2 = await uploadFile(image2, i);
+        setState(() {});
+      });
     }
     if (i == 3) {
-      setState(() => image3 = File(pickedFile.path));
+      // setState(() => image3 = File(pickedFile.path));
+      setState(() async {
+        image3 = File(pickedFile.path);
+        imageUrl3 = await uploadFile(image3, i);
+        setState(() {});
+      });
     }
     if (i == 4) {
-      setState(() => image4 = File(pickedFile.path));
+      setState(() async {
+        image4 = File(pickedFile.path);
+        imageUrl4 = await uploadFile(image4, i);
+        setState(() {});
+      });
+      //setState(() => image4 = File(pickedFile.path));
     }
   }
 
   _imgFromGallery(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     if (i == 1) {
-      setState(() => image1 = File(pickedFile.path));
+      setState(() async {
+        image1 = File(pickedFile.path);
+        imageUrl1 = await uploadFile(image1, i);
+        setState(() {});
+      });
     }
     if (i == 2) {
-      setState(() => image2 = File(pickedFile.path));
+      // setState(() => image2 = File(pickedFile.path));
+      setState(() async {
+        image2 = File(pickedFile.path);
+        imageUrl2 = await uploadFile(image2, i);
+        setState(() {});
+      });
     }
     if (i == 3) {
-      setState(() => image3 = File(pickedFile.path));
+      // setState(() => image3 = File(pickedFile.path));
+      setState(() async {
+        image3 = File(pickedFile.path);
+        imageUrl3 = await uploadFile(image3, i);
+        setState(() {});
+      });
     }
     if (i == 4) {
-      setState(() => image4 = File(pickedFile.path));
+      setState(() async {
+        image4 = File(pickedFile.path);
+        imageUrl4 = await uploadFile(image4, i);
+        setState(() {});
+      });
+      //setState(() => image4 = File(pickedFile.path));
     }
   }
 
@@ -86,8 +129,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
                   new ListTile(
                       leading: new Icon(Icons.photo_library),
                       title: new Text('Photo Library'),
-                      onTap: () async {
-                        await _imgFromGallery(i);
+                      onTap: () {
+                        _imgFromGallery(i);
                         Navigator.of(context).pop();
                       }),
                   new ListTile(
@@ -106,11 +149,21 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   GestureDetector listOFimages(i) {
-    File x;
-    if (i == 1) x = image1;
-    if (i == 2) x = image2;
-    if (i == 3) x = image3;
-    if (i == 4) x = image4;
+    String str;
+    switch (i) {
+      case 1:
+        str = imageUrl1;
+        break;
+      case 2:
+        str = imageUrl2;
+        break;
+      case 3:
+        str = imageUrl3;
+        break;
+      case 4:
+        str = imageUrl4;
+        break;
+    }
     return GestureDetector(
       onTap: () {
         _showPicker(context, i);
@@ -121,9 +174,10 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           child: Stack(
             children: <Widget>[
               Center(
-                child: x == null
-                    ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
-                    : Image.file(x),
+                child: Image.network(str),
+                /* child: x == null
+                      ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
+                      : Image.file(x),*/
               ),
               Positioned(
                 right: 5,
@@ -134,14 +188,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
                     size: 25,
                     color: Colors.red,
                   ),
-                  onTap: () {
-                    setState(() {
-                      if (i == 1) image1 = null;
-                      if (i == 2) image2 = null;
-                      if (i == 3) image3 = null;
-                      if (i == 4) image4 = null;
-                    });
-                  },
+                  onTap: () {},
                 ),
               ),
             ],
@@ -169,27 +216,45 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   Widget _locationlabel(String data) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          TextField(
+    if (documentSnapshot != null) {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
+            GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(
+                location,
+              ),
+            )
+            /* TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               location = val;
             },
-          )
-        ],
-      ),
-    );
+          )*/
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 
   Widget _pricelabel(String data) {
@@ -203,13 +268,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
           ),
-          TextField(
+          GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(price)),
+          /*(TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               price = val;
             },
-          )
+          )*/
         ],
       ),
     );
@@ -226,13 +296,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
           ),
-          TextField(
+          GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(members)),
+          /*TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               members = val;
             },
-          )
+          )*/
         ],
       ),
     );
@@ -249,43 +324,21 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
           ),
-          TextField(
+          GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(beds)),
+          /*TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               beds = val;
             },
-          )
+          )*/
         ],
       ),
     );
-  }
-
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
-  _uplodDetails(String _location, String _price, String _members, String _beds,
-      String _bathroom, String _phoneNo) async {
-    String imageURL1 = await uploadFile(image1);
-    String imageURL2 = await uploadFile(image2);
-    String imageURL3 = await uploadFile(image3);
-    String imageURL4 = await uploadFile(image4);
-    Firestore.instance
-        .collection("RoomDetails")
-        .document(userId)
-        .setData({
-          "image1": imageURL1,
-          "image2": imageURL2,
-          "image3": imageURL3,
-          "image4": imageURL4,
-          'Location': _location,
-          'Price': _price,
-          'Members': _members,
-          'BathRooms': _bathroom,
-          'Beds': _beds,
-          'Mobile': _phoneNo
-        })
-        .then((value) => print('User information added'))
-        .catchError((e) => print('Failed to add user information'));
   }
 
   Widget _bathroomslabel(String data) {
@@ -299,13 +352,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
           ),
-          TextField(
+          GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(bathroom)),
+          /*TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               bathroom = val;
             },
-          )
+          )*/
         ],
       ),
     );
@@ -366,13 +424,18 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
             style: TextStyle(
                 color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          TextField(
+          GestureDetector(
+              onTap: () {
+                showDialogForMessage(data);
+              },
+              child: Text(phoneNo)),
+          /*TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
             onChanged: (val) {
               phoneNo = val;
             },
-          )
+          )*/
         ],
       ),
     );
@@ -387,14 +450,69 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         borderRadius: BorderRadius.all(Radius.circular(5.0)));
   }
 
+  showDialogForMessage(String title) {
+    TextEditingController customeController = TextEditingController();
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          if (customeController.text.toString().isNotEmpty) {
+            switch (title) {
+              case "Location":
+                location = customeController.text.toString();
+                break;
+              case "Members":
+                members = customeController.text.toString();
+                break;
+              case "Price":
+                price = customeController.text.toString();
+                break;
+              case "Beds":
+                beds = customeController.text.toString();
+                break;
+              case "Bathrooms":
+                bathroom = customeController.text.toString();
+                break;
+              case "Phone Number":
+                phoneNo = customeController.text.toString();
+                break;
+            }
+          }
+
+          Navigator.of(context).pop();
+          setState(() {});
+        });
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: TextField(
+        controller: customeController,
+      ),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
   Widget _saveDetailsButton() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         print("Inside _saveDetailsButton");
-        _uplodDetails(location, price, members, beds, bathroom, phoneNo);
-        // UserData().getData();
-      } //UserData().onPressed(),
-      ,
+        // String imageURL1 = await uploadFile(image1);
+        // String imageURL2 = await uploadFile(image2);
+        // String imageURL3 = await uploadFile(image3);
+        // String imageURL4 = await uploadFile(image4);
+        UserData().updateDetails(userId, location, price, members, beds,
+            bathroom, phoneNo, imageUrl1, imageUrl2, imageUrl3, imageUrl4);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ListOfHouse()));
+        //_uplodDetails(location, price, members, beds, bathroom, phoneNo);
+      },
       child: containerOfInkWellOfSaveDetailsButton(),
     );
   }
@@ -425,34 +543,51 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         color: Colors.white);
   }
 
-  @override 
+  @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
       userId = value.uid;
       setState(() {
-        
+        UserData()
+            .getPerticularRoomDetails(userId)
+            .then((DocumentSnapshot value) {
+          setState(() {
+            documentSnapshot = value;
+            location = value.data["Location"];
+            bathroom = value.data["BathRooms"];
+            beds = value.data["Beds"];
+            members = value.data["Members"];
+            phoneNo = value.data["Mobile"];
+            price = value.data["Price"];
+            imageUrl1 = value.data["image1"];
+            imageUrl2 = value.data["image2"];
+            imageUrl3 = value.data["image3"];
+            imageUrl4 = value.data["image4"];
+          });
+        });
       });
     });
+
     super.initState();
-  }
-  
-  @override
-  void initState() {
-    FirebaseAuth.instance.currentUser().then((value) {
-      _email = value.email;
-      userId = value.uid;
-      setState(() {});
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-          height: height,
-          child: buildStackForChildOfContainerOfBuildWidget(height, context)),
-    );
+    if (documentSnapshot != null) {
+      final height = MediaQuery.of(context).size.height;
+      return Scaffold(
+        body: Container(
+            height: height,
+            child: buildStackForChildOfContainerOfBuildWidget(height, context)),
+      );
+    } else {
+      return Container(
+        color: Colors.white,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 
   Stack buildStackForChildOfContainerOfBuildWidget(
@@ -465,10 +600,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50),
+                  SizedBox(height: 70),
                   _title(),
                   SizedBox(
                     height: 5,

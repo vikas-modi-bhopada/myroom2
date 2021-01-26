@@ -140,3 +140,9 @@ signOutUser() async {
 Future sendPasswordResetEmail(String email) async {
   return auth.sendPasswordResetEmail(email: email);
 }
+
+
+deleteAccount() async {
+  FirebaseUser user = await FirebaseAuth.instance.currentUser();
+  user.delete();
+}

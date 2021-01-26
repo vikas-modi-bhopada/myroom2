@@ -2,7 +2,7 @@
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
 import 'controllers/authentications.dart';
@@ -27,18 +27,23 @@ class _SignUpPageState extends State<SignUpPage> {
       _formKey.currentState.save();
       signUp(email.trim(), password, username, context).then((value) {
         if (value != null) {
+          Fluttertoast.showToast(
+           msg: "Your Account has been added, Please Login",
+           toastLength: Toast.LENGTH_SHORT,
+           gravity: ToastGravity.BOTTOM,          
+         );
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => ListOfHouse(),
+                builder: (context) => LoginPage(),
               ));
         }
       });
-      Navigator.pushReplacement(
+     /* Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => ListOfHouse(),
-          ));
+          ));*/
     }
   }
 
