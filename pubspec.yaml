@@ -36,6 +36,7 @@ dependencies:
   splashscreen: ^1.2.0
   fluttertoast:
   flutter_spinkit:
+  carousel_pro:
 
 
   # The following adds the Cupertino Icons font to your application.
