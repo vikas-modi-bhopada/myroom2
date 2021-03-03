@@ -22,6 +22,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
   UserData userData = new UserData();
   QuerySnapshot querySnapshot;
   QuerySnapshot querySnapshot1;
+  bool userAcccountPicture = false;
 
   var _email;
   var _username;
@@ -360,12 +361,11 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   ListTile logOutListTileForDrawer() {
     return ListTile(
-        title: Center(
-          child: Text(
-            "Log Out",
-            style: TextStyle(color: Colors.white),
-          ),
+        title: Text(
+          "Log Out",
+          style: TextStyle(color: Colors.white),
         ),
+        leading: Icon(Icons.logout),
         onTap: () {
           signOutUser();
           FirebaseAuth.instance.onAuthStateChanged.listen((user) {
@@ -381,12 +381,11 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   ListTile uploadRoomDetailsListTileForDrawer() {
     return ListTile(
-      title: Center(
-        child: Text(
-          "Upload Room Details",
-          style: TextStyle(color: Colors.white),
-        ),
+      title: Text(
+        "Upload Room Details",
+        style: TextStyle(color: Colors.white),
       ),
+      leading: Icon(Icons.upload_file),
       onTap: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => UploadRoomDetails()));
@@ -396,12 +395,11 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   ListTile editRoomDetailsListTileForDrawer() {
     return ListTile(
-      title: Center(
-        child: Text(
-          "Edit Room Details",
-          style: TextStyle(color: Colors.white),
-        ),
+      title: Text(
+        "Edit Room Details",
+        style: TextStyle(color: Colors.white),
       ),
+      leading: Icon(Icons.upload_file),
       onTap: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => EditRoomDetails()));
@@ -411,12 +409,11 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   ListTile deleteAccountListTileForDrawer() {
     return ListTile(
-      title: Center(
-        child: Text(
-          "Delete Account",
-          style: TextStyle(color: Colors.white),
-        ),
+      title: Text(
+        "Delete Account",
+        style: TextStyle(color: Colors.white),
       ),
+      leading: Icon(Icons.delete),
       onTap: () {
         UserData().deleteUserAccountInformation();
         deleteAccount();
@@ -431,12 +428,17 @@ class _ListOfHouseState extends State<ListOfHouse> {
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
-      currentAccountPicture: CircleAvatar(
-        child: ClipRRect(
-          child: Image.asset('assets/images/splash_screen.png'),
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-        ),
-      ),
+      currentAccountPicture: userAcccountPicture
+          ? CircleAvatar(
+              child: ClipRRect(
+                child: Image.asset('assets/images/splash_screen.png'),
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+              ),
+            )
+          : CircleAvatar(
+              backgroundColor: Colors.grey,
+              child: Icon(Icons.person),
+            ),
       accountName: Text('$_username'),
 
       //Text('$_username'),
