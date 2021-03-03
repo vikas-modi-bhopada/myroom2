@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:roomi/signUp.dart';
 import 'package:roomi/forgotPasswordPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 
 import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
@@ -23,12 +24,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String email;
   String password;
+  bool loading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void login() {
     if (_formKey.currentState.validate()) {
+      setState(() {
+        loading = true;
+      });
       _formKey.currentState.save();
       signin(email, password, context).then((value) {
         if (value != null) {
@@ -37,13 +42,12 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(
                 builder: (context) => ListOfHouse(),
               ));
-        }else{
-         Fluttertoast.showToast(
-           msg: "Wrong Password or Check our internet connection",
-           toastLength: Toast.LENGTH_SHORT,
-           gravity: ToastGravity.BOTTOM,
-           
-         );
+        } else {
+          Fluttertoast.showToast(
+            msg: "Wrong Password or Check our internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
         }
       });
     }
@@ -338,45 +342,47 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-        key: _scaffoldKey,
-        body: Form(
-          key: _formKey,
+    return loading
+        ? Loading()
+        : Scaffold(
+            key: _scaffoldKey,
+            body: Form(
+              key: _formKey,
 
-          //height: height,
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                  top: -height * .15,
-                  right: -MediaQuery.of(context).size.width * .4,
-                  child: BezierContainer()),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: height * .1),
-                      _title(),
-                      SizedBox(height: 30),
-                      _emailPasswordWidget(),
-                      SizedBox(height: 20),
-                      _loginButton(),
-                      forgetPasswordContainer(),
+              //height: height,
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                      top: -height * .15,
+                      right: -MediaQuery.of(context).size.width * .4,
+                      child: BezierContainer()),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: height * .1),
+                          _title(),
+                          SizedBox(height: 30),
+                          _emailPasswordWidget(),
+                          SizedBox(height: 20),
+                          _loginButton(),
+                          forgetPasswordContainer(),
 
-                      _divider(),
-                      _facebookButton(),
-                      // SizedBox(height: height * .01),
-                      _createAccountLabel(),
-                    ],
+                          _divider(),
+                          _facebookButton(),
+                          // SizedBox(height: height * .01),
+                          _createAccountLabel(),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(top: 40, left: 0, child: _backButton()),
+                ],
               ),
-              Positioned(top: 40, left: 0, child: _backButton()),
-            ],
-          ),
-        ));
+            ));
   }
 
   Container forgetPasswordContainer() {

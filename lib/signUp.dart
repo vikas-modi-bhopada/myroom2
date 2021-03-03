@@ -3,6 +3,7 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
 import 'controllers/authentications.dart';
@@ -22,16 +23,21 @@ class _SignUpPageState extends State<SignUpPage> {
   String email;
   String password;
   String username;
+  bool loading = false;
+
   void handleSignup() {
     if (_formKey.currentState.validate()) {
+      setState(() {
+        loading = true;
+      });
       _formKey.currentState.save();
       signUp(email.trim(), password, username, context).then((value) {
         if (value != null) {
           Fluttertoast.showToast(
-           msg: "Your Account has been added, Please Login",
-           toastLength: Toast.LENGTH_SHORT,
-           gravity: ToastGravity.BOTTOM,          
-         );
+            msg: "Your Account has been added, Please Login",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -39,7 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ));
         }
       });
-     /* Navigator.pushReplacement(
+      /* Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => ListOfHouse(),
@@ -322,13 +328,15 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Form(
-        key: _formKey,
+    return loading
+        ? Loading()
+        : Scaffold(
+            body: Form(
+              key: _formKey,
 //height: ,
-        child: buildStackForFormOfBuildWidget(context, height),
-      ),
-    );
+              child: buildStackForFormOfBuildWidget(context, height),
+            ),
+          );
   }
 
   Stack buildStackForFormOfBuildWidget(BuildContext context, double height) {
