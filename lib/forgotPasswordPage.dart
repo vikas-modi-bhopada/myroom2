@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:roomi/Widget/bezierContainer.dart';
-import 'package:roomi/Widget/customClipper.dart';
 import 'package:roomi/loginPage.dart';
 import 'package:roomi/controllers/authentications.dart';
 import 'package:google_fonts/google_fonts.dart';

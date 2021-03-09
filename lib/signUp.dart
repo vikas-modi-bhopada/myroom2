@@ -4,7 +4,6 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
-import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
 import 'controllers/authentications.dart';
 import 'loginPage.dart';
