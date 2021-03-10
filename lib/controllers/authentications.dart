@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_auths/user_data/update.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../loginPage.dart';
+
 FirebaseAuth auth = FirebaseAuth.instance;
 final gooleSignIn = GoogleSignIn();
 
@@ -13,21 +15,40 @@ showErrDialog(BuildContext context, String err) {
   // to hide the keyboard, if it is still p
   FocusScope.of(context).requestFocus(new FocusNode());
   return showDialog(
-    context: context,
-    // ignore: deprecated_member_use
-    child: AlertDialog(
-      title: Text("Error"),
-      content: Text(err),
-      actions: <Widget>[
-        OutlineButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text("Ok"),
-        ),
-      ],
-    ),
-  );
+      context: context,
+      builder: (_) => new CupertinoAlertDialog(
+            title: new Text("Error"),
+            content: new Text(err),
+            actions: <Widget>[
+              // ignore: deprecated_member_use
+              FlatButton(
+                child: Text('Try Again'),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ));
+                },
+              )
+            ],
+          ));
+  // return showDialog(
+  //   context: context,
+  //   // ignore: deprecated_member_use
+  //   child: AlertDialog(
+  //     title: Text("Error"),
+  //     content: Text(err),
+  //     actions: <Widget>[
+  //       OutlineButton(
+  //         onPressed: () {
+  //           Navigator.pop(context);
+  //         },
+  //         child: Text("Ok"),
+  //       ),
+  //     ],
+  //   ),
+  // );
 }
 
 // many unhandled google error exist
@@ -140,7 +161,6 @@ signOutUser() async {
 Future sendPasswordResetEmail(String email) async {
   return auth.sendPasswordResetEmail(email: email);
 }
-
 
 deleteAccount() async {
   FirebaseUser user = await FirebaseAuth.instance.currentUser();

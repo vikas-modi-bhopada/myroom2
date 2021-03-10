@@ -202,6 +202,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget buildGridViewForImages() {
     return Container(
+      decoration: boxDecorationWidgetForContainerOfSaveButton(),
       height: 180,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -218,33 +219,41 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   Widget _locationlabel(String data) {
     if (documentSnapshot != null) {
       return Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              data,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17),
+            Container(
+              padding: const EdgeInsets.all(6.0),
+              decoration: boxDecorationWidgetForContainerOfSaveButton(),
+              child: Text(
+                data,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17),
+              ),
+            ),
+            SizedBox(
+              width: 20,
             ),
             GestureDetector(
               onTap: () {
                 showDialogForMessage(data);
               },
-              child: Text(
-                location,
+              child: Container(
+                width: 200,
+                padding: const EdgeInsets.all(5.0),
+                decoration: boxDecorationWidgetForContainerOfSaveButton(),
+                child: Text(
+                  "$location",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17),
+                ),
               ),
-            )
-            /* TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
-            onChanged: (val) {
-              location = val;
-            },
-          )*/
+            ),
           ],
         ),
       );
@@ -259,27 +268,40 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget _pricelabel(String data) {
     return Container(
-      child: Column(
+      padding: const EdgeInsets.all(3.0),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
+          Container(
+            padding: const EdgeInsets.all(6.0),
+            decoration: boxDecorationWidgetForContainerOfSaveButton(),
+            child: Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
           ),
+          SizedBox(width: 45),
           GestureDetector(
-              onTap: () {
-                showDialogForMessage(data);
-              },
-              child: Text(price)),
-          /*(TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
-            onChanged: (val) {
-              price = val;
+            onTap: () {
+              showDialogForMessage(data);
             },
-          )*/
+            child: Container(
+              decoration: boxDecorationWidgetForContainerOfSaveButton(),
+              width: 200,
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                price,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -287,27 +309,41 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget _memberslabel(String data) {
     return Container(
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
+          Container(
+            padding: const EdgeInsets.all(6.0),
+            decoration: boxDecorationWidgetForContainerOfSaveButton(),
+            child: Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
+          ),
+          SizedBox(
+            width: 16,
           ),
           GestureDetector(
-              onTap: () {
-                showDialogForMessage(data);
-              },
-              child: Text(members)),
-          /*TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
-            onChanged: (val) {
-              members = val;
+            onTap: () {
+              showDialogForMessage(data);
             },
-          )*/
+            child: Container(
+              width: 200,
+              padding: const EdgeInsets.all(5.0),
+              decoration: boxDecorationWidgetForContainerOfSaveButton(),
+              child: Text(
+                "$members",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -315,27 +351,41 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget _bedslabel(String data) {
     return Container(
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
+          Container(
+            padding: const EdgeInsets.all(6.0),
+            decoration: boxDecorationWidgetForContainerOfSaveButton(),
+            child: Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
+          ),
+          SizedBox(
+            width: 50,
           ),
           GestureDetector(
-              onTap: () {
-                showDialogForMessage(data);
-              },
-              child: Text(beds)),
-          /*TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
-            onChanged: (val) {
-              beds = val;
+            onTap: () {
+              showDialogForMessage(data);
             },
-          )*/
+            child: Container(
+              width: 200,
+              padding: const EdgeInsets.all(5.0),
+              decoration: boxDecorationWidgetForContainerOfSaveButton(),
+              child: Text(
+                "$beds",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -343,47 +393,41 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget _bathroomslabel(String data) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          GestureDetector(
-              onTap: () {
-                showDialogForMessage(data);
-              },
-              child: Text(bathroom)),
-          /*TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
-            onChanged: (val) {
-              bathroom = val;
-            },
-          )*/
-        ],
-      ),
-    );
-  }
-
-  Widget _residence() {
-    return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: _memberslabel("Members")),
-          SizedBox(
-            width: 50,
+          Container(
+            padding: const EdgeInsets.all(6.0),
+            decoration: boxDecorationWidgetForContainerOfSaveButton(),
+            child: Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
           ),
-          Expanded(child: _bedslabel("Beds")),
           SizedBox(
-            width: 50,
+            width: 16,
           ),
-          Expanded(child: _bathroomslabel("Bathrooms")),
+          GestureDetector(
+            onTap: () {
+              showDialogForMessage(data);
+            },
+            child: Container(
+              width: 200,
+              padding: const EdgeInsets.all(5.0),
+              decoration: boxDecorationWidgetForContainerOfSaveButton(),
+              child: Text(
+                "$bathroom",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -415,20 +459,40 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget _phonenumber(String data) {
     return Container(
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+          Container(
+            decoration: boxDecorationWidgetForContainerOfSaveButton(),
+            padding: const EdgeInsets.all(6.0),
+            child: Text(
+              data,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            width: 30,
           ),
           GestureDetector(
               onTap: () {
                 showDialogForMessage(data);
               },
-              child: Text(phoneNo)),
+              child: Container(
+                decoration: boxDecorationWidgetForContainerOfSaveButton(),
+                width: 200,
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  price,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17),
+                ),
+              )),
           /*TextField(
             decoration: InputDecoration(
                 border: InputBorder.none, fillColor: Colors.grey, filled: true),
@@ -452,6 +516,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   showDialogForMessage(String title) {
     TextEditingController customeController = TextEditingController();
+    // ignore: deprecated_member_use
     Widget okButton = FlatButton(
         child: Text("OK"),
         onPressed: () {
@@ -503,10 +568,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     return InkWell(
       onTap: () async {
         print("Inside _saveDetailsButton");
-        // String imageURL1 = await uploadFile(image1);
-        // String imageURL2 = await uploadFile(image2);
-        // String imageURL3 = await uploadFile(image3);
-        // String imageURL4 = await uploadFile(image4);
         UserData().updateDetails(userId, location, price, members, beds,
             bathroom, phoneNo, imageUrl1, imageUrl2, imageUrl3, imageUrl4);
         Navigator.pushReplacement(
@@ -577,9 +638,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     if (documentSnapshot != null) {
       final height = MediaQuery.of(context).size.height;
       return Scaffold(
-        body: Container(
-            height: height,
-            child: buildStackForChildOfContainerOfBuildWidget(height, context)),
+        body: buildStackForChildOfContainerOfBuildWidget(height, context),
       );
     } else {
       return Container(
@@ -596,41 +655,44 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     return Stack(
       children: [
         buildPositionedWidgetForBezierContainer(height, context),
-        Container(
-          alignment: Alignment.topCenter,
-          child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  SizedBox(height: 70),
-                  _title(),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  _locationlabel("Location"),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _pricelabel("Price"),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _residence(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _phonenumber("Phone Number"),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  buildGridViewForImages(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _saveDetailsButton()
-                ],
-              )),
-        )
+        SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              children: [
+                SizedBox(height: 30),
+                _title(),
+                SizedBox(
+                  height: 20,
+                ),
+                _locationlabel("Location"),
+                SizedBox(
+                  height: 20,
+                ),
+                _pricelabel("Price"),
+                SizedBox(
+                  height: 20,
+                ),
+                _phonenumber("Contact"),
+                SizedBox(height: 20),
+                _memberslabel("Members"),
+                SizedBox(
+                  height: 20,
+                ),
+                _bedslabel("Beds"),
+                SizedBox(
+                  height: 20,
+                ),
+                _bathroomslabel("Bathrooms"),
+                SizedBox(
+                  height: 20,
+                ),
+                buildGridViewForImages(),
+                SizedBox(
+                  height: 25,
+                ),
+                _saveDetailsButton()
+              ],
+            ))
       ],
     );
   }

@@ -27,12 +27,14 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   String imageURI;
 
   var i = 1;
+
   @override
   Future<String> uploadFile(File _image) async {
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child('$_email/image_NO_$i');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
+
     print('File Uploaded');
     String returnURL;
     await storageReference.getDownloadURL().then((fileURL) {
