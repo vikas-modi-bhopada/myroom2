@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomi/HouseFiles/ListofHouses.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/Widget/bezierContainer.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
-import 'package:roomi/Shared/loadingwidget.dart';
 
 class EditRoomDetails extends StatefulWidget {
   @override
@@ -487,7 +487,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                 width: 200,
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  price,
+                  phoneNo,
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
@@ -569,9 +569,19 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     return InkWell(
       onTap: () async {
         Loading();
-       
-        UserData().updateDetails(userId, location.toUpperCase(), price, members, beds,
-            bathroom, phoneNo, imageUrl1, imageUrl2, imageUrl3, imageUrl4);
+
+        UserData().updateDetails(
+            userId,
+            location.toUpperCase(),
+            price,
+            members,
+            beds,
+            bathroom,
+            phoneNo,
+            imageUrl1,
+            imageUrl2,
+            imageUrl3,
+            imageUrl4);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         //_uplodDetails(location, price, members, beds, bathroom, phoneNo);
@@ -644,7 +654,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       );
     } else {
       return Container(
-     child: Loading(),
+        child: Loading(),
       );
     }
   }

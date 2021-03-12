@@ -28,7 +28,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var _email;
   var _username;
   var searchbarData;
-  bool _dataFound = true;
 
   Widget profilePicture() {
     return Container(
@@ -69,24 +68,23 @@ class _ListOfHouseState extends State<ListOfHouse> {
               icon: Icon(Icons.filter_list),
               onPressed: () {
                 UserData().getData(searchbarData).then((QuerySnapshot results) {
-                  if (results.documents.isEmpty) {
-                    _dataFound = false;
-                    
-                  } else {
-                    _dataFound = true;
-                   
-                  }
-
+                  if (results == null) print("No result Found");
                   setState(() {
                     querySnapshot = results;
                   });
                 });
               },
             ),
+            /*Icon(
+              Icons.filter_list,
+              color: Colors.lightGreen,
+            ),*/
             hintText: "Search Location",
             focusColor: Colors.green),
         onChanged: (value) {
           searchbarData = value.toUpperCase();
+          print(value);
+          print(searchbarData);
         },
       ),
     );
@@ -101,7 +99,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
     ));
   }
 
- 
   ListView listViewForRoomList() {
     if (querySnapshot != null) {
       print(querySnapshot.documents.length);
@@ -331,15 +328,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
             ));
   }
 
-  Widget noDataFoundWidget() {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Image.asset('assets/images/nodatafound.jpg'),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (querySnapshot != null) {
@@ -357,7 +345,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 height: 10,
               ),
               searchBar(),
-              _dataFound ? roomList() : noDataFoundWidget()
+              SizedBox(
+                height: 10,
+              ),
+              roomList()
             ],
           ),
         ),
