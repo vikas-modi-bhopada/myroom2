@@ -31,9 +31,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() {
     if (_formKey.currentState.validate()) {
-      setState(() {
-        loading = true;
-      });
       _formKey.currentState.save();
       signin(email, password, context).then((value) {
         if (value != null) {

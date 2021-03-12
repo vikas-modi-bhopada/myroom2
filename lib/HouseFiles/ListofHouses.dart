@@ -57,24 +57,36 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16),
       child: TextField(
+        textInputAction: TextInputAction.search,
+        onSubmitted: (value) {
+          UserData().getData(searchbarData).then((QuerySnapshot results) {
+            if (results.documents.isEmpty) {
+              _dataFound = false;
+            } else {
+              _dataFound = true;
+            }
+
+            setState(() {
+              querySnapshot = results;
+            });
+          });
+        },
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.green[300]),
             ),
             prefixIcon: Icon(
-              Icons.search,
+              Icons.location_on,
               color: Colors.grey[500],
             ),
             suffixIcon: IconButton(
-              icon: Icon(Icons.filter_list),
+              icon: Icon(Icons.search),
               onPressed: () {
                 UserData().getData(searchbarData).then((QuerySnapshot results) {
                   if (results.documents.isEmpty) {
                     _dataFound = false;
-                    
                   } else {
                     _dataFound = true;
-                   
                   }
 
                   setState(() {
@@ -101,7 +113,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
     ));
   }
 
- 
   ListView listViewForRoomList() {
     if (querySnapshot != null) {
       print(querySnapshot.documents.length);
@@ -354,7 +365,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
           body: Column(
             children: [
               SizedBox(
-                height: 10,
+                height: 15,
               ),
               searchBar(),
               _dataFound ? roomList() : noDataFoundWidget()
@@ -371,6 +382,28 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   AppBar buildAppBarForBuildWidget() {
     return AppBar(
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.refresh_outlined,
+            color: Colors.white,
+          ),
+          tooltip: "Refresh",
+          onPressed: () {
+            UserData().refreshList().then((QuerySnapshot results) {
+              if (results.documents.isEmpty) {
+                _dataFound = false;
+              } else {
+                _dataFound = true;
+              }
+
+              setState(() {
+                querySnapshot = results;
+              });
+            });
+          },
+        ),
+      ],
       elevation: 10.0,
       centerTitle: true,
       title: Text("Roomi"),
@@ -411,6 +444,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
         ),
         leading: Icon(Icons.logout),
         onTap: () {
+          Navigator.pop(context);
           signOutUser();
           FirebaseAuth.instance.onAuthStateChanged.listen((user) {
             if (user == null) {
@@ -431,6 +465,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       ),
       leading: Icon(Icons.upload_file),
       onTap: () {
+        Navigator.pop(context);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => UploadRoomDetails()));
       },
@@ -445,6 +480,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       ),
       leading: Icon(Icons.upload_file),
       onTap: () {
+        Navigator.pop(context);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => EditRoomDetails()));
       },
@@ -459,6 +495,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       ),
       leading: Icon(Icons.delete),
       onTap: () {
+        Navigator.pop(context);
         UserData().deleteUserAccountInformation();
         deleteAccount();
         Navigator.pushReplacement(

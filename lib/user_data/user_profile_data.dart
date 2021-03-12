@@ -9,6 +9,10 @@ class UserData {
         .getDocuments();
   }
 
+  Future<QuerySnapshot> refreshList() async {
+    return await Firestore.instance.collection("RoomDetails").getDocuments();
+  }
+
   Future<DocumentSnapshot> getPerticularRoomDetails(String docId) async {
     return await Firestore.instance
         .collection("RoomDetails")
