@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:roomi/user_data/user_profile_data.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
+import 'package:roomi/user_data/user_profile_data.dart';
 
 class ListOfRoomImages extends StatefulWidget {
   int index1;
@@ -29,18 +29,13 @@ class _ListOfRoomImagesState extends State<ListOfRoomImages> {
     super.initState();
   }
 
-  Future<bool> _onBackPressed() {
-   
-  }
-
   @override
   Widget build(BuildContext context) {
     // final String str = ModalRoute.of(context).settings.arguments;
     if (querySnapshot != null) {
       var height = MediaQuery.of(context).size.height;
-      return WillPopScope(
-        onWillPop: _onBackPressed,
-        child: Container(
+      return Scaffold(
+        body: Container(
           height: height,
           child: Carousel(
             boxFit: BoxFit.cover,
