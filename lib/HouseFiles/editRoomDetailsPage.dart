@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:roomi/HouseFiles/ListofHouses.dart';
 import 'package:roomi/Widget/bezierContainer.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 
 class EditRoomDetails extends StatefulWidget {
   @override
@@ -567,7 +568,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   Widget _saveDetailsButton() {
     return InkWell(
       onTap: () async {
-        print("Inside _saveDetailsButton");
+        Loading();
+       
         UserData().updateDetails(userId, location, price, members, beds,
             bathroom, phoneNo, imageUrl1, imageUrl2, imageUrl3, imageUrl4);
         Navigator.pushReplacement(
@@ -642,10 +644,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       );
     } else {
       return Container(
-        color: Colors.white,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+     child: Loading(),
       );
     }
   }

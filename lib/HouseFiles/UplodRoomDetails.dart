@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:roomi/HouseFiles/ListofHouses.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -392,8 +394,10 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   Widget _saveDetailsButton() {
     return InkWell(
       onTap: () {
-        print("Inside _saveDetailsButton");
+        Loading();
         _uplodDetails(location, price, members, beds, bathroom, phoneNo);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         // UserData().getData();
       } //UserData().onPressed(),
       ,

@@ -8,6 +8,7 @@ import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
 import 'package:roomi/HouseFiles/listOfRoomImages.dart';
 import 'package:roomi/controllers/authentications.dart';
 import 'package:roomi/loginPage.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
 
@@ -77,7 +78,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
               Icons.filter_list,
               color: Colors.lightGreen,
             ),*/
-            hintText: "Indore",
+            hintText: "Search Location",
             focusColor: Colors.green),
         onChanged: (value) {
           searchbarData = value;
@@ -296,31 +297,51 @@ class _ListOfHouseState extends State<ListOfHouse> {
     super.initState();
   }
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Do you really want to exit the app ?"),
+              actions: [
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: Text("No")),
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    child: Text("Yes"))
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     if (querySnapshot != null) {
-      return Scaffold(
-        appBar: buildAppBarForBuildWidget(),
-        drawer: Theme(
-            data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-            child: sideNav()),
-        // body: _userdataWidget(),
-        body: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            searchBar(),
-            roomList()
-          ],
+      return WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Scaffold(
+          appBar: buildAppBarForBuildWidget(),
+          drawer: Theme(
+              data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+              child: sideNav()),
+          // body: _userdataWidget(),
+          body: Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              searchBar(),
+              roomList()
+            ],
+          ),
         ),
       );
     } else {
       return Container(
-        color: Colors.white,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Loading(),
       );
     }
   }
