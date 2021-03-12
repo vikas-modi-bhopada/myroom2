@@ -17,7 +17,7 @@ class UploadRoomDetails extends StatefulWidget {
 }
 
 class _UploadRoomDetailsState extends State<UploadRoomDetails> {
-  var location;
+  String location;
   var price;
   var members;
   var beds;
@@ -395,7 +395,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     return InkWell(
       onTap: () {
         Loading();
-        _uplodDetails(location, price, members, beds, bathroom, phoneNo);
+        _uplodDetails(location.toUpperCase(), price, members, beds, bathroom, phoneNo);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         // UserData().getData();

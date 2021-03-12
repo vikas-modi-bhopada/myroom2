@@ -28,6 +28,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var _email;
   var _username;
   var searchbarData;
+  bool _dataFound = true;
 
   Widget profilePicture() {
     return Container(
@@ -68,23 +69,24 @@ class _ListOfHouseState extends State<ListOfHouse> {
               icon: Icon(Icons.filter_list),
               onPressed: () {
                 UserData().getData(searchbarData).then((QuerySnapshot results) {
-                  if (results == null) print("No result Found");
+                  if (results.documents.isEmpty) {
+                    _dataFound = false;
+                    print("data not found");
+                  } else {
+                    _dataFound = true;
+                    print("data foud");
+                  }
+
                   setState(() {
                     querySnapshot = results;
                   });
                 });
               },
             ),
-            /*Icon(
-              Icons.filter_list,
-              color: Colors.lightGreen,
-            ),*/
             hintText: "Search Location",
             focusColor: Colors.green),
         onChanged: (value) {
           searchbarData = value.toUpperCase();
-          print(value);
-          print(searchbarData);
         },
       ),
     );
@@ -320,6 +322,15 @@ class _ListOfHouseState extends State<ListOfHouse> {
             ));
   }
 
+  Widget noDataFoundWidget() {
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: Image.asset('assets/images/nodatafound.jpg'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (querySnapshot != null) {
@@ -337,7 +348,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 height: 10,
               ),
               searchBar(),
-              roomList()
+              _dataFound ? roomList() : noDataFoundWidget()
             ],
           ),
         ),
