@@ -570,7 +570,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
       onTap: () async {
         Loading();
        
-        UserData().updateDetails(userId, location, price, members, beds,
+        UserData().updateDetails(userId, location.toUpperCase(), price, members, beds,
             bathroom, phoneNo, imageUrl1, imageUrl2, imageUrl3, imageUrl4);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));

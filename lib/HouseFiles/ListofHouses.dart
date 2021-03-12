@@ -68,6 +68,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
               icon: Icon(Icons.filter_list),
               onPressed: () {
                 UserData().getData(searchbarData).then((QuerySnapshot results) {
+                  if (results == null) print("No result Found");
                   setState(() {
                     querySnapshot = results;
                   });
@@ -81,7 +82,9 @@ class _ListOfHouseState extends State<ListOfHouse> {
             hintText: "Search Location",
             focusColor: Colors.green),
         onChanged: (value) {
-          searchbarData = value;
+          searchbarData = value.toUpperCase();
+          print(value);
+          print(searchbarData);
         },
       ),
     );
