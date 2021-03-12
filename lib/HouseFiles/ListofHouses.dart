@@ -71,10 +71,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 UserData().getData(searchbarData).then((QuerySnapshot results) {
                   if (results.documents.isEmpty) {
                     _dataFound = false;
-                    print("data not found");
+                    
                   } else {
                     _dataFound = true;
-                    print("data foud");
+                   
                   }
 
                   setState(() {
@@ -101,6 +101,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
     ));
   }
 
+ 
   ListView listViewForRoomList() {
     if (querySnapshot != null) {
       print(querySnapshot.documents.length);
