@@ -33,11 +33,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+
+    // Checking Wheather user is already loged in or not
+    // If loged in then navigate to list of Rooms
+    // if not then navigate to welcome page
     return FutureBuilder<FirebaseUser>(
       future: FirebaseAuth.instance.currentUser(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          FirebaseUser user = snapshot.data;
+         /* FirebaseUser user = snapshot.data;*/
           return ListOfHouse();
         } else {
           return WelcomePage();
