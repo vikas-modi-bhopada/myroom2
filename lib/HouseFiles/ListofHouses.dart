@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
 import 'package:roomi/HouseFiles/listOfRoomImages.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/controllers/authentications.dart';
 import 'package:roomi/loginPage.dart';
-import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
 
@@ -106,29 +106,31 @@ class _ListOfHouseState extends State<ListOfHouse> {
       print(querySnapshot.documents.length);
       return ListView.separated(
           itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                print(index);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ListOfRoomImages(index1: index),
-                      //settings: RouteSettings(arguments: index),
-                    ));
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  firstRowOfListView(index),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  secondRowOfListView(index),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  thirdRowOfListView(index)
-                ],
+            return Container(
+              child: GestureDetector(
+                onTap: () {
+                  print(index);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ListOfRoomImages(index1: index),
+                        //settings: RouteSettings(arguments: index),
+                      ));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    firstRowOfListView(index),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    secondRowOfListView(index),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    thirdRowOfListView(index)
+                  ],
+                ),
               ),
             );
           },
@@ -254,7 +256,13 @@ class _ListOfHouseState extends State<ListOfHouse> {
             fit: BoxFit.cover,
           ),
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ListOfRoomImages(index1: index),
+              ));
+        },
       ),
     );
   }
