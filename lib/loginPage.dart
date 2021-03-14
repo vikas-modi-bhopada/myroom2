@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:roomi/signUp.dart';
-import 'package:roomi/forgotPasswordPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
+import 'package:roomi/forgotPasswordPage.dart';
+import 'package:roomi/signUp.dart';
 
 import 'HouseFiles/ListofHouses.dart';
 import 'Widget/bezierContainer.dart';
@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   String email;
   String password;
   bool loading = false;
+  final focus = FocusNode();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -269,9 +270,9 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField textFormFieldForPassword() {
     return TextFormField(
-      autofocus: true,
-      focusNode: FocusNode(),
+      focusNode: focus,
       obscureText: true,
+      textInputAction: TextInputAction.done,
       inputFormatters: [],
       decoration: InputDecoration(
         hintText: 'Enter Password',
@@ -313,8 +314,8 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField textFormFieldForEmail() {
     return TextFormField(
+      textInputAction: TextInputAction.next,
       autofocus: true,
-      focusNode: FocusNode(),
       obscureText: false,
       inputFormatters: [],
       decoration: InputDecoration(

@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:roomi/HouseFiles/ListofHouses.dart';
-import 'package:roomi/Shared/loadingwidget.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roomi/HouseFiles/ListofHouses.dart';
+import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/Widget/bezierContainer.dart';
 
 class UploadRoomDetails extends StatefulWidget {
@@ -395,7 +395,8 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
     return InkWell(
       onTap: () {
         Loading();
-        _uplodDetails(location.toUpperCase(), price, members, beds, bathroom, phoneNo);
+        _uplodDetails(
+            location.toUpperCase(), price, members, beds, bathroom, phoneNo);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ListOfHouse()));
         // UserData().getData();
@@ -504,18 +505,4 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         right: -MediaQuery.of(context).size.width * .4,
         child: BezierContainer());
   }
-}
-
-class ImageUploadModel {
-  bool isUploaded;
-  bool uploading;
-  File imageFile;
-  String imageUrl;
-
-  ImageUploadModel({
-    this.isUploaded,
-    this.uploading,
-    this.imageFile,
-    this.imageUrl,
-  });
 }
