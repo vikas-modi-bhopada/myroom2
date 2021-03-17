@@ -261,20 +261,23 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return Container(
       width: 90,
       height: 90,
-      child: GestureDetector(
-        child: ClipOval(
-          child: Image.network(
-            querySnapshot.documents[index].data['image1'],
-            fit: BoxFit.cover,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
+              child: GestureDetector(
+          child: ClipOval(
+            child: Image.network(
+              querySnapshot.documents[index].data['image1'],
+              fit: BoxFit.cover,
+            ),
           ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ListOfRoomImages(index1: index),
+                ));
+          },
         ),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ListOfRoomImages(index1: index),
-              ));
-        },
       ),
     );
   }

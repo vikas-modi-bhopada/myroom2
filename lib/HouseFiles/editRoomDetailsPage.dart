@@ -434,6 +434,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
+  
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
@@ -603,6 +604,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
+  
   BoxDecoration boxDecorationWidgetForContainerOfSaveButton() {
     return BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -659,6 +661,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     }
   }
 
+  
   Stack buildStackForChildOfContainerOfBuildWidget(
       double height, BuildContext context) {
     return Stack(

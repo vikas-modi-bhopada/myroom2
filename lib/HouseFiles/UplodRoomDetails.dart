@@ -47,6 +47,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   final picker = ImagePicker();
+  
   Future _imgFromCamera(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (i == 1) {
