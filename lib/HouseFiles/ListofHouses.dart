@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +29,14 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var _username;
   var searchbarData;
   bool _dataFound = true;
+
+  void customLaunch(command) async {
+    if (await canLaunch(command)) {
+      await launch(command);
+    } else {
+      print('could not launch $command');
+    }
+  }
 
   Widget profilePicture() {
     return Container(
@@ -154,21 +162,27 @@ class _ListOfHouseState extends State<ListOfHouse> {
     }
   }
 
+// Row for Mobile Number
   Container thirdRowOfListView(int index) {
     return Container(
       margin: EdgeInsets.only(left: 32, right: 16),
-      child: Row(
-        children: [
-          Icon(
-            Icons.phone,
-            size: 12,
-            color: Colors.grey[600],
-          ),
-          Text(
-            querySnapshot.documents[index].data['Mobile'],
-            style: TextStyle(color: Colors.grey[600]),
-          )
-        ],
+      child: GestureDetector(
+        onTap: () {
+          customLaunch(querySnapshot.documents[index].data['Mobile']);
+        },
+        child: Row(
+          children: [
+            Icon(
+              Icons.phone,
+              size: 12,
+              color: Colors.grey[600],
+            ),
+            Text(
+              querySnapshot.documents[index].data['Mobile'],
+              style: TextStyle(color: Colors.grey[600]),
+            )
+          ],
+        ),
       ),
     );
   }

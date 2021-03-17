@@ -38,6 +38,7 @@ dependencies:
   flutter_spinkit:
   carousel_pro:
   connectivity: ^0.4.8+2
+  url_launcher: ^5.1.2
 
 
   # The following adds the Cupertino Icons font to your application.

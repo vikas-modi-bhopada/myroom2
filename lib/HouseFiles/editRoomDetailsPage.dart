@@ -619,6 +619,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
         color: Colors.white);
   }
 
+  
   @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
@@ -673,6 +674,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     }
   }
 
+  
   Stack buildStackForChildOfContainerOfBuildWidget(
       double height, BuildContext context) {
     return Stack(
@@ -695,7 +697,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                 SizedBox(
                   height: 20,
                 ),
-                _phonenumber("Contact"),
+                _phonenumber("Phone Number"),
                 SizedBox(height: 20),
                 _memberslabel("Members"),
                 SizedBox(

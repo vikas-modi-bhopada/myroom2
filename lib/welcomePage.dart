@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'loginPage.dart';
 import 'signUp.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:connectivity/connectivity.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);
@@ -14,6 +14,8 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  bool isConnected = false;
+
   Widget _logInButton() {
     return InkWell(
       onTap: () {
@@ -137,17 +139,42 @@ class _WelcomePageState extends State<WelcomePage> {
         ]);
   }
 
-  void checkStatus(){
+  /* void checkStatusOfInternet() {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi) {
+        print('Connected');
+        setState(() {
+          isConnected = true;
+        });
+      } else {
+        print('NOt Connected');
+        setState(() {
+          isConnected = false;
+        });
+      }
+    });
+  }*/
 
-  }
-  
-  @override 
-  void initState(){
-    checkStatus();
-super.initState();
-  }
-  
-  
+  /* Widget widgetForInternet() {
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        child: Center(
+            child: Text(
+          'Turn On Your Internet Connection and Try Again',
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        )),
+      ),
+    );
+  }*/
+
+  /*@override
+  void initState() {
+    checkStatusOfInternet();
+    super.initState();
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,13 +182,15 @@ super.initState();
     );
   }
 
-  SingleChildScrollView buildSingleChildScrollViewOfScaffoldOfBuildWidget(BuildContext context) {
+  SingleChildScrollView buildSingleChildScrollViewOfScaffoldOfBuildWidget(
+      BuildContext context) {
     return SingleChildScrollView(
       child: buildContainerOfSingleChildScrollViewOfBuildWidget(context),
     );
   }
 
-  Container buildContainerOfSingleChildScrollViewOfBuildWidget(BuildContext context) {
+  Container buildContainerOfSingleChildScrollViewOfBuildWidget(
+      BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       height: MediaQuery.of(context).size.height,
