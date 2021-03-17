@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomi/HouseFiles/ListofHouses.dart';
+import 'package:roomi/HouseFiles/noRoomUploaded.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/Widget/bezierContainer.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
@@ -24,6 +25,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   String beds;
   String phoneNo;
   String bathroom;
+  bool isDataLoaded = false;
+  bool isDocumentExists = false;
   String userId;
   String imageUrl1, imageUrl2, imageUrl3, imageUrl4, _email;
   DocumentSnapshot documentSnapshot;
@@ -434,7 +437,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
-  
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
@@ -604,7 +606,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
-  
   BoxDecoration boxDecorationWidgetForContainerOfSaveButton() {
     return BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -628,17 +629,24 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
             .getPerticularRoomDetails(userId)
             .then((DocumentSnapshot value) {
           setState(() {
-            documentSnapshot = value;
-            location = value.data["Location"];
-            bathroom = value.data["BathRooms"];
-            beds = value.data["Beds"];
-            members = value.data["Members"];
-            phoneNo = value.data["Mobile"];
-            price = value.data["Price"];
-            imageUrl1 = value.data["image1"];
-            imageUrl2 = value.data["image2"];
-            imageUrl3 = value.data["image3"];
-            imageUrl4 = value.data["image4"];
+            isDataLoaded = true;
+            if (value.exists) {
+              isDocumentExists = true;
+
+              documentSnapshot = value;
+              location = value.data["Location"];
+              bathroom = value.data["BathRooms"];
+              beds = value.data["Beds"];
+              members = value.data["Members"];
+              phoneNo = value.data["Mobile"];
+              price = value.data["Price"];
+              imageUrl1 = value.data["image1"];
+              imageUrl2 = value.data["image2"];
+              imageUrl3 = value.data["image3"];
+              imageUrl4 = value.data["image4"];
+            } else {
+              isDocumentExists = false;
+            }
           });
         });
       });
@@ -649,11 +657,15 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   @override
   Widget build(BuildContext context) {
-    if (documentSnapshot != null) {
-      final height = MediaQuery.of(context).size.height;
-      return Scaffold(
-        body: buildStackForChildOfContainerOfBuildWidget(height, context),
-      );
+    if (isDataLoaded) {
+      if (isDocumentExists) {
+        final height = MediaQuery.of(context).size.height;
+        return Scaffold(
+          body: buildStackForChildOfContainerOfBuildWidget(height, context),
+        );
+      } else {
+        return NoRoomUploaded();
+      }
     } else {
       return Container(
         child: Loading(),
@@ -661,7 +673,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     }
   }
 
-  
   Stack buildStackForChildOfContainerOfBuildWidget(
       double height, BuildContext context) {
     return Stack(

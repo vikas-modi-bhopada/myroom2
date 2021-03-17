@@ -263,7 +263,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       height: 90,
       child: Padding(
         padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
-              child: GestureDetector(
+        child: GestureDetector(
           child: ClipOval(
             child: Image.network(
               querySnapshot.documents[index].data['image1'],
