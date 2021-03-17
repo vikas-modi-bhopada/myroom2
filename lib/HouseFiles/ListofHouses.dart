@@ -331,11 +331,13 @@ class _ListOfHouseState extends State<ListOfHouse> {
         builder: (context) => AlertDialog(
               title: Text("Do you really want to exit the app ?"),
               actions: [
+                // ignore: deprecated_member_use
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context, false);
                     },
                     child: Text("No")),
+                // ignore: deprecated_member_use
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context, true);
@@ -432,10 +434,40 @@ class _ListOfHouseState extends State<ListOfHouse> {
   ListView listViewOfDrawer() {
     return ListView(padding: EdgeInsets.zero, children: <Widget>[
       userAccountsDrawerHeader(),
+      Divider(
+        thickness: .5,
+        endIndent: 40,
+        indent: 40,
+        color: Colors.white,
+      ),
       uploadRoomDetailsListTileForDrawer(),
+      Divider(
+        thickness: .5,
+        endIndent: 40,
+        indent: 40,
+        color: Colors.white,
+      ),
       editRoomDetailsListTileForDrawer(),
+      Divider(
+        thickness: .5,
+        endIndent: 40,
+        indent: 40,
+        color: Colors.white,
+      ),
       logOutListTileForDrawer(),
-      deleteAccountListTileForDrawer()
+      Divider(
+        thickness: .5,
+        endIndent: 40,
+        indent: 40,
+        color: Colors.white,
+      ),
+      deleteAccountListTileForDrawer(),
+      Divider(
+        thickness: .5,
+        endIndent: 40,
+        indent: 40,
+        color: Colors.white,
+      ),
     ]);
   }
 
@@ -445,7 +477,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
           "Log Out",
           style: TextStyle(color: Colors.white),
         ),
-        leading: Icon(Icons.logout),
+        leading: Icon(
+          Icons.logout,
+          color: Colors.orange,
+        ),
         onTap: () {
           Navigator.pop(context);
           signOutUser();
@@ -466,7 +501,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
         "Upload Room Details",
         style: TextStyle(color: Colors.white),
       ),
-      leading: Icon(Icons.upload_file),
+      leading: Icon(
+        Icons.upload_file,
+        color: Colors.orange,
+      ),
       onTap: () {
         Navigator.pop(context);
         Navigator.push(context,
@@ -481,7 +519,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
         "Edit Room Details",
         style: TextStyle(color: Colors.white),
       ),
-      leading: Icon(Icons.upload_file),
+      leading: Icon(
+        Icons.edit,
+        color: Colors.orange,
+      ),
       onTap: () {
         Navigator.pop(context);
         Navigator.push(context,
@@ -496,7 +537,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
         "Delete Account",
         style: TextStyle(color: Colors.white),
       ),
-      leading: Icon(Icons.delete),
+      leading: Icon(
+        Icons.delete,
+        color: Colors.orange,
+      ),
       onTap: () {
         Navigator.pop(context);
         UserData().deleteUserAccountInformation();
@@ -523,10 +567,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
               backgroundColor: Colors.grey,
               child: Icon(Icons.person),
             ),
-      accountName: Text('$_username'),
+      accountName: Text('Name  : $_username'),
 
       //Text('$_username'),
-      accountEmail: Text('$_email'),
+      accountEmail: Text('Email  : $_email'),
     );
   }
 
