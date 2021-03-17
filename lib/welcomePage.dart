@@ -3,6 +3,7 @@ import 'loginPage.dart';
 import 'signUp.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);
 
@@ -136,6 +137,17 @@ class _WelcomePageState extends State<WelcomePage> {
         ]);
   }
 
+  void checkStatus(){
+
+  }
+  
+  @override 
+  void initState(){
+    checkStatus();
+super.initState();
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

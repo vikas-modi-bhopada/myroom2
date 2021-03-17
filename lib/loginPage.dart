@@ -324,6 +324,7 @@ class _LoginPageState extends State<LoginPage> {
         fillColor: Colors.grey[300],
         filled: true,
       ),
+      keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter some text';

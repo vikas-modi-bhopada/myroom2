@@ -47,7 +47,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   final picker = ImagePicker();
-  
+
   Future _imgFromCamera(i) async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (i == 1) {
@@ -187,7 +187,9 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
+                border: InputBorder.none, fillColor: Colors.grey, filled: true,
+                hintText: 'Location'),
+                keyboardType: TextInputType.text,
             onChanged: (val) {
               location = val;
             },
@@ -210,7 +212,11 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
+                border: InputBorder.none, fillColor: Colors.grey, filled: true,
+                hintText: 'Price per month'
+                ),
+           keyboardType: TextInputType.number,
+           
             onChanged: (val) {
               price = val;
             },
@@ -233,7 +239,10 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
+                border: InputBorder.none,
+                hintText: 'Number of members',
+                 fillColor: Colors.grey, filled: true),
+           keyboardType: TextInputType.number,
             onChanged: (val) {
               members = val;
             },
@@ -256,7 +265,10 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
+                border: InputBorder.none, 
+                hintText: 'Number of beds',
+                fillColor: Colors.grey, filled: true),
+           keyboardType: TextInputType.number,
             onChanged: (val) {
               beds = val;
             },
@@ -306,7 +318,10 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
+                border: InputBorder.none,
+                hintText: 'Number of bathrooms',
+                 fillColor: Colors.grey, filled: true),
+            keyboardType: TextInputType.number,
             onChanged: (val) {
               bathroom = val;
             },
@@ -373,7 +388,11 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true),
+                border: InputBorder.none, 
+                hintText: 'Phone number',
+                fillColor: Colors.grey, filled: true),
+          keyboardType: TextInputType.phone,
+          maxLength: 10,
             onChanged: (val) {
               phoneNo = val;
             },
@@ -433,6 +452,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
         color: Colors.white);
   }
 
+  
   @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
