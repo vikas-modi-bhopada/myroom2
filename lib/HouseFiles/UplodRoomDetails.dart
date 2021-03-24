@@ -279,13 +279,16 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  
   _uplodDetails(String _location, String _price, String _members, String _beds,
       String _bathroom, String _phoneNo) async {
     String imageURL1 = await uploadFile(image1);
     String imageURL2 = await uploadFile(image2);
     String imageURL3 = await uploadFile(image3);
     String imageURL4 = await uploadFile(image4);
+
+List<String> listOfLocation = _location.split(" ");
+
     Firestore.instance
         .collection("RoomDetails")
         .document(userId)
@@ -294,7 +297,7 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
           "image2": imageURL2,
           "image3": imageURL3,
           "image4": imageURL4,
-          'Location': _location,
+          'Location': listOfLocation,
           'Price': _price,
           'Members': _members,
           'BathRooms': _bathroom,

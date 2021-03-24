@@ -30,13 +30,13 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var searchbarData;
   bool _dataFound = true;
 
-  void customLaunch(command) async {
+  /*void customLaunch(command) async {
     if (await canLaunch(command)) {
       await launch(command);
     } else {
       print('could not launch $command');
     }
-  }
+  }*/
 
   Widget profilePicture() {
     return Container(
@@ -168,7 +168,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       margin: EdgeInsets.only(left: 32, right: 16),
       child: GestureDetector(
         onTap: () {
-          customLaunch(querySnapshot.documents[index].data['Mobile']);
+        //  customLaunch(querySnapshot.documents[index].data['Mobile']);
         },
         child: Row(
           children: [
@@ -319,8 +319,14 @@ class _ListOfHouseState extends State<ListOfHouse> {
   }
 
   Text textWidgetForLocation(int index) {
+    List<String> listOfLocation =
+        List.from(querySnapshot.documents[index].data['Location']);
+    String locationstr = "";
+    listOfLocation.forEach((element) {
+      locationstr = locationstr + " " + element;
+    });
     return Text(
-      querySnapshot.documents[index].data['Location'],
+      locationstr,
       style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
     );
   }
@@ -331,7 +337,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       _email = value.email;
       _username = value.displayName;
     });
-    UserData().getData(searchbarData).then((QuerySnapshot results) {
+    UserData().refreshList().then((QuerySnapshot results) {
       setState(() {
         querySnapshot = results;
       });

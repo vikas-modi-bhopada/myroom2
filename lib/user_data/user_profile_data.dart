@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class UserData {
   Future<QuerySnapshot> getData(dynamic searchbarData) async {
+    List searchLocationList = searchbarData.toString().split(' ');
+    print(searchLocationList);
     return await Firestore.instance
         .collection("RoomDetails")
-        //.where('Location', isGreaterThanOrEqualTo: searchbarData)
-        .where('Location', isEqualTo: searchbarData)
+        .where("Location", arrayContainsAny: searchLocationList)
+        // .where('Location', isEqualTo: searchbarData)
         .getDocuments();
   }
 
@@ -21,6 +23,7 @@ class UserData {
         .get();
   }
 
+  
   updateDetails(
     String docId,
     String location,
@@ -34,8 +37,11 @@ class UserData {
     String imageUrl3,
     String imageUrl4,
   ) {
+
+    List<String> listOfLocation = location.split(" ");
+
     Firestore.instance.collection("RoomDetails").document(docId).updateData({
-      "Location": location,
+      "Location": listOfLocation,
       "Price": price,
       "Members": members,
       "Beds": beds,

@@ -619,7 +619,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
         color: Colors.white);
   }
 
-  
   @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
@@ -636,6 +635,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
               documentSnapshot = value;
               location = value.data["Location"];
+
               bathroom = value.data["BathRooms"];
               beds = value.data["Beds"];
               members = value.data["Members"];
@@ -674,7 +674,6 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     }
   }
 
-  
   Stack buildStackForChildOfContainerOfBuildWidget(
       double height, BuildContext context) {
     return Stack(
