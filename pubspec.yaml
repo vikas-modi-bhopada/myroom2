@@ -23,22 +23,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  image_picker: ^0.6.7+21
+  image_picker:
   firebase_storage:
-  form_field_validator: ^1.0.1
-  firebase_core: ^0.4.5
-  firebase_auth: ^0.16.0
-  google_sign_in: ^4.4.4
-  cloud_firestore: ^0.13.7
-  flushbar: ^1.10.4
-  google_fonts: ^1.1.1
-  flutter_signin_button: ^1.1.0
-  splashscreen: ^1.2.0
+  form_field_validator:
+  firebase_core:
+  firebase_auth:
+  google_sign_in:
+  cloud_firestore:
+  flushbar:
+  google_fonts:
+  flutter_signin_button:
+  splashscreen:
   fluttertoast:
   flutter_spinkit:
   carousel_pro:
-  connectivity: ^0.4.8+2
-  url_launcher: ^5.1.2
+  connectivity:
+  url_launcher:
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -21,7 +21,7 @@ class _ListOfRoomImagesState extends State<ListOfRoomImages> {
 
   @override
   void initState() {
-    UserData().getData(searchbarData).then((QuerySnapshot results) {
+    UserData().refreshList().then((QuerySnapshot results) {
       setState(() {
         querySnapshot = results;
       });
@@ -36,6 +36,7 @@ class _ListOfRoomImagesState extends State<ListOfRoomImages> {
       var height = MediaQuery.of(context).size.height;
       return Scaffold(
         body: Container(
+          color: Colors.black,
           height: height,
           child: Carousel(
             boxFit: BoxFit.cover,

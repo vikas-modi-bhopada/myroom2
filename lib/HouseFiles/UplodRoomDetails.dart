@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomi/HouseFiles/ListofHouses.dart';
@@ -65,18 +66,29 @@ class _UploadRoomDetailsState extends State<UploadRoomDetails> {
   }
 
   _imgFromGallery(i) async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (i == 1) {
-      setState(() => image1 = File(pickedFile.path));
-    }
-    if (i == 2) {
-      setState(() => image2 = File(pickedFile.path));
-    }
-    if (i == 3) {
-      setState(() => image3 = File(pickedFile.path));
-    }
-    if (i == 4) {
-      setState(() => image4 = File(pickedFile.path));
+    try {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+      if (i == 1) {
+        setState(() => image1 = File(pickedFile.path));
+      }
+      if (i == 2) {
+        setState(() => image2 = File(pickedFile.path));
+      }
+      if (i == 3) {
+        setState(() => image3 = File(pickedFile.path));
+      }
+      if (i == 4) {
+        setState(() => image4 = File(pickedFile.path));
+      }
+    } catch (e) {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "$e",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      });
     }
   }
 

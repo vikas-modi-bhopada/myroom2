@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +11,7 @@ import 'package:roomi/controllers/authentications.dart';
 import 'package:roomi/loginPage.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'UplodRoomDetails.dart';
 
@@ -30,13 +31,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var searchbarData;
   bool _dataFound = true;
 
-  /*void customLaunch(command) async {
-    if (await canLaunch(command)) {
-      await launch(command);
-    } else {
-      print('could not launch $command');
-    }
-  }*/
 
   Widget profilePicture() {
     return Container(
@@ -168,7 +162,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       margin: EdgeInsets.only(left: 32, right: 16),
       child: GestureDetector(
         onTap: () {
-        //  customLaunch(querySnapshot.documents[index].data['Mobile']);
+          launch("tel://${querySnapshot.documents[index].data['Mobile']}");
         },
         child: Row(
           children: [
