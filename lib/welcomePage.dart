@@ -14,6 +14,8 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  int _value = 1;
+
   Widget _logInButton() {
     return InkWell(
       onTap: () {
@@ -34,6 +36,40 @@ class _WelcomePageState extends State<WelcomePage> {
         'Login',
         style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
       ),
+      /*child: DropdownButton(
+        value: _value,
+        items: [
+          DropdownMenuItem(
+            child: Text(
+              "Log in",
+              style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
+            ),
+            value: 1,
+          ),
+          DropdownMenuItem(
+            child: Text(
+              "Log in as Landlord",
+              style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
+            ),
+            value: 2,
+            onTap: () {
+              
+            },
+          ),
+          DropdownMenuItem(
+            child: Text(
+              "Log in as Renter",
+              style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
+            ),
+            value: 3,
+          ),
+        ],
+        onChanged: (value) {
+          setState(() {
+            _value = value;
+          });
+        },
+      ),*/
     );
   }
 
