@@ -19,7 +19,8 @@ class EditRoomDetails extends StatefulWidget {
 }
 
 class _EditRoomDetailsState extends State<EditRoomDetails> {
-  String location;
+  String location = "";
+  List<String> listOfLocation;
   String price;
   String members;
   String beds;
@@ -250,7 +251,9 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                 padding: const EdgeInsets.all(5.0),
                 decoration: boxDecorationWidgetForContainerOfSaveButton(),
                 child: Text(
-                  "$location",
+                  location,
+
+                  // documentSnapshot.data["Location"],
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
@@ -634,7 +637,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
               isDocumentExists = true;
 
               documentSnapshot = value;
-              location = value.data["Location"];
+              listOfLocation = List.from(value.data["Location"]);
 
               bathroom = value.data["BathRooms"];
               beds = value.data["Beds"];
@@ -645,6 +648,11 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
               imageUrl2 = value.data["image2"];
               imageUrl3 = value.data["image3"];
               imageUrl4 = value.data["image4"];
+              setState(() {
+                listOfLocation.forEach((element) {
+                  location = location + " " + element;
+                });
+              });
             } else {
               isDocumentExists = false;
             }
