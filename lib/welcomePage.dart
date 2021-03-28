@@ -14,8 +14,6 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  bool isConnected = false;
-
   Widget _logInButton() {
     return InkWell(
       onTap: () {
