@@ -31,7 +31,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var searchbarData;
   bool _dataFound = true;
 
-
   Widget profilePicture() {
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16, top: 32),
@@ -148,7 +147,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
               ),
             );
           },
-          separatorBuilder: (context, index) => Divider(),
+          separatorBuilder: (context, index) => Divider(
+            thickness: 1.0,
+            color: Colors.black
+          ),
           itemCount: querySnapshot.documents.length);
     } else {
       print("query snapshot is null");
@@ -370,6 +372,25 @@ class _ListOfHouseState extends State<ListOfHouse> {
     );
   }
 
+  Widget result() {
+    return Container(
+      
+      margin: EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(querySnapshot.documents.length.toString() + " results",
+          style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold),
+          ),
+          Divider(
+            thickness: 1.0,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (querySnapshot != null) {
@@ -387,6 +408,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 height: 15,
               ),
               searchBar(),
+              result(),
               _dataFound ? roomList() : noDataFoundWidget()
             ],
           ),
