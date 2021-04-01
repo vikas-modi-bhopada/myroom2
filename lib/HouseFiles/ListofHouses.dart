@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
-import 'package:roomi/HouseFiles/listOfRoomImages.dart';
+import 'package:roomi/HouseFiles/roomDetails_Page.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/controllers/authentications.dart';
 import 'package:roomi/loginPage.dart';
@@ -30,7 +30,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
   var _username;
   var searchbarData;
   bool _dataFound = true;
-
 
   Widget profilePicture() {
     return Container(
@@ -123,11 +122,12 @@ class _ListOfHouseState extends State<ListOfHouse> {
             return Container(
               child: GestureDetector(
                 onTap: () {
-                  print(index);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ListOfRoomImages(index1: index),
+                        builder: (context) => HouseDetail(
+                          index: index,
+                        ),
                         //settings: RouteSettings(arguments: index),
                       ));
                 },
@@ -172,7 +172,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
               color: Colors.grey[600],
             ),
             Text(
-              querySnapshot.documents[index].data['Mobile'],
+              'Mobile',
               style: TextStyle(color: Colors.grey[600]),
             )
           ],
@@ -207,7 +207,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
           width: 4,
         ),
         Text(
-          querySnapshot.documents[index].data['BathRooms'],
+          'BathRooms',
           style: TextStyle(color: Colors.grey[600]),
         )
       ],
@@ -226,7 +226,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
           width: 4,
         ),
         Text(
-          querySnapshot.documents[index].data['Beds'],
+          "beds",
           style: TextStyle(color: Colors.grey[600]),
         )
       ],
@@ -245,7 +245,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
           width: 4,
         ),
         Text(
-          querySnapshot.documents[index].data['Members'],
+          "MEMBERS",
           style: TextStyle(color: Colors.grey[600]),
         )
       ],
@@ -274,7 +274,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
         child: GestureDetector(
           child: ClipOval(
             child: Image.network(
-              querySnapshot.documents[index].data['image1'],
+              querySnapshot.documents[index].data['houseImages'][0],
               fit: BoxFit.cover,
             ),
           ),
@@ -282,8 +282,9 @@ class _ListOfHouseState extends State<ListOfHouse> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ListOfRoomImages(index1: index),
-                ));
+                    builder: (context) => HouseDetail(
+                          index: index,
+                        )));
           },
         ),
       ),
@@ -306,21 +307,26 @@ class _ListOfHouseState extends State<ListOfHouse> {
 
   Text textWidgetForPriceOfRoom(int index) {
     return Text(
-      querySnapshot.documents[index].data['Price'],
+      "PHONE",
       style: TextStyle(
           color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18),
     );
   }
 
   Text textWidgetForLocation(int index) {
-    List<String> listOfLocation =
-        List.from(querySnapshot.documents[index].data['Location']);
-    String locationstr = "";
-    listOfLocation.forEach((element) {
-      locationstr = locationstr + " " + element;
-    });
+    // List<dynamic> listOfLocation =
+    //     List.from(querySnapshot.documents[index].data['Address']{'city'});
+
+    // String locationstr = "";
+    // listOfLocation.forEach((element) {
+    //   locationstr = locationstr + " " + element;
+    // });
+    Map<String, dynamic> map = querySnapshot.documents[index].data['Address'];
+    /* map.forEach((key, value) {
+      print(key + "  " + value);
+    });*/
     return Text(
-      locationstr,
+      "Addres",
       style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
     );
   }
@@ -521,8 +527,8 @@ class _ListOfHouseState extends State<ListOfHouse> {
       ),
       onTap: () {
         Navigator.pop(context);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => UploadRoomDetails()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AddHouse()));
       },
     );
   }

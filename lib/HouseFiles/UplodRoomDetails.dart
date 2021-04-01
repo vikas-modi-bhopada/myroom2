@@ -1,473 +1,27 @@
+import 'dart:async';
+import 'dart:core';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:roomi/HouseFiles/ListofHouses.dart';
-import 'package:roomi/Shared/loadingwidget.dart';
-import 'package:roomi/Widget/bezierContainer.dart';
 
-class UploadRoomDetails extends StatefulWidget {
+// ignore: must_be_immutable
+class AddHouse extends StatefulWidget {
   @override
-  _UploadRoomDetailsState createState() => _UploadRoomDetailsState();
+  State<StatefulWidget> createState() {
+    return AddHouseState();
+  }
 }
 
-class _UploadRoomDetailsState extends State<UploadRoomDetails> {
-  String location;
-  var price;
-  var members;
-  var beds;
-  String _email;
-  var phoneNo;
-  var bathroom;
-  String userId;
-  File image1, image2, image3, image4;
-  String imageURI;
+var ownerRef;
 
-  var i = 1;
-
-  @override
-  Future<String> uploadFile(File _image) async {
-    StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('$_email/image_NO_$i');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-
-    print('File Uploaded');
-    String returnURL;
-    await storageReference.getDownloadURL().then((fileURL) {
-      returnURL = fileURL;
-    });
-    i = i + 1;
-    return returnURL;
-  }
-
-  final picker = ImagePicker();
-
-  Future _imgFromCamera(i) async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    if (i == 1) {
-      setState(() => image1 = File(pickedFile.path));
-    }
-    if (i == 2) {
-      setState(() => image2 = File(pickedFile.path));
-    }
-    if (i == 3) {
-      setState(() => image3 = File(pickedFile.path));
-    }
-    if (i == 4) {
-      setState(() => image4 = File(pickedFile.path));
-    }
-  }
-
-  _imgFromGallery(i) async {
-    try {
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-      if (i == 1) {
-        setState(() => image1 = File(pickedFile.path));
-      }
-      if (i == 2) {
-        setState(() => image2 = File(pickedFile.path));
-      }
-      if (i == 3) {
-        setState(() => image3 = File(pickedFile.path));
-      }
-      if (i == 4) {
-        setState(() => image4 = File(pickedFile.path));
-      }
-    } catch (e) {
-      setState(() {
-        Fluttertoast.showToast(
-          msg: "$e",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      });
-    }
-  }
-
-  void _showPicker(context, i) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () async {
-                        await _imgFromGallery(i);
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      _imgFromCamera(i);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  GestureDetector listOFimages(i) {
-    File x;
-    if (i == 1) x = image1;
-    if (i == 2) x = image2;
-    if (i == 3) x = image3;
-    if (i == 4) x = image4;
-    return GestureDetector(
-      onTap: () {
-        _showPicker(context, i);
-      },
-      child: Container(
-        width: 120,
-        child: Card(
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: x == null
-                    ? Icon(Icons.image, size: 50, color: Colors.blueGrey)
-                    : Image.file(x),
-              ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: InkWell(
-                  child: Icon(
-                    Icons.remove_circle,
-                    size: 25,
-                    color: Colors.red,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      if (i == 1) image1 = null;
-                      if (i == 2) image2 = null;
-                      if (i == 3) image3 = null;
-                      if (i == 4) image4 = null;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ignore: deprecated_member_use
-
-  Widget buildGridViewForImages() {
-    return Container(
-      height: 180,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          listOFimages(1),
-          listOFimages(2),
-          listOFimages(3),
-          listOFimages(4)
-        ],
-      ),
-    );
-  }
-
-  Widget _locationlabel(String data) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true,
-                hintText: 'Location'),
-                keyboardType: TextInputType.text,
-            onChanged: (val) {
-              location = val;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _pricelabel(String data) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, fillColor: Colors.grey, filled: true,
-                hintText: 'Price per month'
-                ),
-           keyboardType: TextInputType.number,
-           
-            onChanged: (val) {
-              price = val;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _memberslabel(String data) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Number of members',
-                 fillColor: Colors.grey, filled: true),
-           keyboardType: TextInputType.number,
-            onChanged: (val) {
-              members = val;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _bedslabel(String data) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, 
-                hintText: 'Number of beds',
-                fillColor: Colors.grey, filled: true),
-           keyboardType: TextInputType.number,
-            onChanged: (val) {
-              beds = val;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  
-  _uplodDetails(String _location, String _price, String _members, String _beds,
-      String _bathroom, String _phoneNo) async {
-    String imageURL1 = await uploadFile(image1);
-    String imageURL2 = await uploadFile(image2);
-    String imageURL3 = await uploadFile(image3);
-    String imageURL4 = await uploadFile(image4);
-
-List<String> listOfLocation = _location.split(" ");
-
-    Firestore.instance
-        .collection("RoomDetails")
-        .document(userId)
-        .setData({
-          "image1": imageURL1,
-          "image2": imageURL2,
-          "image3": imageURL3,
-          "image4": imageURL4,
-          'Location': listOfLocation,
-          'Price': _price,
-          'Members': _members,
-          'BathRooms': _bathroom,
-          'Beds': _beds,
-          'Mobile': _phoneNo
-        })
-        .then((value) => print('User information added'))
-        .catchError((e) => print('Failed to add user information'));
-  }
-
-  Widget _bathroomslabel(String data) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
-          TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Number of bathrooms',
-                 fillColor: Colors.grey, filled: true),
-            keyboardType: TextInputType.number,
-            onChanged: (val) {
-              bathroom = val;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _residence() {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: _memberslabel("Members")),
-          SizedBox(
-            width: 50,
-          ),
-          Expanded(child: _bedslabel("Beds")),
-          SizedBox(
-            width: 50,
-          ),
-          Expanded(child: _bathroomslabel("Bathrooms")),
-        ],
-      ),
-    );
-  }
-
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'R',
-          style: GoogleFonts.portLligatSans(
-              // ignore: deprecated_member_use
-              textStyle: Theme.of(context).textTheme.display1,
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-              color: Color(0xffe46b10)),
-          children: [
-            TextSpan(
-              text: 'oo',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'mi',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
-    );
-  }
-
-  Widget _phonenumber(String data) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data,
-            style: TextStyle(
-                color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-          ),
-          TextField(
-            decoration: InputDecoration(
-                border: InputBorder.none, 
-                hintText: 'Phone number',
-                fillColor: Colors.grey, filled: true),
-          keyboardType: TextInputType.phone,
-          maxLength: 10,
-            onChanged: (val) {
-              phoneNo = val;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  BoxDecoration myBoxDecoration() {
-    return BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: Colors.grey,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(5.0)));
-  }
-
-  Widget _saveDetailsButton() {
-    return InkWell(
-      onTap: () {
-        Loading();
-        _uplodDetails(
-            location.toUpperCase(), price, members, beds, bathroom, phoneNo);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ListOfHouse()));
-        // UserData().getData();
-      } //UserData().onPressed(),
-      ,
-      child: containerOfInkWellOfSaveDetailsButton(),
-    );
-  }
-
-  Container containerOfInkWellOfSaveDetailsButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 13),
-      alignment: Alignment.center,
-      decoration: boxDecorationWidgetForContainerOfSaveButton(),
-      child: Text(
-        'Save',
-        style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
-      ),
-    );
-  }
-
-  BoxDecoration boxDecorationWidgetForContainerOfSaveButton() {
-    return BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Color(0xffdf8e33).withAlpha(100),
-              offset: Offset(2, 4),
-              blurRadius: 8,
-              spreadRadius: 2)
-        ],
-        color: Colors.white);
-  }
-
-  
+class AddHouseState extends State<AddHouse> {
   @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
@@ -478,67 +32,1675 @@ List<String> listOfLocation = _location.split(" ");
     super.initState();
   }
 
+  Future<bool> _back() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    return WillPopScope(
+      onWillPop: _back,
+      child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            backgroundColor: Colors.blue[700],
+            title: Text('Property Address'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: Wall()),
+    );
+  }
+}
+
+List<String> _filters = <String>[];
+List<String> _filter = <String>[];
+final databaseReference = Firestore.instance;
+DocumentReference ref;
+DocumentReference addd;
+String _ownerPhone;
+String _OwnerName;
+String _ownerAdd;
+double _progress;
+String _email;
+String userId;
+String _locality;
+String _city;
+String _state;
+String _address;
+String _pincod;
+String _hono;
+String _buildup;
+String _monthly;
+String _deposit;
+String _beds;
+String _bath;
+String _members;
+int _value = 0;
+int groupValue = 0;
+String _farnistatus;
+String _preferedType = "Aynone";
+String _propert;
+List<String> imageDataPath = <String>[];
+
+class Wall extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _WallState();
+  }
+}
+
+class _WallState extends State<Wall> {
+  final _formKey = GlobalKey<FormState>();
+
+  bool validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Secondpage()));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          height: height,
-          child: buildStackForChildOfContainerOfBuildWidget(height, context)),
+      body: Form(
+        key: _formKey,
+        child: Center(
+            child: Container(
+          color: Colors.grey[300],
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Card(
+            margin: EdgeInsets.only(
+                bottom: 10.0, left: 20.0, right: 20.0, top: 15.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Container(
+              margin: EdgeInsets.all(15.0),
+              color: Colors.white,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Icon(
+                              Icons.my_location,
+                              size: 30.0,
+                              color: Colors.blue[400],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'ADDRESS',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        labelText: 'Locality',
+                        hintText: _locality,
+                      ),
+                      onSaved: (String value) {
+                        if (_locality == null) {
+                          _locality = value;
+                        } else {
+                          value = _locality;
+                        }
+                      },
+                      autofocus: true,
+                      validator: (value) =>
+                          value.isEmpty ? 'Locality is required' : null,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'City'),
+                      onSaved: (String value) {
+                        _city = value;
+                      },
+                      validator: (value) =>
+                          value.isEmpty ? 'City is required' : null,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'State'),
+                      style: new TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16.0,
+                      ),
+                      onSaved: (String value) {
+                        _state = value;
+                      },
+                      validator: (value) =>
+                          value.isEmpty ? 'Satate is required' : null,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'House No.'),
+                      style: new TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16.0,
+                      ),
+                      onSaved: (String value) {
+                        _hono = value;
+                      },
+                      validator: (value) =>
+                          value.isEmpty ? 'Please Enter House Number' : null,
+                    ),
+                    TextFormField(
+                      maxLines: 2,
+                      decoration: new InputDecoration(
+                        labelText: "Society Name",
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.only(
+                            top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
+                      ),
+                      onSaved: (String value) {
+                        _address = value;
+                      },
+                      validator: (value) =>
+                          value.isEmpty ? 'Society Name  is required' : null,
+                      style: new TextStyle(
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Pin-Code'),
+                      style: new TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16.0,
+                      ),
+                      onSaved: (String value) {
+                        _pincod = value;
+                      },
+                      keyboardType: TextInputType.number,
+                      validator: (value) =>
+                          value.isEmpty ? 'Pin Code is required' : null,
+                    ),
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          // ignore: deprecated_member_use
+                          child: RaisedButton(
+                            onPressed: validateAndSave,
+                            child: Text(
+                              'Next',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            elevation: 4.0,
+                            color: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )),
+      ),
+    );
+  }
+}
+
+class Secondpage extends StatefulWidget {
+  @override
+  _MyFlutterAppState createState() => _MyFlutterAppState();
+}
+
+class _MyFlutterAppState extends State<Secondpage> {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      // ignore: missing_return
+      onWillPop: () {
+        Navigator.pop(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Post Free House Ad"),
+          backgroundColor: Colors.blue[700],
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context)),
+        ),
+        body: Inte(),
+      ),
+    );
+  }
+}
+
+class Inte extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _InteState();
+  }
+}
+
+class _InteState extends State<Inte> {
+  final _formKey1 = GlobalKey<FormState>();
+  // String _buildup;
+  // String _monthly;
+  // String _deposit;
+
+  bool validateAndSave() {
+    final form = _formKey1.currentState;
+    if (form.validate()) {
+      form.save();
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Thirdpage()));
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey1,
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.grey[300],
+          child: Card(
+            margin: EdgeInsets.only(
+                bottom: 10.0, left: 20.0, right: 20.0, top: 15.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              margin: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              color: Colors.white,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                    bottom: 20.0, left: 20.0, right: 20.0, top: 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Row(
+                      //PROPERTY TYPE
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'PROPERTY TYPE',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      //PROPERTY LIST
+                      children: <Widget>[
+                        //MyPropertyOptions(),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.only(bottom: 10.0, top: 5.0),
+                            width: MediaQuery.of(context).size.width,
+                            //color: Colors.black,
+                            child: MyPropertyOptions(),
+                          ),
+                        )
+                        //FacilitiesFilter(),
+                      ],
+                    ),
+
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      //FACILITYS
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'FACILITIES',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      //FACILITYS LIST
+                      children: <Widget>[
+                        //MyPropertyOptions(),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.only(bottom: 10.0, top: 5.0),
+                            width: MediaQuery.of(context).size.width,
+                            child: FacilitiesFilter(),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      //FURNISHING STATUS
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'FURNISHING STATUS',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      //FURNISHING STATUS LIST
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: MyStatefulWidget(),
+                          ),
+                        )
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    Row(
+                      //MONTHLY RENT STATUS
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'MONTHLY RENT',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      //MONTHLY RENT STATUS ENTRY
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: new InputDecoration(
+                                        hintText: 'Monthly Rent in INR',
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.all(10.0),
+                                      ),
+                                      onSaved: (String value) {
+                                        _monthly = value;
+                                      },
+                                      validator: (value) => value.isEmpty
+                                          ? 'Monthly Rent is required'
+                                          : null,
+                                      keyboardType: TextInputType.number,
+                                      style: new TextStyle(
+                                        fontFamily: "Poppins",
+                                      ),
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "Rs/Month",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ), //ends
+
+                    Row(
+                      //DEPOSIT AMOUNT RENT STATUS
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'DEPOSIT AMOUNT',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      //DEPOSIT AMOUNT STATUS ENTRY
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: new InputDecoration(
+                                        hintText: 'Deposit Amount in INR',
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.all(10.0),
+                                      ),
+                                      onSaved: (String value) {
+                                        _deposit = value;
+                                      },
+                                      validator: (value) => value.isEmpty
+                                          ? 'Deposit Amount is required'
+                                          : null,
+                                      keyboardType: TextInputType.number,
+                                      style: new TextStyle(
+                                        fontFamily: "Poppins",
+                                      ),
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "Rs              ",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ), //ends
+
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          // ignore: deprecated_member_use
+                          child: RaisedButton(
+                            onPressed: validateAndSave,
+                            child: Text(
+                              'Next',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            elevation: 4.0,
+                            color: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyPropertyOptions extends StatefulWidget {
+  @override
+  _MyPropertyOptionsState createState() => _MyPropertyOptionsState();
+}
+
+class _MyPropertyOptionsState extends State<MyPropertyOptions> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Wrap(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+            child: ChoiceChip(
+              pressElevation: 0.0,
+              backgroundColor: Colors.grey[300],
+              selectedColor: Colors.black.withOpacity(0.3),
+              avatar: CircleAvatar(
+                backgroundColor: Color(0xff3ABBFA),
+                child: Icon(
+                  Icons.house_outlined,
+                  color: Colors.black,
+                ),
+              ),
+              label: Text(
+                "Room",
+                style: TextStyle(
+                  color: (_value == 1) ? Colors.grey.shade200 : Colors.black87,
+                ),
+              ),
+              selected: _value == 1,
+              onSelected: (bool selected) {
+                setState(() {
+                  _value = selected ? 1 : null;
+                  String apartment = 'Room';
+                  _propert = apartment;
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+            child: ChoiceChip(
+              pressElevation: 0.0,
+              backgroundColor: Colors.grey[300],
+              selectedColor: Colors.grey[500],
+              avatar: CircleAvatar(
+                  backgroundColor: Color(0xffFBBF36), child: Icon(Icons.house)),
+              label: Text(
+                "Flat",
+                style: TextStyle(
+                  color: (_value == 2) ? Colors.grey.shade200 : Colors.black87,
+                ),
+              ),
+              selected: _value == 2,
+              onSelected: (bool selected) {
+                setState(() {
+                  _value = selected ? 2 : null;
+                  String apartment = 'Flat';
+                  _propert = apartment;
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+            child: ChoiceChip(
+              pressElevation: 0.0,
+              backgroundColor: Colors.grey[300],
+              selectedColor: Colors.grey[500],
+              avatar: CircleAvatar(
+                backgroundColor: Color(0xff83E934),
+                child: Image.asset(
+                  'assets/icons/flat.png',
+                  width: double.infinity,
+                ),
+              ),
+              label: Text(
+                "Apartment",
+                style: TextStyle(
+                  color: (_value == 3) ? Colors.grey.shade200 : Colors.black87,
+                ),
+              ),
+              selected: _value == 3,
+              onSelected: (bool selected) {
+                setState(() {
+                  _value = selected ? 3 : null;
+                  String apartment = 'Apartment';
+                  _propert = apartment;
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+            child: ChoiceChip(
+              pressElevation: 0.0,
+              backgroundColor: Colors.grey[300],
+              selectedColor: Colors.grey[500],
+              avatar: CircleAvatar(
+                backgroundColor: Color(0xffA7A4FC),
+                child: Image.asset(
+                  'assets/icons/hostel.png',
+                  width: double.infinity,
+                ),
+              ),
+              label: Text(
+                "Hostel",
+                style: TextStyle(
+                  color: (_value == 4) ? Colors.grey.shade200 : Colors.black87,
+                ),
+              ),
+              selected: _value == 4,
+              onSelected: (bool selected) {
+                setState(() {
+                  _value = selected ? 4 : null;
+                  String apartment = 'Hostel';
+                  _propert = apartment;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ActorFilterEntry {
+  const ActorFilterEntry(this.name, this.initials);
+  final String name;
+  final String initials;
+}
+
+class FacilitiesFilter extends StatefulWidget {
+  @override
+  State createState() => FacilitiesFilterState();
+}
+
+class FacilitiesFilterState extends State<FacilitiesFilter> {
+  final List<ActorFilterEntry> _cast = <ActorFilterEntry>[
+    const ActorFilterEntry('Air Conditioner', 'AC'),
+    const ActorFilterEntry('Washing Machine', 'WM'),
+    const ActorFilterEntry('Car Parking', 'CP'),
+    const ActorFilterEntry('Wi-Fi', 'WF'),
+    const ActorFilterEntry('Tiffin Facility', 'TF'),
+    const ActorFilterEntry('24x7 Water Supply', 'WF'),
+    const ActorFilterEntry('Garden', 'GR'),
+    const ActorFilterEntry('Lift', 'LF'),
+    const ActorFilterEntry('24x7 CCTV', 'CC'),
+    const ActorFilterEntry('Swimming Pool', 'SP'),
+    const ActorFilterEntry('Security', 'SC'),
+    const ActorFilterEntry('Children Park', 'CP'),
+    const ActorFilterEntry('Gym', 'GY'),
+    const ActorFilterEntry('HouseKeeping', 'HK'),
+    const ActorFilterEntry('Fire Safety', 'FS'),
+  ];
+
+  Iterable<Widget> get actorWidgets sync* {
+    for (ActorFilterEntry actor in _cast) {
+      yield Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: FilterChip(
+          label: Text(
+            actor.name,
+            style: new TextStyle(fontSize: 11.0),
+          ),
+          selected: _filters.contains(actor.name),
+          onSelected: (bool value) {
+            setState(() {
+              if (value) {
+                _filters.add(actor.name);
+              } else {
+                _filters.removeWhere((String name) {
+                  return name == actor.name;
+                });
+              }
+            });
+          },
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Wrap(
+          children: actorWidgets.toList(),
+        ),
+        Text('Look for: ${_filters.join(', ')}'),
+      ],
+    );
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
+
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  // int groupValue=1;
+
+  Widget build(BuildContext context) {
+    return Column(
+      //child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          child: Row(
+            children: <Widget>[
+              Radio(
+                onChanged: (int e) => something(e),
+                activeColor: Colors.blue[400],
+                value: 1,
+                groupValue: groupValue,
+              ),
+              Text(
+                'Fully Furnished',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          child: Row(
+            children: <Widget>[
+              Radio(
+                onChanged: (int e) => something(e),
+                activeColor: Colors.blue[400],
+                value: 2,
+                groupValue: groupValue,
+              ),
+              Text(
+                'Half Furnished',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          child: Row(
+            children: <Widget>[
+              Radio(
+                onChanged: (int e) => something(e),
+                activeColor: Colors.blue[400],
+                value: 3,
+                groupValue: groupValue,
+              ),
+              Text(
+                'Not Furnished',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Stack buildStackForChildOfContainerOfBuildWidget(
-      double height, BuildContext context) {
-    return Stack(
-      children: [
-        buildPositionedWidgetForBezierContainer(height, context),
-        Container(
-          alignment: Alignment.topCenter,
-          child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 50),
-                  _title(),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  _locationlabel("Location"),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _pricelabel("Price"),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _residence(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _phonenumber("Phone Number"),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  buildGridViewForImages(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  _saveDetailsButton()
-                ],
-              )),
+  void something(int e) {
+    setState(() {
+      if (e == 1) {
+        groupValue = 1;
+        String apartment = 'Fully Furnished';
+        _farnistatus = apartment;
+      }
+      if (e == 2) {
+        groupValue = 2;
+        String apartment = 'Half Furnished';
+        _farnistatus = apartment;
+      }
+      if (e == 3) {
+        groupValue = 3;
+        String apartment = 'Not Furnished';
+        _farnistatus = apartment;
+      }
+    });
+  }
+}
+
+class Thirdpage extends StatefulWidget {
+  @override
+  _MyFlutterApp createState() => _MyFlutterApp();
+}
+
+class _MyFlutterApp extends State<Thirdpage> {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        // ignore: missing_return, missing_return
+        Navigator.pop(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Post Free House Ad"),
+          backgroundColor: Colors.blue[700],
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context)),
+        ),
+        body: Finalfm(),
+      ),
+    );
+  }
+}
+
+class Finalfm extends StatefulWidget {
+  Finalfm({Key key}) : super(key: key);
+
+  @override
+  _Finalfmstate createState() => _Finalfmstate();
+}
+
+class _Finalfmstate extends State<Finalfm> {
+  final _formKey2 = GlobalKey<FormState>();
+  // String _detail;
+  // String _beds;
+  // String _bath;
+
+  bool validateAndSave() {
+    final form = _formKey2.currentState;
+    if (form.validate()) {
+      form.save();
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddImages()));
+      //createRecord();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey2,
+      child: Center(
+        child: Container(
+          color: Colors.grey[100],
+          child: Card(
+            margin: EdgeInsets.all(20.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              margin: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              color: Colors.white,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Row(
+                      //DEPOSIT AMOUNT RENT STATUS
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: _value != 1
+                                  ? Text(
+                                      'NO. OF BEDROOMS',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
+                                    )
+                                  : Text(
+                                      'NO. OF BEDS',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      //NO OF BEDROOMS ENTRY
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: new InputDecoration(
+                                        //labelText: 'No. of Bedrooms',
+                                        hintText: 'Enter No of Bedrooms',
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.all(15),
+                                      ),
+                                      onSaved: (String value) {
+                                        _beds = value;
+                                      },
+                                      validator: (value) => value.isEmpty
+                                          ? 'No. of Bedrooms is required'
+                                          : null,
+                                      keyboardType: TextInputType.number,
+                                      style: new TextStyle(
+                                        fontFamily: "Poppins",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      //DEPOSIT AMOUNT RENT STATUS
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'NO. OF MEMBERS',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      //NO OF BATHROOMS ENTRY
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: new InputDecoration(
+                                        //labelText: "No. of Bathrooms",
+                                        hintText: 'Enter No Of Members',
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.all(15.0),
+                                      ),
+                                      onSaved: (String value) {
+                                        _members = value;
+                                      },
+                                      validator: (value) => value.isEmpty
+                                          ? 'No. of Members is required'
+                                          : null,
+                                      keyboardType: TextInputType.number,
+                                      style: new TextStyle(
+                                        fontFamily: "Poppins",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            decoration: const BoxDecoration(),
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      //DEPOSIT AMOUNT RENT STATUS
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'NO. OF BATHROOMS',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      //NO OF BATHROOMS ENTRY
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: new InputDecoration(
+                                        //labelText: "No. of Bathrooms",
+                                        hintText: 'Enter No Of Bathrooms',
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.all(15.0),
+                                      ),
+                                      onSaved: (String value) {
+                                        _bath = value;
+                                      },
+                                      validator: (value) => value.isEmpty
+                                          ? 'No. of Bathroom is required'
+                                          : null,
+                                      keyboardType: TextInputType.number,
+                                      style: new TextStyle(
+                                        fontFamily: "Poppins",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            decoration: const BoxDecoration(),
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      //TYPESOFTANENT STATUS
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'TYPES OF TENANT EXPECTING',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Tentype(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          // ignore: deprecated_member_use
+                          child: RaisedButton(
+                            onPressed: validateAndSave,
+                            child: Text(
+                              'Next',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            elevation: 6.0,
+                            color: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+bool stdVal = false;
+bool baVal = false;
+bool boyVal = false;
+bool girlVal = false;
+bool anyVal = false;
+
+class Tentype extends StatefulWidget {
+  @override
+  _TentypeState createState() => _TentypeState();
+}
+
+class _TentypeState extends State<Tentype> {
+  // bool stdVal = false;
+  // bool baVal = false;
+  // bool boyVal = false;
+  // bool girlVal = false;
+  // bool anyVal = true;
+
+  /// box widget
+  /// [title] is the name of the checkbox
+  /// [boolValue] is the boolean value of the checkbox
+  Widget checkbox(String title, bool boolValue) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            //Text(title),
+            Checkbox(
+              value: boolValue,
+              onChanged: (bool value) {
+                /// manage the state of each value
+                setState(() {
+                  switch (title) {
+                    case "Students":
+                      stdVal = value;
+                      _preferedType = "Students";
+                      break;
+                    case "Bachelors":
+                      baVal = value;
+                      _preferedType = "Bachelors";
+                      break;
+                    case "Boys Only":
+                      boyVal = value;
+                      _preferedType = "Boys Only";
+                      break;
+                    case "Girls Only":
+                      girlVal = value;
+                      _preferedType = "Girls Only";
+                      break;
+                    case "Anyone":
+                      anyVal = value;
+                      _preferedType = "Anyone";
+                      break;
+                  }
+                });
+              },
+            ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
         )
       ],
     );
   }
 
-  Positioned buildPositionedWidgetForBezierContainer(
-      double height, BuildContext context) {
-    return Positioned(
-        top: -height * .15,
-        right: -MediaQuery.of(context).size.width * .4,
-        child: BezierContainer());
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              checkbox("Students", stdVal),
+              checkbox("Bachelors", baVal),
+              checkbox("Boys Only", boyVal),
+              checkbox("Girls Only", girlVal),
+              checkbox("Anyone", anyVal),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AddImages extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AddImage(),
+    );
+  }
+}
+
+void createRecord(context, uid) async {
+  var address = {
+    'locality': _locality,
+    'city': _city,
+    'state': _state,
+    'society': _address,
+    'pincode': _pincod,
+    'houseNo': _hono
+  };
+  var overview = {
+    'bathroom': _bath,
+    'room': _beds,
+    'furnishingStatus': _farnistatus,
+    'propertyType': _propert,
+    'preferedType': _preferedType
+  };
+  Firestore.instance.collection("RoomDetails").document(userId).setData({
+    'Address': address,
+    'Date Created': DateTime.now(),
+    'Date Updated': DateTime.now(),
+    'Facilities': _filters,
+    'Overview': overview,
+    'favourite': 0,
+    'houseImages': imageDataPath,
+    'builtUpArea': _buildup,
+    'depositAmount': _deposit,
+    'monthlyRent': _monthly,
+    'Members': _members,
+    'status': 'Available'
+  });
+  Navigator.pop(context);
+  Navigator.pop(context);
+  Fluttertoast.showToast(msg: 'Details uploded  Successfully');
+  Navigator.push(context, MaterialPageRoute(builder: (_) => ListOfHouse()));
+}
+
+class Choice {
+  const Choice({this.title, this.icon});
+
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'Upload', icon: Icons.cloud_upload),
+  const Choice(title: 'Post House Deal', icon: Icons.check)
+];
+
+class ChoiceCard extends StatelessWidget {
+  const ChoiceCard({Key key, this.choice}) : super(key: key);
+
+  final Choice choice;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
+    return Card(
+      color: Colors.white,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(choice.icon, size: 128.0, color: textStyle.color),
+            Text(choice.title, style: textStyle),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddImage extends StatefulWidget {
+  @override
+  _AddImageState createState() => _AddImageState();
+}
+
+class _AddImageState extends State<AddImage> {
+  bool uploading = false;
+  bool button = true;
+  var val;
+  CollectionReference imgRef;
+  Future<bool> _back() {
+    Navigator.pop(context);
+  }
+
+  List<File> _image = [];
+  final picker = ImagePicker();
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _back,
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Add Image'),
+          ),
+          body: button
+              ? Stack(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      child: GridView.builder(
+                          itemCount: _image.length + 1,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (context, index) {
+                            return index == 0
+                                ? Center(
+                                    child: IconButton(
+                                        icon: Icon(Icons.add),
+                                        onPressed: () =>
+                                            !uploading ? chooseImage() : null),
+                                  )
+                                : Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: FileImage(
+                                                      _image[index - 1]),
+                                                  fit: BoxFit.cover)),
+                                        ),
+                                        Positioned(
+                                          right: 5,
+                                          top: 5,
+                                          child: InkWell(
+                                            child: Icon(
+                                              Icons.remove_circle,
+                                              size: 25,
+                                              color: Colors.red,
+                                            ),
+                                            onTap: () {
+                                              setState(() {
+                                                _image.removeAt(index - 1);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                          }),
+                    ),
+                    _image.length != 0
+                        ? Align(
+                            child: RawMaterialButton(
+                              fillColor: Colors.white,
+                              splashColor: Colors.greenAccent,
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.cloud_upload_outlined,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Text(
+                                      "Uplod Images",
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              shape: const StadiumBorder(),
+                              onPressed: () {
+                                setState(() {
+                                  uploading = true;
+                                  button = false;
+                                });
+                                uploadFile().whenComplete(
+                                    () => createRecord(context, userId));
+                              },
+                            ),
+                            alignment: Alignment(0.0, .7),
+                          )
+                        : Align(
+                            child: Text(
+                              "Pleas Select Atleast one Image",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            alignment: Alignment.center,
+                          ),
+                  ],
+                )
+              : Center(
+                  child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      child: Text(
+                        'uploading Details',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(25.0),
+                      child: LinearPercentIndicator(
+                        width: MediaQuery.of(context).size.width - 50,
+                        animation: true,
+                        animationDuration: 1000,
+                        animateFromLastPercent: true,
+                        lineHeight: 20.0,
+                        percent: val,
+                        center: Text("${(val * 100).toStringAsFixed(0)}%"),
+                        linearStrokeCap: LinearStrokeCap.roundAll,
+                        progressColor: Colors.orange,
+                      ),
+                    ),
+                  ],
+                ))),
+    );
+  }
+
+  chooseImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      _image.add(File(pickedFile?.path));
+    });
+    if (pickedFile.path == null) retrieveLostData();
+  }
+
+  Future<void> retrieveLostData() async {
+    final LostData response = await picker.getLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+      setState(() {
+        _image.add(File(response.file.path));
+      });
+    } else {
+      print(response.file);
+    }
+  }
+
+  Future uploadFile() async {
+    int i = 1;
+    for (var img in _image) {
+      setState(() {
+        val = i / _image.length;
+      });
+      StorageReference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('$_email/image_NO_${DateTime.now()}');
+      StorageUploadTask task = storageReference.putFile(img);
+      StorageTaskSnapshot storageTaskSnapshot = await task.onComplete;
+      String url = await storageTaskSnapshot.ref.getDownloadURL();
+      print("\nUploaded: " + url);
+      imageDataPath.add(url);
+      i++;
+    }
   }
 }
