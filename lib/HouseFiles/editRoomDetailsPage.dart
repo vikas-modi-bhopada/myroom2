@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:roomi/user_data/user_profile_data.dart';
 
 class EditRoomDetails extends StatefulWidget {
   @override
@@ -7,6 +10,42 @@ class EditRoomDetails extends StatefulWidget {
 
 class _EditRoomDetailsState extends State<EditRoomDetails> {
   final _formKey = GlobalKey<FormState>();
+  String _userUid;
+  Map mapOfAddress;
+  String state;
+  String city;
+  String colony;
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.currentUser().then((value) {
+      _userUid = value.uid;
+      setState(() {
+        UserData().getPerticularRoomDetails(_userUid).then((value) {
+          mapOfAddress = value.data['Address'];
+          setState(() {
+            mapOfAddress.forEach((key, value) {
+              switch (key) {
+                case 'city':
+                  city = value;
+                  print(city);
+                  break;
+                case 'society':
+                  colony = value;
+                  print(colony);
+                  break;
+                case 'state':
+                  state = value;
+                  print(state);
+                  break;
+              }
+            });
+          });
+        });
+      });
+    });
+    super.initState();
+  }
 
   bool validAndSave() {
     final form = _formKey.currentState;
@@ -47,6 +86,9 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
               color: Colors.grey[300],
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
+
+              // ========== Card Widget ========
+
               child: Card(
                 margin: EdgeInsets.only(
                     bottom: 10.0, left: 20.0, right: 20.0, top: 15.0),
@@ -63,18 +105,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Icon(
-                                  Icons.my_location,
-                                  size: 30.0,
-                                  color: Colors.blue[400],
-                                ),
-                              ),
-                            ),
+                            // ======= Adderess Text =========
+
                             Expanded(
                               child: Align(
                                 alignment: Alignment.centerLeft,
@@ -101,11 +133,34 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                             ),
                           ],
                         ),
+
+                        // =======   State Field ======
+
                         TextFormField(
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
-                            labelText: 'Locality',
-                            // hintText: _locality,
+                            labelText: 'State',
+                            hintText: state
+                          ),
+                        ),
+
+                        // =======   City Field ======
+
+                        TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            labelText: 'City',
+                            hintText: city
+                          ),
+                        ),
+
+                        // =======   Colony Field ======
+
+                        TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            labelText: 'Colony',
+                            hintText: colony
                           ),
                         ),
                       ],

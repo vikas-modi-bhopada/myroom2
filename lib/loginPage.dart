@@ -275,6 +275,7 @@ class _LoginPageState extends State<LoginPage> {
       textInputAction: TextInputAction.done,
       inputFormatters: [],
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.lock),
         hintText: 'Enter Password',
         border: InputBorder.none,
         fillColor: Colors.grey[300],
@@ -314,11 +315,13 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField textFormFieldForEmail() {
     return TextFormField(
+      
       textInputAction: TextInputAction.next,
       autofocus: true,
       obscureText: false,
       inputFormatters: [],
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.email),
         hintText: 'Enter Email Id',
         border: InputBorder.none,
         fillColor: Colors.grey[300],
