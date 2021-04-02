@@ -63,17 +63,14 @@ final databaseReference = Firestore.instance;
 DocumentReference ref;
 DocumentReference addd;
 String _ownerPhone;
-String _OwnerName;
+String __ownerName;
 String _ownerAdd;
 double _progress;
 String _email;
 String userId;
-String _locality;
 String _city;
 String _state;
 String _address;
-String _pincod;
-String _hono;
 String _buildup;
 String _monthly;
 String _deposit;
@@ -175,31 +172,6 @@ class _WallState extends State<Wall> {
                       ],
                     ),
                     TextFormField(
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: InputDecoration(
-                        labelText: 'Locality',
-                        hintText: _locality,
-                      ),
-                      onSaved: (String value) {
-                        if (_locality == null) {
-                          _locality = value;
-                        } else {
-                          value = _locality;
-                        }
-                      },
-                      autofocus: true,
-                      validator: (value) =>
-                          value.isEmpty ? 'Locality is required' : null,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'City'),
-                      onSaved: (String value) {
-                        _city = value;
-                      },
-                      validator: (value) =>
-                          value.isEmpty ? 'City is required' : null,
-                    ),
-                    TextFormField(
                       decoration: InputDecoration(labelText: 'State'),
                       style: new TextStyle(
                         fontFamily: "Poppins",
@@ -212,21 +184,17 @@ class _WallState extends State<Wall> {
                           value.isEmpty ? 'Satate is required' : null,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'House No.'),
-                      style: new TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 16.0,
-                      ),
+                      decoration: InputDecoration(labelText: 'City'),
                       onSaved: (String value) {
-                        _hono = value;
+                        _city = value;
                       },
                       validator: (value) =>
-                          value.isEmpty ? 'Please Enter House Number' : null,
+                          value.isEmpty ? 'City is required' : null,
                     ),
                     TextFormField(
                       maxLines: 2,
                       decoration: new InputDecoration(
-                        labelText: "Society Name",
+                        labelText: "Coloney",
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
@@ -235,23 +203,10 @@ class _WallState extends State<Wall> {
                         _address = value;
                       },
                       validator: (value) =>
-                          value.isEmpty ? 'Society Name  is required' : null,
+                          value.isEmpty ? 'Coloney Name  is required' : null,
                       style: new TextStyle(
                         fontFamily: "Poppins",
                       ),
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Pin-Code'),
-                      style: new TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 16.0,
-                      ),
-                      onSaved: (String value) {
-                        _pincod = value;
-                      },
-                      keyboardType: TextInputType.number,
-                      validator: (value) =>
-                          value.isEmpty ? 'Pin Code is required' : null,
                     ),
                     Align(
                         alignment: Alignment.bottomRight,
@@ -276,6 +231,172 @@ class _WallState extends State<Wall> {
             ),
           ),
         )),
+      ),
+    );
+  }
+}
+
+class OwnerDetails extends StatefulWidget {
+  @override
+  _OwnerDetailsState createState() => _OwnerDetailsState();
+}
+
+class _OwnerDetailsState extends State<OwnerDetails> {
+  final _formKey = GlobalKey<FormState>();
+
+  bool validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddImage()));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: Colors.blue[700],
+          title: Text('OWNER DETAILS'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: Form(
+          key: _formKey,
+          child: Center(
+              child: Container(
+            color: Colors.grey[300],
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Card(
+              margin: EdgeInsets.only(
+                  bottom: 10.0, left: 20.0, right: 20.0, top: 15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Container(
+                margin: EdgeInsets.all(15.0),
+                color: Colors.white,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Icon(
+                                Icons.person,
+                                size: 30.0,
+                                color: Colors.blue[400],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      //                   <--- left side
+                                      color: Colors.blue[400],
+                                      width: 3.0,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'OWNER DETAILS',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Name'),
+                        style: new TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 16.0,
+                        ),
+                        onSaved: (String value) {
+                          __ownerName = value;
+                        },
+                        validator: (value) =>
+                            value.isEmpty ? 'Name is required' : null,
+                      ),
+                      TextFormField(
+                        maxLength: 10,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(labelText: 'Contact No.'),
+                        onSaved: (String value) {
+                          _ownerPhone = value;
+                        },
+                        validator: (value) =>
+                            value.isEmpty ? 'Contact is required' : null,
+                      ),
+                      TextFormField(
+                        maxLines: 2,
+                        decoration: new InputDecoration(
+                          labelText: "Address",
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.only(
+                              top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
+                        ),
+                        onSaved: (String value) {
+                          _ownerAdd = value;
+                        },
+                        validator: (value) =>
+                            value.isEmpty ? 'Address Name  is required' : null,
+                        style: new TextStyle(
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            // ignore: deprecated_member_use
+                            child: RaisedButton(
+                              onPressed: validateAndSave,
+                              child: Text(
+                                'Next',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              elevation: 4.0,
+                              color: Colors.blue[700],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(30.0)),
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )),
+        ),
       ),
     );
   }
@@ -1029,7 +1150,7 @@ class _Finalfmstate extends State<Finalfm> {
     if (form.validate()) {
       form.save();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => AddImages()));
+          context, MaterialPageRoute(builder: (context) => OwnerDetails()));
       //createRecord();
       return true;
     } else {
@@ -1167,7 +1288,6 @@ class _Finalfmstate extends State<Finalfm> {
                       ],
                     ),
                     Row(
-                      //NO OF BATHROOMS ENTRY
                       children: <Widget>[
                         Expanded(
                           child: Container(
@@ -1180,7 +1300,6 @@ class _Finalfmstate extends State<Finalfm> {
                                   Expanded(
                                     child: TextFormField(
                                       decoration: new InputDecoration(
-                                        //labelText: "No. of Bathrooms",
                                         hintText: 'Enter No Of Members',
                                         fillColor: Colors.white,
                                         contentPadding:
@@ -1260,6 +1379,76 @@ class _Finalfmstate extends State<Finalfm> {
                                       },
                                       validator: (value) => value.isEmpty
                                           ? 'No. of Bathroom is required'
+                                          : null,
+                                      keyboardType: TextInputType.number,
+                                      style: new TextStyle(
+                                        fontFamily: "Poppins",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            decoration: const BoxDecoration(),
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      //DEPOSIT AMOUNT RENT STATUS
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    //                   <--- left side
+                                    color: Colors.blue[400],
+                                    width: 3.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'BUILD AREA',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      //Area of Property ENTRY
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: new InputDecoration(
+                                        //labelText: "No. of Bathrooms",
+                                        hintText:
+                                            'Enter area of property Sp.ft.',
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            const EdgeInsets.all(15.0),
+                                      ),
+                                      onSaved: (String value) {
+                                        _buildup = value;
+                                      },
+                                      validator: (value) => value.isEmpty
+                                          ? 'Buildup area is required'
                                           : null,
                                       keyboardType: TextInputType.number,
                                       style: new TextStyle(
@@ -1436,12 +1625,9 @@ class AddImages extends StatelessWidget {
 
 void createRecord(context, uid) async {
   var address = {
-    'locality': _locality,
     'city': _city,
     'state': _state,
     'society': _address,
-    'pincode': _pincod,
-    'houseNo': _hono
   };
   var overview = {
     'bathroom': _bath,
@@ -1462,6 +1648,9 @@ void createRecord(context, uid) async {
     'depositAmount': _deposit,
     'monthlyRent': _monthly,
     'Members': _members,
+    'OwnerName': __ownerName,
+    'OwnerAdd': _ownerAdd,
+    'OwnerPhone': _ownerPhone,
     'status': 'Available'
   });
   Navigator.pop(context);

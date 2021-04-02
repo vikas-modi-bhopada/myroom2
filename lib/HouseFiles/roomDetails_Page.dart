@@ -1288,24 +1288,11 @@ class _HouseDetailState extends State<HouseDetail> {
                     SizedBox(
                       height: 15,
                     ),
+
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address']['houseNo'] +
-                            ' ' +
-                            documentSnapshot['Address']['society'] +
-                            ',',
-                        style: TextStyle(
-                          fontFamily: 'Ex02',
-                          color: Colors.black.withOpacity(0.6),
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        documentSnapshot['Address']['locality'] + ',',
+                        documentSnapshot['Address']['society'] + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1327,13 +1314,11 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address']['state'] +
-                            ', ' +
-                            documentSnapshot['Address']['pincode'],
+                        documentSnapshot['Address']['state'] + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
-                          fontSize: 18,
                           color: Colors.black.withOpacity(0.6),
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -1425,7 +1410,7 @@ class _HouseDetailState extends State<HouseDetail> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Sawan Kag',
+                          "${documentSnapshot.data["OwnerName"]}",
                           style: TextStyle(
                               fontFamily: 'Ex02',
                               fontSize: size.getWidthPx(20),
@@ -1440,7 +1425,7 @@ class _HouseDetailState extends State<HouseDetail> {
                             size: size.getWidthPx(16),
                             color: Colors.grey,
                           ),
-                          Text("Indore MP India",
+                          Text("${documentSnapshot.data["OwnerAdd"]}",
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: size.getWidthPx(16))),
@@ -1451,7 +1436,7 @@ class _HouseDetailState extends State<HouseDetail> {
                       ),
                       Align(
                         alignment: Alignment.topLeft,
-                        child: Text('1234567890',
+                        child: Text("${documentSnapshot.data["OwnerPhone"]}",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: Colors.grey,
