@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:responsive_container/responsive_container.dart';
 import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
 import 'package:roomi/HouseFiles/roomDetails_Page.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
@@ -11,7 +13,6 @@ import 'package:roomi/controllers/authentications.dart';
 import 'package:roomi/loginPage.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'UplodRoomDetails.dart';
 
@@ -23,7 +24,7 @@ class ListOfHouse extends StatefulWidget {
 class _ListOfHouseState extends State<ListOfHouse> {
   UserData userData = new UserData();
   QuerySnapshot querySnapshot;
-  QuerySnapshot querySnapshot1;
+  DocumentSnapshot _documentSnapshot;
   bool userAcccountPicture = false;
 
   var _email;
@@ -109,7 +110,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return Expanded(
         child: Container(
       padding: EdgeInsets.only(left: 16, right: 16),
-      color: Colors.grey[100],
       child: listViewForRoomList(),
     ));
   }
@@ -119,6 +119,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       print(querySnapshot.documents.length);
       return ListView.separated(
           itemBuilder: (context, index) {
+            _documentSnapshot = querySnapshot.documents[index];
             return Container(
               child: GestureDetector(
                 onTap: () {
@@ -138,11 +139,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
                     SizedBox(
                       height: 12,
                     ),
-                    secondRowOfListView(index),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    thirdRowOfListView(index)
                   ],
                 ),
               ),
@@ -156,179 +152,173 @@ class _ListOfHouseState extends State<ListOfHouse> {
     }
   }
 
-// Row for Mobile Number
-  Container thirdRowOfListView(int index) {
-    return Container(
-      margin: EdgeInsets.only(left: 32, right: 16),
-      child: GestureDetector(
-        onTap: () {
-          launch("tel://${querySnapshot.documents[index].data['Mobile']}");
-        },
-        child: Row(
-          children: [
-            Icon(
-              Icons.phone,
-              size: 12,
-              color: Colors.grey[600],
-            ),
-            Text(
-              'Mobile',
-              style: TextStyle(color: Colors.grey[600]),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container secondRowOfListView(int index) {
-    return Container(
-      margin: EdgeInsets.only(left: 32, right: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  firstRowOfListView(int index) {
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Stack(
         children: [
-          rowWidgetForNoOfPeople(index),
-          rowWidgetForNoOfBeds(index),
-          rowWidgetForNoOfBathRooms(index)
-        ],
-      ),
-    );
-  }
-
-  Row rowWidgetForNoOfBathRooms(int index) {
-    return Row(
-      children: [
-        Icon(
-          Icons.airline_seat_legroom_reduced,
-          size: 12,
-          color: Colors.grey[600],
-        ),
-        SizedBox(
-          width: 4,
-        ),
-        Text(
-          'BathRooms',
-          style: TextStyle(color: Colors.grey[600]),
-        )
-      ],
-    );
-  }
-
-  Row rowWidgetForNoOfBeds(int index) {
-    return Row(
-      children: [
-        Icon(
-          Icons.local_offer,
-          size: 12,
-          color: Colors.grey[600],
-        ),
-        SizedBox(
-          width: 4,
-        ),
-        Text(
-          "beds",
-          style: TextStyle(color: Colors.grey[600]),
-        )
-      ],
-    );
-  }
-
-  Row rowWidgetForNoOfPeople(int index) {
-    return Row(
-      children: [
-        Icon(
-          Icons.people,
-          size: 12,
-          color: Colors.grey[600],
-        ),
-        SizedBox(
-          width: 4,
-        ),
-        Text(
-          "MEMBERS",
-          style: TextStyle(color: Colors.grey[600]),
-        )
-      ],
-    );
-  }
-
-  Row firstRowOfListView(int index) {
-    return Row(
-      children: [
-        containerOfImageOfRoomInListView(index),
-        SizedBox(
-          width: 20,
-        ),
-        widgetForLocationAndPrice(index),
-        IconButton(icon: Icon(Icons.navigation), onPressed: () {})
-      ],
-    );
-  }
-
-  Container containerOfImageOfRoomInListView(int index) {
-    return Container(
-      width: 90,
-      height: 90,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
-        child: GestureDetector(
-          child: ClipOval(
-            child: Image.network(
-              querySnapshot.documents[index].data['houseImages'][0],
-              fit: BoxFit.cover,
+          Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            borderOnForeground: true,
+            child: InkWell(
+              onTap: () {
+                // Navigate
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HouseDetail(
+                      index: index,
+                    ),
+                  ),
+                );
+              },
+              child: Column(children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.92,
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    color: Colors.grey,
+                    child: Image.network(
+                        querySnapshot.documents[index].data['houseImages'][0],
+                        fit: BoxFit.fill),
+                  ),
+                ),
+                Row(children: <Widget>[
+                  ResponsiveContainer(
+                    widthPercent: 23,
+                    heightPercent: 9,
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.only(bottomLeft: Radius.circular(10)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: _documentSnapshot.data['Overview']
+                                        ['propertyType'] !=
+                                    'Room'
+                                ? Text(
+                                    '${_documentSnapshot.data['builtUpArea']} Sq.ft.')
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          'For ${_documentSnapshot.data['Members']} '),
+                                      Text(' Members'),
+                                    ],
+                                  )),
+                      ),
+                    ),
+                  ),
+                  ResponsiveContainer(
+                    widthPercent: 41,
+                    heightPercent: 9,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _documentSnapshot.data['Overview']['propertyType'] !=
+                                  "Room"
+                              ? Column(
+                                  children: [
+                                    Align(
+                                        child: Text(
+                                            '${_documentSnapshot['Overview']['room']} BHK in ${_documentSnapshot['Address']['city']}')),
+                                    Align(
+                                        child: Text(
+                                            '${_documentSnapshot['Overview']['furnishingStatus']}')),
+                                  ],
+                                )
+                              : Text(
+                                  '${_documentSnapshot['Address']['society']},${_documentSnapshot['Address']['city']}'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  ResponsiveContainer(
+                    widthPercent: 23,
+                    heightPercent: 9,
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.only(bottomRight: Radius.circular(10)),
+                      child: Container(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.rupeeSign,
+                                    size: 13,
+                                  ),
+                                  Text(
+                                      '${_documentSnapshot.data['monthlyRent']} /-'),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text('Month'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ])
+              ]),
             ),
           ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => HouseDetail(
-                          index: index,
-                        )));
-          },
-        ),
-      ),
-    );
-  }
-
-  Expanded widgetForLocationAndPrice(int index) {
-    return Expanded(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        textWidgetForLocation(index),
-        SizedBox(
-          height: 8,
-        ),
-        textWidgetForPriceOfRoom(index)
-      ],
-    ));
-  }
-
-  Text textWidgetForPriceOfRoom(int index) {
-    return Text(
-      "PHONE",
-      style: TextStyle(
-          color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18),
-    );
-  }
-
-  Text textWidgetForLocation(int index) {
-    // List<dynamic> listOfLocation =
-    //     List.from(querySnapshot.documents[index].data['Address']{'city'});
-
-    // String locationstr = "";
-    // listOfLocation.forEach((element) {
-    //   locationstr = locationstr + " " + element;
-    // });
-    Map<String, dynamic> map = querySnapshot.documents[index].data['Address'];
-    /* map.forEach((key, value) {
-      print(key + "  " + value);
-    });*/
-    return Text(
-      "Addres",
-      style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
-    );
+          Positioned(
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10)),
+              child: Container(
+                padding: EdgeInsets.all(5),
+                child: Center(
+                    child: Text(
+                  "${_documentSnapshot.data['Overview']['propertyType']}",
+                  style: TextStyle(color: Colors.deepOrange),
+                )),
+                color: Colors.white,
+              ),
+            ),
+            top: 4,
+            left: 20,
+          )
+        ],
+      )
+    ]);
   }
 
   @override
@@ -393,6 +383,9 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 height: 15,
               ),
               searchBar(),
+              SizedBox(
+                height: 10,
+              ),
               _dataFound ? roomList() : noDataFoundWidget()
             ],
           ),
