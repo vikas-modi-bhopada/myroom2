@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -209,7 +208,7 @@ class _WallState extends State<Wall> {
                         _state = value;
                       },
                       validator: (value) =>
-                          value.isEmpty ? 'Satate is required' : null,
+                          value.isEmpty ? 'State is required' : null,
                     ),
                     TextFormField(
                       decoration: InputDecoration(labelText: 'House No.'),
