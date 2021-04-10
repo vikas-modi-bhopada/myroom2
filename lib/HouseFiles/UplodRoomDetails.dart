@@ -193,7 +193,7 @@ class _WallState extends State<Wall> {
                     TextFormField(
                       maxLines: 2,
                       decoration: new InputDecoration(
-                        labelText: "Coloney",
+                        labelText: "Colony",
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
@@ -259,6 +259,9 @@ class _OwnerDetailsState extends State<OwnerDetails> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: (){
+        Navigator.pop(context);
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(

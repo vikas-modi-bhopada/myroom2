@@ -33,7 +33,7 @@ dependencies:
   form_field_validator:
   firebase_core:
   firebase_auth:
-  full_screen_image: ^1.0.2
+  full_screen_image:
   cached_network_image: ^2.5.1
   google_sign_in:
   cloud_firestore:
