@@ -17,6 +17,13 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   Map mapOfOverview;
   int _value = 0;
   int selectedRadio = 0;
+  bool valueofCheck = false;
+  bool studentVal = false;
+  bool bachelorsval = false;
+  bool boysonlyval = false;
+  bool girlsonlyval = false;
+  bool anyoneval = false;
+
   DocumentSnapshot documentSnapshot;
   static RoomDetails roomDetails = new RoomDetails();
 
@@ -53,6 +60,10 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
           roomDetails.setNoOfMemebers(value.data['Members']);
           roomDetails.setbuildArea(value.data['builtUpArea']);
           checkFurnishingStaus();
+          checkDataBaseDataOfTenantType();
+          roomDetails.setOwnerName(value.data['OwnerName']);
+          roomDetails.setOwnerAddress(value.data['OwnerAdd']);
+          roomDetails.setOwnerContactNO(value.data['OwnerPhone']);
           setState(() {});
         });
       });
@@ -478,6 +489,86 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
+  Widget checkbox(String title, bool boolValue) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Checkbox(
+              value: boolValue,
+              onChanged: (bool value) {
+                setState(() {
+                  switch (title) {
+                    case "Students":
+                      studentVal = value;
+                      break;
+                    case "Bachelors":
+                      bachelorsval = value;
+                      break;
+                    case "Boys Only":
+                      boysonlyval = value;
+                      break;
+                    case "Girls Only":
+                      girlsonlyval = value;
+                      break;
+                    case "Anyone":
+                      anyoneval = value;
+                      break;
+                  }
+                });
+              },
+            ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  checkDataBaseDataOfTenantType() {
+    String tenantType = roomDetails.gettenantType();
+    setState(() {
+      switch (tenantType) {
+        case "Students":
+          studentVal = true;
+          break;
+        case "Bachelors":
+          bachelorsval = true;
+          break;
+        case "Boys Only":
+          boysonlyval = true;
+          break;
+        case "Girls Only":
+          girlsonlyval = true;
+          break;
+        case "Anyone":
+          anyoneval = true;
+          break;
+      }
+    });
+  }
+
+  Widget buildListForTenantType() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            checkbox("Students", studentVal),
+            checkbox("Bachelors", bachelorsval),
+            checkbox("Boys Only", boysonlyval),
+            checkbox("Girls Only", girlsonlyval),
+            checkbox("Anyone", anyoneval),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -588,16 +679,43 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                                   buildRow("No OF MEMBERS"),
                                   // Text Field For No OF MEMBERS
                                   textField(roomDetails.getNoOfMemebers()),
-                                   // ========= No OF BATHROOMS ==========
+                                  // ========= No OF BATHROOMS ==========
                                   buildRow("No OF BATHROOMS"),
                                   // Text Field For No OF BATHROOMS
                                   textField(roomDetails.getNoOfBathRooms()),
-                                   // ========= BUILD AREA ==========
+                                  // ========= BUILD AREA ==========
                                   buildRow("BUILD AREA"),
                                   // Text Field For No OF BATHROOMS
                                   textField(roomDetails.getBuildArea()),
-                                   // ========= TYPES OF TENANT EXPECTING ==========
+                                  // ========= TYPES OF TENANT EXPECTING ==========
                                   buildRow("TYPES OF TENANT EXPECTING"),
+                                  // List of checkbox for tenant type
+                                  buildListForTenantType(),
+                                  // ======= === Owner Details ===========
+                                  buildRow("OWNER DETAILS"),
+                                  TextFormField(
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    decoration: InputDecoration(
+                                        labelText: 'Name',
+                                        hintText: roomDetails.getOwnerName()),
+                                  ),
+                                  TextFormField(
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    decoration: InputDecoration(
+                                        labelText: 'Contact No',
+                                        hintText:
+                                            roomDetails.getOwnerContactNo()),
+                                  ),
+                                  TextFormField(
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    decoration: InputDecoration(
+                                        labelText: 'Address',
+                                        hintText:
+                                            roomDetails.getOwnerAddress()),
+                                  ),
                                 ],
                               ),
                             ),

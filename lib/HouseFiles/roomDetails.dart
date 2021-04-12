@@ -2,9 +2,8 @@ class RoomDetails {
   String _state;
   String _city;
   String _colony;
-  
   String _furnishingStatus;
-  String _preferedType;
+  String _tenantType;
   String _propertyType;
   String _room;
   List<String> _facilities;
@@ -14,6 +13,34 @@ class RoomDetails {
   String _noOFMembers;
   String _noOfBathRooms;
   String _buildArea;
+
+  String _ownerName;
+  String _ownerContactNo;
+  String _ownerAddress;
+
+  String getOwnerName() {
+    return _ownerName;
+  }
+
+  String getOwnerContactNo() {
+    return _ownerContactNo;
+  }
+
+  String getOwnerAddress() {
+    return _ownerAddress;
+  }
+
+  void setOwnerName(String ownerName) {
+    _ownerName = ownerName;
+  }
+
+  void setOwnerContactNO(String ownerContactNo) {
+    _ownerContactNo = ownerContactNo;
+  }
+
+  void setOwnerAddress(String ownerAddress) {
+    _ownerAddress = ownerAddress;
+  }
 
   void setbuildArea(String buildArea) {
     _buildArea = buildArea;
@@ -75,14 +102,12 @@ class RoomDetails {
     _propertyType = propertyType;
   }
 
-  
-
   String getfurnishingStatus() {
     return _furnishingStatus;
   }
 
-  String getpreferedType() {
-    return _preferedType;
+  String gettenantType() {
+    return _tenantType;
   }
 
   String getpropertyType() {
@@ -103,7 +128,7 @@ class RoomDetails {
           _furnishingStatus = value;
           break;
         case "preferedType":
-          _preferedType = value;
+          _tenantType = value;
           break;
         case "propertyType":
           _propertyType = value;
