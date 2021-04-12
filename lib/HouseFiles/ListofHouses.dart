@@ -100,7 +100,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
             hintText: "Search Location",
             focusColor: Colors.green),
         onChanged: (value) {
-          searchbarData = value.toUpperCase();
+          searchbarData = value;
         },
       ),
     );
@@ -345,6 +345,17 @@ class _ListOfHouseState extends State<ListOfHouse> {
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context, false);
+                      UserData().refreshList().then((QuerySnapshot results) {
+                        if (results.documents.isEmpty) {
+                          _dataFound = false;
+                        } else {
+                          _dataFound = true;
+                        }
+
+                        setState(() {
+                          querySnapshot = results;
+                        });
+                      });
                     },
                     child: Text("No")),
                 // ignore: deprecated_member_use

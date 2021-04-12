@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:roomi/HouseFiles/roomDetails.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
@@ -572,6 +572,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         Navigator.pop(context);
       },
@@ -743,7 +744,7 @@ class FacilitiesFilter extends StatefulWidget {
 }
 
 class FacilitiesFilterState extends State<FacilitiesFilter> {
-  List<String> _filters = _EditRoomDetailsState.roomDetails.getFacilityList();
+  List<dynamic> _filters = _EditRoomDetailsState.roomDetails.getFacilityList();
 
   final List<ActorFilterEntry> _cast = <ActorFilterEntry>[
     const ActorFilterEntry('Air Conditioner', 'AC'),
@@ -778,7 +779,7 @@ class FacilitiesFilterState extends State<FacilitiesFilter> {
               if (value) {
                 _filters.add(actor.name);
               } else {
-                _filters.removeWhere((String name) {
+                _filters.removeWhere((dynamic name) {
                   return name == actor.name;
                 });
               }

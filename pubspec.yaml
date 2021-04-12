@@ -26,6 +26,7 @@ dependencies:
   intl:
   flutter_swiper:
   percent_indicator:
+  flutter_range_slider:
   responsive_container:
   flutter_custom_clippers:
   image_picker:

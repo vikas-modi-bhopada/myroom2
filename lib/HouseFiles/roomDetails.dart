@@ -6,7 +6,7 @@ class RoomDetails {
   String _tenantType;
   String _propertyType;
   String _room;
-  List<String> _facilities;
+  List<dynamic> _facilities;
   String _monthlyRent;
   String _depositAmount;
   String _noOfBedRooms;
@@ -90,11 +90,11 @@ class RoomDetails {
     _monthlyRent = monthlyRent;
   }
 
-  List<String> getFacilityList() {
+  List<dynamic> getFacilityList() {
     return _facilities;
   }
 
-  void setFacilities(List<String> facilities) {
+  void setFacilities(List<dynamic> facilities) {
     _facilities = facilities;
   }
 

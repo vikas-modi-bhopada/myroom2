@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -259,7 +260,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         Navigator.pop(context);
       },
       child: Scaffold(
@@ -1116,8 +1117,8 @@ class _MyFlutterApp extends State<Thirdpage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
-        // ignore: missing_return, missing_return
         Navigator.pop(context);
       },
       child: Scaffold(
@@ -1143,9 +1144,6 @@ class Finalfm extends StatefulWidget {
 
 class _Finalfmstate extends State<Finalfm> {
   final _formKey2 = GlobalKey<FormState>();
-  // String _detail;
-  // String _beds;
-  // String _bath;
 
   bool validateAndSave() {
     final form = _formKey2.currentState;
@@ -1397,7 +1395,7 @@ class _Finalfmstate extends State<Finalfm> {
                       ],
                     ),
                     Row(
-                      //DEPOSIT AMOUNT RENT STATUS
+                      //build up area
                       children: <Widget>[
                         Expanded(
                           child: Align(
