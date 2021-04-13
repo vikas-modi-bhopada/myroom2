@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:roomi/HouseFiles/roomDetails.dart';
 
 class UserData {
   Future<QuerySnapshot> getData(dynamic searchbarData) async {
@@ -23,8 +24,23 @@ class UserData {
         .get();
   }
 
-  
-  updateDetails(
+  updateRoomDetails(RoomDetails roomDetails, String userUid) {
+    print(roomDetails.getMapOfAddress(roomDetails));
+    Firestore.instance.collection('RoomDetails').document(userUid).updateData({
+      "Address": roomDetails.getMapOfAddress(roomDetails),
+      "Facilities": roomDetails.getFacilityList(),
+      "Members": roomDetails.getNoOfMemebers(),
+      "Overview": roomDetails.getMapOfOverView(roomDetails),
+      "OwnerAdd": roomDetails.getOwnerAddress(),
+      "OwnerName": roomDetails.getOwnerName(),
+      "OwnerPhone": roomDetails.getOwnerContactNo(),
+      "builtUpArea": roomDetails.getBuildArea(),
+      "depositAmount": roomDetails.getDepositAmout(),
+      "monthlyRent": roomDetails.getMonthlyRent(),
+    });
+  }
+
+  /*updateDetails(
     String docId,
     String location,
     String price,
@@ -52,7 +68,7 @@ class UserData {
       "image3": imageUrl3,
       "image4": imageUrl4,
     });
-  }
+  }*/
 
   deleteUserAccountInformation() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();

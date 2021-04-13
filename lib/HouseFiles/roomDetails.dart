@@ -18,6 +18,48 @@ class RoomDetails {
   String _ownerContactNo;
   String _ownerAddress;
 
+ 
+
+  void setTenantType(String tenantType){
+    _tenantType = tenantType;
+  }
+
+  void setFurnishingStatus(String status){
+    _furnishingStatus = status;
+  }
+
+  void setstate(String state) {
+    _state = state;
+  }
+
+  void setCity(String city) {
+    _city = city;
+  }
+
+  void setColony(String colony) {
+    _colony = colony;
+  }
+
+  dynamic getMapOfAddress(RoomDetails roomDetails) {
+    var mapOfAdderess = {
+      "city": roomDetails.getCity(),
+      "state": roomDetails.getState(),
+      "society": roomDetails.getColony(),
+    };
+    return mapOfAdderess;
+  }
+
+  dynamic getMapOfOverView(RoomDetails roomDetails) {
+    var mapOfOverview = {
+      "bathroom": roomDetails.getNoOfBathRooms(),
+      "furnishingStatus": roomDetails.getfurnishingStatus(),
+      "preferedType": roomDetails.gettenantType(),
+      "propertyType": roomDetails.getpropertyType(),
+      "room":'3',
+    };
+    return mapOfOverview;
+  }
+
   String getOwnerName() {
     return _ownerName;
   }

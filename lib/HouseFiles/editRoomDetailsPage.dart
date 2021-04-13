@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomi/HouseFiles/ListofHouses.dart';
 import 'package:roomi/HouseFiles/roomDetails.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
@@ -299,6 +300,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                       Radio(
                         onChanged: (value) {
                           setSelectedRadio(value);
+                          roomDetails.setFurnishingStatus('Fully Furnished');
                         },
                         activeColor: Colors.blue[400],
                         value: 1,
@@ -317,6 +319,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                       Radio(
                         onChanged: (value) {
                           setSelectedRadio(value);
+                          roomDetails.setFurnishingStatus('Half Furnished');
                         },
                         activeColor: Colors.blue[400],
                         value: 2,
@@ -335,6 +338,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                       Radio(
                         onChanged: (value) {
                           setSelectedRadio(value);
+                          roomDetails.setFurnishingStatus('Not Furnished');
                         },
                         activeColor: Colors.blue[400],
                         value: 3,
@@ -368,6 +372,9 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                 children: <Widget>[
                   Expanded(
                     child: TextFormField(
+                      onChanged: (String value) {
+                        roomDetails.setMonthlyRent(value);
+                      },
                       decoration: new InputDecoration(
                         hintText: roomDetails.getMonthlyRent(),
                         fillColor: Colors.white,
@@ -415,6 +422,9 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                 children: <Widget>[
                   Expanded(
                     child: TextFormField(
+                      onChanged: (String value) {
+                        roomDetails.setDepositAmount(value);
+                      },
                       decoration: new InputDecoration(
                         hintText: roomDetails.getDepositAmout(),
                         fillColor: Colors.white,
@@ -449,7 +459,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
-  Widget textField(String hint) {
+  Widget textField(String lebel, String hint) {
     return Row(
       //NO OF BEDROOMS ENTRY
       children: <Widget>[
@@ -463,21 +473,27 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                 children: <Widget>[
                   Expanded(
                     child: TextFormField(
+                      onChanged: (String value) {
+                        switch (lebel) {
+                          case "No OF MEMBERS":
+                            roomDetails.setNoOfMemebers(value);
+                            break;
+
+                          case "BUILD AREA":
+                            roomDetails.setbuildArea(value);
+                            break;
+                          case "No OF BATHROOMS":
+                            roomDetails.setNoOfBathRooms(value);
+                            break;
+                          default:
+                        }
+                      },
                       decoration: new InputDecoration(
                         //labelText: 'No. of Bedrooms',
                         hintText: hint,
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.all(15),
                       ),
-                      /* onSaved: (String value) {
-                        _beds = value;
-                      },*/
-                      /* validator: (value) =>
-                          value.isEmpty ? 'No. of Bedrooms is required' : null,
-                      keyboardType: TextInputType.number,
-                      style: new TextStyle(
-                        fontFamily: "Poppins",
-                      ),*/
                     ),
                   ),
                 ],
@@ -490,6 +506,21 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   }
 
   Widget checkbox(String title, bool boolValue) {
+    if (title == "Students" && boolValue) {
+      roomDetails.setTenantType(title);
+    }
+    if (title == "Bachelors" && boolValue) {
+      roomDetails.setTenantType(title);
+    }
+    if (title == "Boys Only" && boolValue) {
+      roomDetails.setTenantType(title);
+    }
+    if (title == "Girls Only" && boolValue) {
+      roomDetails.setTenantType(title);
+    }
+    if (title == "Anyone" && boolValue) {
+      roomDetails.setTenantType(title);
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
@@ -569,6 +600,36 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
     );
   }
 
+  Widget buildCustomSizedBox() {
+    return SizedBox(
+      height: 10.0,
+    );
+  }
+
+  Widget buildUpdateButton() {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: RaisedButton(
+          onPressed: () {
+            UserData().updateRoomDetails(roomDetails, _userUid);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ListOfHouse()));
+          },
+          child: Text(
+            'Update',
+            style: TextStyle(color: Colors.white),
+          ),
+          elevation: 4.0,
+          color: Colors.blue[700],
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0)),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -628,8 +689,12 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                        labelText: 'State',
-                                        hintText: roomDetails.getState()),
+                                        //  labelText: 'State',
+                                        hintText: 'State : ' +
+                                            roomDetails.getState()),
+                                    onChanged: (String value) {
+                                      roomDetails.setstate(value);
+                                    },
                                   ),
 
                                   // =======   City Field ======
@@ -638,8 +703,12 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                        labelText: 'City',
-                                        hintText: roomDetails.getCity()),
+                                        //  labelText: 'City',
+                                        hintText:
+                                            'City : ' + roomDetails.getCity()),
+                                    onChanged: (String value) {
+                                      roomDetails.setCity(value);
+                                    },
                                   ),
 
                                   // =======   Colony Field ======
@@ -648,75 +717,111 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                        labelText: 'Colony',
-                                        hintText: roomDetails.getColony()),
+                                        //  labelText: 'Colony',
+                                        hintText: 'Colony : ' +
+                                            roomDetails.getColony()),
+                                    onChanged: (String value) {
+                                      roomDetails.setColony(value);
+                                    },
                                   ),
-
+                                  buildCustomSizedBox(),
                                   // =======   PROPERTY TYPE  =========
                                   buildRow("PROPERTY TYPE"),
                                   // List  of Property Type
                                   listOfPropertyType(),
+                                  buildCustomSizedBox(),
                                   // ========  FACILITIES  ==========
                                   buildRow("FACILITIES"),
                                   // List of Facilities type
                                   listOfFacility(),
+                                  buildCustomSizedBox(),
                                   // ======== FURNISHING STATUS =======
                                   buildRow("FURNISHING STATUS"),
                                   // List of Furnishing Item
                                   listOfFurnishingItem(),
+                                  buildCustomSizedBox(),
                                   // ========= MONTHLY RENT ==========
                                   buildRow("MONTHLY RENT"),
                                   //  Text Field For Monthly rent
                                   testFieldForMonthlyRent(),
+                                  buildCustomSizedBox(),
                                   // ========= DEPOSIT AMOUNT ==========
                                   buildRow("DEPOSIT AMOUNT"),
                                   //  Text Field For DEPOSIT AMOUNT
                                   testFieldForDepositAmount(),
+                                  buildCustomSizedBox(),
                                   // ========= No OF BEDROOMS ==========
                                   buildRow("No OF BEDROOMS"),
                                   // Text Field For No OF BEDROOMS
-                                  textField("no of bedrooms"),
+                                  textField("no of bedrooms", "no of bedrooms"),
+                                  buildCustomSizedBox(),
                                   // ========= No OF MEMBERS ==========
                                   buildRow("No OF MEMBERS"),
                                   // Text Field For No OF MEMBERS
-                                  textField(roomDetails.getNoOfMemebers()),
+                                  textField("No OF MEMBERS",
+                                      roomDetails.getNoOfMemebers()),
+                                  buildCustomSizedBox(),
                                   // ========= No OF BATHROOMS ==========
                                   buildRow("No OF BATHROOMS"),
                                   // Text Field For No OF BATHROOMS
-                                  textField(roomDetails.getNoOfBathRooms()),
+                                  textField("No OF BATHROOMS",
+                                      roomDetails.getNoOfBathRooms()),
+                                  buildCustomSizedBox(),
                                   // ========= BUILD AREA ==========
                                   buildRow("BUILD AREA"),
                                   // Text Field For No OF BATHROOMS
-                                  textField(roomDetails.getBuildArea()),
+                                  textField(
+                                      "BUILD AREA", roomDetails.getBuildArea()),
+                                  buildCustomSizedBox(),
                                   // ========= TYPES OF TENANT EXPECTING ==========
                                   buildRow("TYPES OF TENANT EXPECTING"),
                                   // List of checkbox for tenant type
                                   buildListForTenantType(),
+                                  buildCustomSizedBox(),
                                   // ======= === Owner Details ===========
                                   buildRow("OWNER DETAILS"),
+
+                                  //Owner Name
                                   TextFormField(
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                        labelText: 'Name',
-                                        hintText: roomDetails.getOwnerName()),
+                                        // labelText: 'Name',
+                                        hintText: 'Name : ' +
+                                            roomDetails.getOwnerName()),
+                                    onChanged: (String value) {
+                                      roomDetails.setOwnerName(value);
+                                    },
                                   ),
+
+                                  //Owner Contact Number
                                   TextFormField(
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                        labelText: 'Contact No',
-                                        hintText:
+                                        //  labelText: 'Contact No',
+                                        hintText: 'Contact No : ' +
                                             roomDetails.getOwnerContactNo()),
+                                    onChanged: (String value) {
+                                      roomDetails.setOwnerContactNO(value);
+                                    },
                                   ),
+
+                                  //Owner Address
                                   TextFormField(
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                        labelText: 'Address',
-                                        hintText:
+                                        //   labelText: 'Address',
+                                        hintText: 'Address : ' +
                                             roomDetails.getOwnerAddress()),
+                                    onChanged: (String value) {
+                                      roomDetails.setOwnerAddress(value);
+                                    },
                                   ),
+
+                                  // Update Button
+                                  buildUpdateButton(),
                                 ],
                               ),
                             ),
@@ -777,9 +882,15 @@ class FacilitiesFilterState extends State<FacilitiesFilter> {
           onSelected: (bool value) {
             setState(() {
               if (value) {
-                _filters.add(actor.name);
+                //  _filters.add(actor.name);
+                _EditRoomDetailsState.roomDetails
+                    .getFacilityList()
+                    .add(actor.name);
               } else {
                 _filters.removeWhere((dynamic name) {
+                  _EditRoomDetailsState.roomDetails
+                      .getFacilityList()
+                      .remove(actor.name);
                   return name == actor.name;
                 });
               }
