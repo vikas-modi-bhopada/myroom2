@@ -5,7 +5,7 @@ class RoomDetails {
   String _furnishingStatus;
   String _tenantType;
   String _propertyType;
-  String _room;
+
   List<dynamic> _facilities;
   String _monthlyRent;
   String _depositAmount;
@@ -18,13 +18,11 @@ class RoomDetails {
   String _ownerContactNo;
   String _ownerAddress;
 
- 
-
-  void setTenantType(String tenantType){
+  void setTenantType(String tenantType) {
     _tenantType = tenantType;
   }
 
-  void setFurnishingStatus(String status){
+  void setFurnishingStatus(String status) {
     _furnishingStatus = status;
   }
 
@@ -55,7 +53,7 @@ class RoomDetails {
       "furnishingStatus": roomDetails.getfurnishingStatus(),
       "preferedType": roomDetails.gettenantType(),
       "propertyType": roomDetails.getpropertyType(),
-      "room":'3',
+      "room": roomDetails.getNoOfBedRooms(),
     };
     return mapOfOverview;
   }
@@ -156,10 +154,6 @@ class RoomDetails {
     return _propertyType;
   }
 
-  String getroom() {
-    return _room;
-  }
-
   void setBathroomFurnishStatusPreferedTypePropertyTypeRoom(Map map) {
     map.forEach((key, value) {
       switch (key) {
@@ -176,7 +170,7 @@ class RoomDetails {
           _propertyType = value;
           break;
         case "room":
-          _room = value;
+          _noOfBedRooms = value;
           break;
       }
     });

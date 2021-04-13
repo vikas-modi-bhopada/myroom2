@@ -485,6 +485,9 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                           case "No OF BATHROOMS":
                             roomDetails.setNoOfBathRooms(value);
                             break;
+                          case "No OF BEDROOMS":
+                            roomDetails.setNoOFBedRooms(value);
+                            break;
                           default:
                         }
                       },
@@ -753,7 +756,8 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
                                   // ========= No OF BEDROOMS ==========
                                   buildRow("No OF BEDROOMS"),
                                   // Text Field For No OF BEDROOMS
-                                  textField("no of bedrooms", "no of bedrooms"),
+                                  textField("No OF BEDROOMS",
+                                      roomDetails.getNoOfBedRooms()),
                                   buildCustomSizedBox(),
                                   // ========= No OF MEMBERS ==========
                                   buildRow("No OF MEMBERS"),

@@ -8,7 +8,7 @@ class UserData {
     print(searchLocationList);
     return await Firestore.instance
         .collection("RoomDetails")
-        .where("Location", arrayContainsAny: searchLocationList)
+        .where("Address", arrayContainsAny: searchLocationList)
         // .where('Location', isEqualTo: searchbarData)
         .getDocuments();
   }
