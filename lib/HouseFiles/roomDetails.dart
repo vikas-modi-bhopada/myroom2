@@ -13,10 +13,13 @@ class RoomDetails {
   String _noOFMembers;
   String _noOfBathRooms;
   String _buildArea;
-
+  List<dynamic> images = <dynamic>[];
   String _ownerName;
   String _ownerContactNo;
   String _ownerAddress;
+  void setImage(var x){
+    images=x;
+  }
 
   void setTenantType(String tenantType) {
     _tenantType = tenantType;

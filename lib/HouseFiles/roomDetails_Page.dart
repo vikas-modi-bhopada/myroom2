@@ -226,7 +226,7 @@ class _HouseDetailState extends State<HouseDetail> {
                                     color: Colors.black.withOpacity(0.6),
                                   ),
                                   Text(
-                                    "${documentSnapshot.data["monthlyRent"]}",
+                                    "${documentSnapshot.data["depositAmount"]}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -279,7 +279,7 @@ class _HouseDetailState extends State<HouseDetail> {
                                     color: Colors.black.withOpacity(0.6),
                                   ),
                                   Text(
-                                    "${documentSnapshot.data["depositAmount"]}",
+                                    "${documentSnapshot.data["monthlyRent"]}",
                                     style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.black.withOpacity(0.6)),
@@ -670,7 +670,7 @@ class _HouseDetailState extends State<HouseDetail> {
                                         Text(
                                           DateFormat('dd/MM/yyyy')
                                               .format((documentSnapshot[
-                                                          'Date Created']
+                                                          'Date Updated']
                                                       as Timestamp)
                                                   .toDate())
                                               .toString(),
@@ -718,7 +718,7 @@ class _HouseDetailState extends State<HouseDetail> {
                                           style: TextStyle(
                                             color:
                                                 Colors.black.withOpacity(0.6),
-                                            fontSize: 20,
+                                            fontSize: 16,
                                           ),
                                         ),
                                       ],

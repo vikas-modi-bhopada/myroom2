@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   intl:
+  rflutter_alert:
+  country_state_city_picker:
   flutter_swiper:
   percent_indicator:
   flutter_range_slider:

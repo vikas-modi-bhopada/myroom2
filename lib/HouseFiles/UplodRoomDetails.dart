@@ -43,7 +43,13 @@ class AddHouseState extends State<AddHouse> {
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
-            backgroundColor: Colors.blue[700],
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xfffbb448), Color(0xffe46b10)])),
+            ),
             title: Text('Property Address'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -141,7 +147,7 @@ class _WallState extends State<Wall> {
                             child: Icon(
                               Icons.my_location,
                               size: 30.0,
-                              color: Colors.blue[400],
+                              color: Colors.orange,
                             ),
                           ),
                         ),
@@ -154,7 +160,7 @@ class _WallState extends State<Wall> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange,
                                     width: 3.0,
                                   ),
                                 ),
@@ -220,7 +226,7 @@ class _WallState extends State<Wall> {
                               style: TextStyle(color: Colors.white),
                             ),
                             elevation: 4.0,
-                            color: Colors.blue[700],
+                            color: Colors.orange[700],
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0)),
                           ),
@@ -260,13 +266,14 @@ class _OwnerDetailsState extends State<OwnerDetails> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         Navigator.pop(context);
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          backgroundColor: Colors.blue[700],
+          backgroundColor: Colors.orange,
           title: Text('OWNER DETAILS'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -306,7 +313,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                               child: Icon(
                                 Icons.person,
                                 size: 30.0,
-                                color: Colors.blue[400],
+                                color: Colors.orange[400],
                               ),
                             ),
                           ),
@@ -319,7 +326,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                                   border: Border(
                                     bottom: BorderSide(
                                       //                   <--- left side
-                                      color: Colors.blue[400],
+                                      color: Colors.orange[400],
                                       width: 3.0,
                                     ),
                                   ),
@@ -387,7 +394,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               elevation: 4.0,
-                              color: Colors.blue[700],
+                              color: Colors.orange[700],
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       new BorderRadius.circular(30.0)),
@@ -421,7 +428,7 @@ class _MyFlutterAppState extends State<Secondpage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Post Free House Ad"),
-          backgroundColor: Colors.blue[700],
+          backgroundColor: Colors.orange[700],
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context)),
@@ -496,7 +503,7 @@ class _InteState extends State<Inte> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -549,7 +556,7 @@ class _InteState extends State<Inte> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -600,7 +607,7 @@ class _InteState extends State<Inte> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -650,7 +657,7 @@ class _InteState extends State<Inte> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -728,7 +735,7 @@ class _InteState extends State<Inte> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -806,7 +813,7 @@ class _InteState extends State<Inte> {
                               style: TextStyle(color: Colors.white),
                             ),
                             elevation: 4.0,
-                            color: Colors.blue[700],
+                            color: Colors.orange[700],
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0)),
                           ),
@@ -1040,7 +1047,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             children: <Widget>[
               Radio(
                 onChanged: (int e) => something(e),
-                activeColor: Colors.blue[400],
+                activeColor: Colors.orange[400],
                 value: 1,
                 groupValue: groupValue,
               ),
@@ -1056,7 +1063,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             children: <Widget>[
               Radio(
                 onChanged: (int e) => something(e),
-                activeColor: Colors.blue[400],
+                activeColor: Colors.orange[400],
                 value: 2,
                 groupValue: groupValue,
               ),
@@ -1072,7 +1079,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             children: <Widget>[
               Radio(
                 onChanged: (int e) => something(e),
-                activeColor: Colors.blue[400],
+                activeColor: Colors.orange[400],
                 value: 3,
                 groupValue: groupValue,
               ),
@@ -1124,7 +1131,7 @@ class _MyFlutterApp extends State<Thirdpage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Post Free House Ad"),
-          backgroundColor: Colors.blue[700],
+          backgroundColor: Colors.orange[700],
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context)),
@@ -1191,7 +1198,7 @@ class _Finalfmstate extends State<Finalfm> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -1270,7 +1277,7 @@ class _Finalfmstate extends State<Finalfm> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -1337,7 +1344,7 @@ class _Finalfmstate extends State<Finalfm> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -1406,7 +1413,7 @@ class _Finalfmstate extends State<Finalfm> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -1476,7 +1483,7 @@ class _Finalfmstate extends State<Finalfm> {
                                 border: Border(
                                   bottom: BorderSide(
                                     //                   <--- left side
-                                    color: Colors.blue[400],
+                                    color: Colors.orange[400],
                                     width: 3.0,
                                   ),
                                 ),
@@ -1509,7 +1516,7 @@ class _Finalfmstate extends State<Finalfm> {
                               style: TextStyle(color: Colors.white),
                             ),
                             elevation: 6.0,
-                            color: Colors.blue[700],
+                            color: Colors.orange[700],
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0)),
                           ),
@@ -1717,6 +1724,13 @@ class _AddImageState extends State<AddImage> {
       onWillPop: _back,
       child: Scaffold(
           appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xfffbb448), Color(0xffe46b10)])),
+            ),
             centerTitle: true,
             title: Text('Add Image'),
           ),

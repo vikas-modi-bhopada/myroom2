@@ -15,6 +15,7 @@ import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
 
 import 'UplodRoomDetails.dart';
+import 'editRoom.dart';
 
 class ListOfHouse extends StatefulWidget {
   @override
@@ -550,7 +551,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       onTap: () {
         Navigator.pop(context);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EditRoomDetails()));
+            MaterialPageRoute(builder: (context) => EditRoom()));
       },
     );
   }

@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:roomi/HouseFiles/ListofHouses.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:roomi/HouseFiles/roomDetails.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
+
+String _email;
+String _userUid;
 
 class EditRoomDetails extends StatefulWidget {
   @override
@@ -13,7 +19,7 @@ class EditRoomDetails extends StatefulWidget {
 
 class _EditRoomDetailsState extends State<EditRoomDetails> {
   final _formKey = GlobalKey<FormState>();
-  String _userUid;
+
   Map mapOfAddress;
   Map mapOfOverview;
   int _value = 0;
@@ -47,6 +53,7 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
       _userUid = value.uid;
+      _email = value.email;
       setState(() {
         UserData().getPerticularRoomDetails(_userUid).then((value) {
           documentSnapshot = value;
@@ -611,17 +618,20 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
   Widget buildUpdateButton() {
     return Align(
-      alignment: Alignment.bottomRight,
+      alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0),
         child: RaisedButton(
           onPressed: () {
-            UserData().updateRoomDetails(roomDetails, _userUid);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ListOfHouse()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddImage(
+                          documentSnapshot: documentSnapshot,
+                        )));
           },
           child: Text(
-            'Update',
+            'Edit Images',
             style: TextStyle(color: Colors.white),
           ),
           elevation: 4.0,
@@ -671,7 +681,10 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
 
                         child: Card(
                           margin: EdgeInsets.only(
-                              bottom: 10.0, left: 20.0, right: 20.0, top: 15.0),
+                              bottom: 100.0,
+                              left: 20.0,
+                              right: 20.0,
+                              top: 15.0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           child: Container(
@@ -838,6 +851,178 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
               ),
             ),
     );
+  }
+}
+
+class AddImage extends StatefulWidget {
+  DocumentSnapshot documentSnapshot;
+  AddImage({Key key, @required this.documentSnapshot}) : super(key: key);
+  @override
+  _AddImageState createState() => _AddImageState(documentSnapshot);
+}
+
+class _AddImageState extends State<AddImage> {
+  static RoomDetails roomDetails = new RoomDetails();
+  DocumentSnapshot documentSnapshot;
+  _AddImageState(this.documentSnapshot);
+  bool uploading = false;
+  bool button = true;
+  List<dynamic> imageDataPath = <dynamic>[];
+  var val;
+  CollectionReference imgRef;
+  Future<bool> _back() {
+    Navigator.pop(context);
+  }
+
+  File _image;
+  final picker = ImagePicker();
+  @override
+  void initState() {
+    imageDataPath = documentSnapshot.data['houseImages'];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _back,
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Add Image'),
+          ),
+          body: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.all(4),
+                child: GridView.builder(
+                    itemCount: imageDataPath.length + 1,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3),
+                    itemBuilder: (context, index) {
+                      return index == 0
+                          ? Center(
+                              child: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () =>
+                                      !uploading ? chooseImage() : null),
+                            )
+                          : Card(
+                              clipBehavior: Clip.antiAlias,
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                imageDataPath[index - 1]),
+                                            fit: BoxFit.cover)),
+                                  ),
+                                  Positioned(
+                                    right: 5,
+                                    top: 5,
+                                    child: InkWell(
+                                      child: Icon(
+                                        Icons.remove_circle,
+                                        size: 25,
+                                        color: Colors.red,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          imageDataPath.removeAt(index - 1);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                    }),
+              ),
+              imageDataPath.length != 0
+                  ? Align(
+                      child: RawMaterialButton(
+                        fillColor: Colors.white,
+                        splashColor: Colors.greenAccent,
+                        child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.cloud_upload_outlined,
+                                color: Colors.black,
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Text(
+                                "UPDATE DETAILS",
+                                maxLines: 1,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                        shape: const StadiumBorder(),
+                        onPressed: () {
+                          setState(() {
+                            uploading = true;
+                            button = false;
+                          });
+                          UserData().updateRoomDetails(roomDetails, _userUid);
+                        },
+                      ),
+                      alignment: Alignment(0.0, .7),
+                    )
+                  : Align(
+                      child: Text(
+                        "Pleas Select Atleast one Image",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      alignment: Alignment.center,
+                    ),
+            ],
+          )),
+    );
+  }
+
+  chooseImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      _image = File(pickedFile?.path);
+      uploadFile();
+    });
+    if (pickedFile.path == null) retrieveLostData();
+  }
+
+  Future<void> retrieveLostData() async {
+    final LostData response = await picker.getLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+      setState(() {
+        _image = File(response.file.path);
+      });
+    } else {
+      print(response.file);
+    }
+  }
+
+  Future uploadFile() async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('$_email/image_NO_${DateTime.now()}');
+    StorageUploadTask task = storageReference.putFile(_image);
+    StorageTaskSnapshot storageTaskSnapshot = await task.onComplete;
+    String url = await storageTaskSnapshot.ref.getDownloadURL();
+    print("\nUploaded: " + url);
+    setState(() {
+      imageDataPath.add(url);
+    });
+    roomDetails.setImage(imageDataPath);
   }
 }
 
