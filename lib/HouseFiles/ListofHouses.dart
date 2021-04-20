@@ -26,6 +26,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
   QuerySnapshot querySnapshot;
   DocumentSnapshot _documentSnapshot;
   bool userAcccountPicture = false;
+  List listOfAddress;
 
   var _email;
   var _username;
@@ -153,6 +154,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
   }
 
   firstRowOfListView(int index) {
+    listOfAddress = querySnapshot.documents[index].data["Address"];
     return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Stack(
         children: [
@@ -253,9 +255,9 @@ class _ListOfHouseState extends State<ListOfHouse> {
                                             '${_documentSnapshot['Overview']['furnishingStatus']}')),
                                   ],
                                 )
-                              : Text(_documentSnapshot['PropertyCity'] +
+                              : Text(listOfAddress.elementAt(2) +
                                       " , " +
-                                      _documentSnapshot['PropertyColoney'] +
+                                      listOfAddress.elementAt(3) +
                                       " , "
                                   //'${_documentSnapshot['Address']['society']},${_documentSnapshot['Address']['city']}'
                                   ),
@@ -333,6 +335,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
     });
     UserData().refreshList().then((QuerySnapshot results) {
       setState(() {
+       
         querySnapshot = results;
       });
     });

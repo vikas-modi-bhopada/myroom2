@@ -197,11 +197,13 @@ class _WallState extends State<Wall> {
                           },
                           onStateChanged: (value) {
                             setState(() {
+                              print(value);
                               propertyState = value;
                             });
                           },
                           onCityChanged: (value) {
                             setState(() {
+                              print(value);
                               propertyCity = value;
                             });
                           },
@@ -1677,6 +1679,12 @@ class AddImages extends StatelessWidget {
 }
 
 void createRecord(context, uid) async {
+  List listOfAddress = new List();
+  listOfAddress.add(propertyCountry);
+  listOfAddress.add(propertyState);
+  listOfAddress.add(propertyCity);
+  listOfAddress.add(propertyColoney);
+
   var overview = {
     'bathroom': _bath,
     'room': _beds,
@@ -1685,10 +1693,7 @@ void createRecord(context, uid) async {
     'preferedType': _preferedType
   };
   Firestore.instance.collection("RoomDetails").document(userId).setData({
-    'PropertyCountry': propertyCountry,
-    'PropertyState': propertyState,
-    'PropertyCity': propertyCity,
-    'PropertyColoney': propertyColoney,
+    'Address': listOfAddress,
     'Date Created': DateTime.now(),
     'Date Updated': DateTime.now(),
     'Facilities': _filters,
