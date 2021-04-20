@@ -249,7 +249,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
                                   children: [
                                     Align(
                                         child: Text(
-                                            '${_documentSnapshot['Overview']['room']} BHK in ${_documentSnapshot['PropertyCity']}')),
+                                            '${_documentSnapshot['Overview']['room']} BHK in ${listOfAddress.elementAt(2)}')),
                                     Align(
                                         child: Text(
                                             '${_documentSnapshot['Overview']['furnishingStatus']}')),
@@ -335,7 +335,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
     });
     UserData().refreshList().then((QuerySnapshot results) {
       setState(() {
-       
         querySnapshot = results;
       });
     });

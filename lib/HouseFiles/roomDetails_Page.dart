@@ -21,7 +21,6 @@ class _HouseDetailState extends State<HouseDetail> {
   int index1;
   DocumentSnapshot documentSnapshot;
   _HouseDetailState(this.index1);
-
   @override
   void initState() {
     UserData().refreshList().then((QuerySnapshot results) {
@@ -1292,7 +1291,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['PropertyColoney'] + ',',
+                        documentSnapshot['Address'].elementAt(2) + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1303,7 +1302,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['PropertyCity'] + ',',
+                        documentSnapshot['Address'].elementAt(2) + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1314,7 +1313,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['PropertyState'] + ',',
+                        documentSnapshot['Address'].elementAt(2) + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
