@@ -76,7 +76,7 @@ String _email;
 String userId;
 String _city;
 String _state;
-String _address;
+String _colony;
 String _buildup;
 String _monthly;
 String _deposit;
@@ -206,7 +206,7 @@ class _WallState extends State<Wall> {
                             top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
                       ),
                       onSaved: (String value) {
-                        _address = value;
+                        _colony = value;
                       },
                       validator: (value) =>
                           value.isEmpty ? 'Coloney Name  is required' : null,
@@ -1634,7 +1634,7 @@ void createRecord(context, uid) async {
   var address = {
     'city': _city,
     'state': _state,
-    'society': _address,
+    'society': _colony,
   };
   var overview = {
     'bathroom': _bath,
@@ -1644,7 +1644,9 @@ void createRecord(context, uid) async {
     'preferedType': _preferedType
   };
   Firestore.instance.collection("RoomDetails").document(userId).setData({
-    'Address': address,
+    'city': _city,
+    'state': _state,
+    'colony': _colony,
     'Date Created': DateTime.now(),
     'Date Updated': DateTime.now(),
     'Facilities': _filters,

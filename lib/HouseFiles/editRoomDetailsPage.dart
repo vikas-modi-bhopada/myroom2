@@ -623,15 +623,16 @@ class _EditRoomDetailsState extends State<EditRoomDetails> {
         padding: const EdgeInsets.only(top: 20.0),
         child: RaisedButton(
           onPressed: () {
-            Navigator.push(
+            UserData().updateRoomDetails(roomDetails, _userUid);
+         /*   Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => AddImage(
                           documentSnapshot: documentSnapshot,
-                        )));
+                        )));*/
           },
           child: Text(
-            'Edit Images',
+            'Update',
             style: TextStyle(color: Colors.white),
           ),
           elevation: 4.0,

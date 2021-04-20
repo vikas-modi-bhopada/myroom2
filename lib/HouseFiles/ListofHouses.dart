@@ -255,7 +255,9 @@ class _ListOfHouseState extends State<ListOfHouse> {
                                   ],
                                 )
                               : Text(
-                                  '${_documentSnapshot['Address']['society']},${_documentSnapshot['Address']['city']}'),
+                                _documentSnapshot.data['colony']+" , "+_documentSnapshot.data['city']+" , "
+                                  //'${_documentSnapshot['Address']['society']},${_documentSnapshot['Address']['city']}'
+                                  ),
                         ],
                       ),
                     ),
@@ -551,7 +553,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
       onTap: () {
         Navigator.pop(context);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EditRoom()));
+            MaterialPageRoute(builder: (context) => EditRoomDetails()));
       },
     );
   }
