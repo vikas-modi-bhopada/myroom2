@@ -4,7 +4,7 @@ import 'package:roomi/HouseFiles/roomDetails.dart';
 
 class UserData {
   Future<QuerySnapshot> getData(dynamic searchbarData) async {
-    List searchLocationList = searchbarData.toString().split(' ');
+    List searchLocationList = searchbarData.toString().toUpperCase().split(' ');
     print(searchLocationList);
     return await Firestore.instance
         .collection("RoomDetails")
