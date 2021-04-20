@@ -159,7 +159,7 @@ class _EditRoomState extends State<EditRoom> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['city']}',
+                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['PropertyCity']}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -172,7 +172,7 @@ class _EditRoomState extends State<EditRoom> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'At ${documentSnapshot['colony']}',
+                                'At ${documentSnapshot['PropertyColoney']}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 13,
@@ -1773,8 +1773,6 @@ class _EditRoomState extends State<EditRoom> {
                 buttons: [
                   DialogButton(
                     onPressed: () {
-                      print(
-                          "$ownerCountry // $ownerState  // $ownerCity // $ownerAddres // $ownerContact // $ownerName");
                       Navigator.pop(context);
                       Firestore.instance
                           .collection("RoomDetails")
@@ -1853,7 +1851,7 @@ class _EditRoomState extends State<EditRoom> {
                             size: size.getWidthPx(16),
                             color: Colors.grey,
                           ),
-                          Text("${documentSnapshot.data["OwnerAdd"]}",
+                          Text("${documentSnapshot.data["OwnerCity"]}",
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: size.getWidthPx(16))),
