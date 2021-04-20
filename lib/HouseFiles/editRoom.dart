@@ -1475,6 +1475,7 @@ class _EditRoomState extends State<EditRoom> {
 
   // ignore: missing_retur
   Widget getSeventhCard() {
+    List  listOfAddress = documentSnapshot.data["Address"];
     return Stack(children: [
       Center(
         child: Card(
@@ -1514,7 +1515,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          " ${documentSnapshot['PropertyColoney']}" + ',',
+                          listOfAddress.elementAt(3) + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1525,7 +1526,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          " ${documentSnapshot['PropertyCity']}" + ',',
+                          listOfAddress.elementAt(2) + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1536,7 +1537,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          "${documentSnapshot['PropertyState']}" + ',',
+                          listOfAddress.elementAt(1) + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1609,15 +1610,18 @@ class _EditRoomState extends State<EditRoom> {
                 buttons: [
                   DialogButton(
                     onPressed: () {
+                      List listOfAddress = new List();
+                      listOfAddress.add(countryValue.toUpperCase());
+                      listOfAddress.add( stateValue.toUpperCase());
+                      listOfAddress.add(cityValue.toUpperCase());
+                      listOfAddress.add(addres.toUpperCase());
+
                       Navigator.pop(context);
                       Firestore.instance
                           .collection("RoomDetails")
                           .document(_userUid)
                           .updateData({
-                        'PropertyCountry': countryValue,
-                        'PropertyState': stateValue,
-                        'PropertyCity': cityValue,
-                        'PropertyColoney': addres,
+                        'Address' : listOfAddress
                       });
                       UserData()
                           .getPerticularRoomDetails(_userUid)

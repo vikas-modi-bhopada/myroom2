@@ -1680,10 +1680,10 @@ class AddImages extends StatelessWidget {
 
 void createRecord(context, uid) async {
   List listOfAddress = new List();
-  listOfAddress.add(propertyCountry);
-  listOfAddress.add(propertyState);
-  listOfAddress.add(propertyCity);
-  listOfAddress.add(propertyColoney);
+  listOfAddress.add(propertyCountry.toUpperCase());
+  listOfAddress.add(propertyState.toUpperCase());
+  listOfAddress.add(propertyCity.toUpperCase());
+  listOfAddress.add(propertyColoney.toUpperCase());
 
   var overview = {
     'bathroom': _bath,
