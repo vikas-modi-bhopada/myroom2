@@ -29,6 +29,7 @@ bool girlVal = false;
 bool anyVal = false;
 String _membess;
 String _bathroom;
+// ignore: non_constant_identifier_names
 String _no_of_beds;
 DateTime selectedDate = DateTime.now();
 String _preferedType = "Aynone";
@@ -36,7 +37,15 @@ String _propertyType;
 String countryValue;
 String stateValue;
 String cityValue;
+String addres;
 String _status;
+String ownerName;
+String ownerCountry;
+String ownerCity;
+String ownerState;
+String ownerContact;
+String ownerAddres;
+List<String> _filters = <String>[];
 
 class EditRoom extends StatefulWidget {
   @override
@@ -76,7 +85,6 @@ class _EditRoomState extends State<EditRoom> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return WillPopScope(
       // ignore: missing_return
       onWillPop: () {
@@ -1064,54 +1072,99 @@ class _EditRoomState extends State<EditRoom> {
   }
 
   Widget getFifthCard() {
-    return Center(
-      child: Card(
-        elevation: 6,
-        child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
-          child: ClipRRect(
-            borderRadius: new BorderRadius.circular(0.0),
-            child: Container(
-                padding: new EdgeInsets.fromLTRB(15, 16, 15, 16),
-                child: Column(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              //                   <--- left side
-                              color: Colors.orange[500].withOpacity(0.6),
-                              width: 3.0,
+    return Stack(children: [
+      Center(
+        child: Card(
+          elevation: 6,
+          child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            child: ClipRRect(
+              borderRadius: new BorderRadius.circular(0.0),
+              child: Container(
+                  padding: new EdgeInsets.fromLTRB(15, 16, 15, 16),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                //                   <--- left side
+                                color: Colors.orange[500].withOpacity(0.6),
+                                width: 3.0,
+                              ),
                             ),
                           ),
+                          child: Text('FACILITIES',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black.withOpacity(0.7),
+                              )),
                         ),
-                        child: Text('FACILITIES',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black.withOpacity(0.7),
-                            )),
                       ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Wrap(
-                      children: <Widget>[
-                        for (var i in documentSnapshot['Facilities'])
-                          getFacility(i)
-                      ],
-                    )
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Wrap(
+                        children: <Widget>[
+                          for (var i in documentSnapshot['Facilities'])
+                            getFacility(i)
+                        ],
+                      )
 
-                    // Body Here
-                  ],
-                )),
+                      // Body Here
+                    ],
+                  )),
+            ),
           ),
         ),
       ),
-    );
+      Positioned(
+        right: 20,
+        top: 5,
+        child: InkWell(
+          child: Icon(
+            FontAwesomeIcons.solidEdit,
+            size: 20,
+            color: Colors.blue,
+          ),
+          onTap: () {
+            Alert(
+                context: context,
+                title: "PROPERTY ADDRESS",
+                content: Center(
+                  child: FacilitiesFilter(),
+                ),
+                buttons: [
+                  DialogButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Firestore.instance
+                          .collection("RoomDetails")
+                          .document(_userUid)
+                          .updateData({
+                        'Facilities': _filters,
+                      });
+                      UserData()
+                          .getPerticularRoomDetails(_userUid)
+                          .then((value) {
+                        setState(() {
+                          documentSnapshot = value;
+                        });
+                      });
+                    },
+                    child: Text(
+                      "UPDATE",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  )
+                ]).show();
+          },
+        ),
+      ),
+    ]);
   }
 
   // ignore: missing_return
@@ -1513,34 +1566,225 @@ class _EditRoomState extends State<EditRoom> {
                 context: context,
                 title: "PROPERTY ADDRESS",
                 content: Center(
-                  child: SelectState(
-                    onCountryChanged: (value) {
-                      setState(() {
-                        print(value);
-                        countryValue = "India";
-                      });
-                    },
-                    onStateChanged: (value) {
-                      setState(() {
-                        stateValue = value;
-                      });
-                    },
-                    onCityChanged: (value) {
-                      setState(() {
-                        cityValue = value;
-                      });
-                    },
+                  child: Column(
+                    children: [
+                      SelectState(
+                        onCountryChanged: (value) {
+                          setState(() {
+                            print(value);
+                            countryValue = value;
+                          });
+                        },
+                        onStateChanged: (value) {
+                          setState(() {
+                            stateValue = value;
+                          });
+                        },
+                        onCityChanged: (value) {
+                          setState(() {
+                            cityValue = value;
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        maxLines: 2,
+                        decoration: new InputDecoration(
+                          labelText: "ADDRESS",
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.only(
+                              top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
+                        ),
+                        onChanged: (String value) {
+                          addres = value;
+                        },
+                        validator: (value) =>
+                            value.isEmpty ? 'Address  is required' : null,
+                        style: new TextStyle(
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 buttons: [
                   DialogButton(
                     onPressed: () {
+                      print(
+                          "$countryValue // $stateValue  // $cityValue // $addres");
+                      // Navigator.pop(context);
+                      // Firestore.instance
+                      //     .collection("RoomDetails")
+                      //     .document(_userUid)
+                      //     .updateData({
+                      //   'Overview.preferedType': _preferedType,
+                      // });
+                      // UserData()
+                      //     .getPerticularRoomDetails(_userUid)
+                      //     .then((value) {
+                      //   setState(() {
+                      //     documentSnapshot = value;
+                      //   });
+                      // });
+                    },
+                    child: Text(
+                      "UPDATE",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  )
+                ]).show();
+          },
+        ),
+      ),
+    ]);
+  }
+
+  Widget getEightCard() {
+    return Stack(children: [
+      Center(
+        child: Card(
+          elevation: 6,
+          child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            child: ClipRRect(
+              borderRadius: new BorderRadius.circular(0.0),
+              child: Container(
+                  padding: new EdgeInsets.fromLTRB(10, 16, 10, 16),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                //                   <--- left side
+                                color: Colors.blue[500].withOpacity(0.6),
+                                width: 3.0,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'OWNER\'S DETAIL',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black.withOpacity(0.7),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      getUserCard(context),
+                      // Body Here
+                    ],
+                  )),
+            ),
+          ),
+        ),
+      ),
+      Positioned(
+        right: 20,
+        top: 5,
+        child: InkWell(
+          child: Icon(
+            FontAwesomeIcons.solidEdit,
+            size: 20,
+            color: Colors.blue,
+          ),
+          onTap: () {
+            Alert(
+                context: context,
+                title: 'OWNER\'S DETAIL',
+                content: Center(
+                  child: Column(
+                    children: [
+                      SelectState(
+                        onCountryChanged: (value) {
+                          setState(() {
+                            print(value);
+                            ownerCountry = value;
+                          });
+                        },
+                        onStateChanged: (value) {
+                          setState(() {
+                            ownerState = value;
+                          });
+                        },
+                        onCityChanged: (value) {
+                          setState(() {
+                            ownerCity = value;
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        maxLines: 2,
+                        decoration: new InputDecoration(
+                          labelText: "ADDRESS",
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.only(
+                              top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                        ),
+                        onChanged: (String value) {
+                          ownerAddres = value;
+                        },
+                        validator: (value) =>
+                            value.isEmpty ? 'Address  is required' : null,
+                        style: new TextStyle(
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            FontAwesomeIcons.phoneAlt,
+                            size: 25,
+                          ),
+                          labelText: 'Contact No. :',
+                          alignLabelWithHint: true,
+                        ),
+                        onChanged: (value) {
+                          ownerContact = value;
+                        },
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            FontAwesomeIcons.user,
+                            size: 25,
+                          ),
+                          labelText: 'Name :',
+                          alignLabelWithHint: true,
+                        ),
+                        onChanged: (value) {
+                          ownerName = value;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                buttons: [
+                  DialogButton(
+                    onPressed: () {
+                      print(
+                          "$ownerCountry // $ownerState  // $ownerCity // $ownerAddres // $ownerContact // $ownerName");
                       Navigator.pop(context);
                       Firestore.instance
                           .collection("RoomDetails")
                           .document(_userUid)
                           .updateData({
-                        'Overview.preferedType': _preferedType,
+                        'OwnerAdd': ownerAddres,
+                        'OwnerName': ownerName,
+                        'OwnerPhone': ownerContact,
+                        'OwnerCountry': ownerCountry,
+                        'OwnerState': ownerState,
+                        'OwnerCity': ownerCity,
                       });
                       UserData()
                           .getPerticularRoomDetails(_userUid)
@@ -1562,53 +1806,6 @@ class _EditRoomState extends State<EditRoom> {
     ]);
   }
 
-  Widget getEightCard() {
-    return Center(
-      child: Card(
-        elevation: 6,
-        child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
-          child: ClipRRect(
-            borderRadius: new BorderRadius.circular(0.0),
-            child: Container(
-                padding: new EdgeInsets.fromLTRB(10, 16, 10, 16),
-                child: Column(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: new EdgeInsets.fromLTRB(0, 0, 0, 3),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              //                   <--- left side
-                              color: Colors.blue[500].withOpacity(0.6),
-                              width: 3.0,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'OWNER\'S DETAIL',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black.withOpacity(0.7),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    getUserCard(context),
-                    // Body Here
-                  ],
-                )),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget getUserCard(var context) {
     var size = Screen(MediaQuery.of(context).size);
     return Card(
@@ -1625,7 +1822,7 @@ class _EditRoomState extends State<EditRoom> {
           child: Row(
             children: <Widget>[
               Container(
-                width: size.hp(17),
+                width: size.hp(14),
                 color: Colors.grey,
                 child: Image.asset('assets/icons/avatar.png'),
               ),
@@ -1633,8 +1830,8 @@ class _EditRoomState extends State<EditRoom> {
                 width: size.wp(84) - size.hp(16),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: size.getWidthPx(12),
-                      horizontal: size.getWidthPx(16)),
+                      vertical: size.getWidthPx(0),
+                      horizontal: size.getWidthPx(5)),
                   child: Column(
                     children: <Widget>[
                       Align(
@@ -1990,6 +2187,73 @@ class _TentypeState extends State<Tentype> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class FacilitiesFilter extends StatefulWidget {
+  @override
+  State createState() => FacilitiesFilterState();
+}
+
+class FacilitiesFilterState extends State<FacilitiesFilter> {
+  final List<ActorFilterEntry> _cast = <ActorFilterEntry>[
+    const ActorFilterEntry('Air Conditioner', 'AC'),
+    const ActorFilterEntry('Washing Machine', 'WM'),
+    const ActorFilterEntry('Car Parking', 'CP'),
+    const ActorFilterEntry('Wi-Fi', 'WF'),
+    const ActorFilterEntry('Tiffin Facility', 'TF'),
+    const ActorFilterEntry('24x7 Water Supply', 'WF'),
+    const ActorFilterEntry('Garden', 'GR'),
+    const ActorFilterEntry('Lift', 'LF'),
+    const ActorFilterEntry('24x7 CCTV', 'CC'),
+    const ActorFilterEntry('Swimming Pool', 'SP'),
+    const ActorFilterEntry('Security', 'SC'),
+    const ActorFilterEntry('Children Park', 'CP'),
+    const ActorFilterEntry('Gym', 'GY'),
+    const ActorFilterEntry('HouseKeeping', 'HK'),
+    const ActorFilterEntry('Fire Safety', 'FS'),
+  ];
+
+  Iterable<Widget> get actorWidgets sync* {
+    for (ActorFilterEntry actor in _cast) {
+      yield Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: FilterChip(
+          label: Text(
+            actor.name,
+            style: new TextStyle(fontSize: 11.0),
+          ),
+          selected: _filters.contains(actor.name),
+          onSelected: (bool value) {
+            setState(() {
+              if (value) {
+                _filters.add(actor.name);
+              } else {
+                _filters.removeWhere((String name) {
+                  return name == actor.name;
+                });
+              }
+            });
+          },
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Wrap(
+          children: actorWidgets.toList(),
+        ),
+        Text(
+          'Look for: ${_filters.join(', ')}',
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
     );
   }
 }
