@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_container/responsive_container.dart';
-import 'package:roomi/HouseFiles/editRoomDetailsPage.dart';
+import 'package:roomi/HouseFiles/editRoom.dart';
 import 'package:roomi/HouseFiles/roomDetails_Page.dart';
 import 'package:roomi/Shared/loadingwidget.dart';
 import 'package:roomi/controllers/authentications.dart';
@@ -15,7 +15,6 @@ import 'package:roomi/user_data/user_profile_data.dart';
 import 'package:roomi/welcomePage.dart';
 
 import 'UplodRoomDetails.dart';
-import 'editRoom.dart';
 
 class ListOfHouse extends StatefulWidget {
   @override
@@ -248,14 +247,16 @@ class _ListOfHouseState extends State<ListOfHouse> {
                                   children: [
                                     Align(
                                         child: Text(
-                                            '${_documentSnapshot['Overview']['room']} BHK in ${_documentSnapshot['Address']['city']}')),
+                                            '${_documentSnapshot['Overview']['room']} BHK in ${_documentSnapshot['PropertyCity']}')),
                                     Align(
                                         child: Text(
                                             '${_documentSnapshot['Overview']['furnishingStatus']}')),
                                   ],
                                 )
-                              : Text(
-                                _documentSnapshot.data['colony']+" , "+_documentSnapshot.data['city']+" , "
+                              : Text(_documentSnapshot['PropertyCity'] +
+                                      " , " +
+                                      _documentSnapshot['PropertyColoney'] +
+                                      " , "
                                   //'${_documentSnapshot['Address']['society']},${_documentSnapshot['Address']['city']}'
                                   ),
                         ],
@@ -552,8 +553,8 @@ class _ListOfHouseState extends State<ListOfHouse> {
       ),
       onTap: () {
         Navigator.pop(context);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EditRoomDetails()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => EditRoom()));
       },
     );
   }

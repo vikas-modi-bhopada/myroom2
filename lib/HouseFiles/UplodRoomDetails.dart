@@ -3,10 +3,12 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:roomi/HouseFiles/ListofHouses.dart';
@@ -65,18 +67,22 @@ class AddHouseState extends State<AddHouse> {
 
 List<String> _filters = <String>[];
 List<String> _filter = <String>[];
+String ownerName;
+String ownerCountry;
+String ownerCity;
+String ownerState;
+String ownerContact;
+String ownerAddres;
 final databaseReference = Firestore.instance;
 DocumentReference ref;
 DocumentReference addd;
-String _ownerPhone;
-String __ownerName;
-String _ownerAdd;
 double _progress;
 String _email;
 String userId;
-String _city;
-String _state;
-String _colony;
+String propertyCountry;
+String propertyState;
+String propertyCity;
+String propertyColoney;
 String _buildup;
 String _monthly;
 String _deposit;
@@ -166,7 +172,7 @@ class _WallState extends State<Wall> {
                                 ),
                               ),
                               child: Text(
-                                'ADDRESS',
+                                'PROPERTY ADDRESS',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black.withOpacity(0.7),
@@ -177,42 +183,48 @@ class _WallState extends State<Wall> {
                         ),
                       ],
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'State'),
-                      style: new TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 16.0,
-                      ),
-                      onSaved: (String value) {
-                        _state = value;
-                      },
-                      validator: (value) =>
-                          value.isEmpty ? 'State is required' : null,
+                    SizedBox(
+                      height: 50,
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'City'),
-                      onSaved: (String value) {
-                        _city = value;
-                      },
-                      validator: (value) =>
-                          value.isEmpty ? 'City is required' : null,
-                    ),
-                    TextFormField(
-                      maxLines: 2,
-                      decoration: new InputDecoration(
-                        labelText: "Colony",
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
-                      ),
-                      onSaved: (String value) {
-                        _colony = value;
-                      },
-                      validator: (value) =>
-                          value.isEmpty ? 'Coloney Name  is required' : null,
-                      style: new TextStyle(
-                        fontFamily: "Poppins",
-                      ),
+                    Column(
+                      children: [
+                        SelectState(
+                          onCountryChanged: (value) {
+                            setState(() {
+                              print(value);
+                              propertyCountry = value;
+                            });
+                          },
+                          onStateChanged: (value) {
+                            setState(() {
+                              propertyState = value;
+                            });
+                          },
+                          onCityChanged: (value) {
+                            setState(() {
+                              propertyCity = value;
+                            });
+                          },
+                        ),
+                        TextFormField(
+                          maxLines: 2,
+                          decoration: new InputDecoration(
+                            labelText: "Colony OR Society",
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.only(
+                                top: 10.0, bottom: 10.0, left: 0.0, right: 0.0),
+                          ),
+                          onChanged: (String value) {
+                            propertyColoney = value;
+                          },
+                          validator: (value) => value.isEmpty
+                              ? 'Coloney OR Society  is required'
+                              : null,
+                          style: new TextStyle(
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                      ],
                     ),
                     Align(
                         alignment: Alignment.bottomRight,
@@ -343,44 +355,78 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                           ),
                         ],
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Name'),
-                        style: new TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 16.0,
-                        ),
-                        onSaved: (String value) {
-                          __ownerName = value;
-                        },
-                        validator: (value) =>
-                            value.isEmpty ? 'Name is required' : null,
+                      SizedBox(
+                        height: 50,
                       ),
-                      TextFormField(
-                        maxLength: 10,
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(labelText: 'Contact No.'),
-                        onSaved: (String value) {
-                          _ownerPhone = value;
-                        },
-                        validator: (value) =>
-                            value.isEmpty ? 'Contact is required' : null,
-                      ),
-                      TextFormField(
-                        maxLines: 2,
-                        decoration: new InputDecoration(
-                          labelText: "Address",
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.only(
-                              top: 20.0, bottom: 20.0, left: 0.0, right: 0.0),
-                        ),
-                        onSaved: (String value) {
-                          _ownerAdd = value;
-                        },
-                        validator: (value) =>
-                            value.isEmpty ? 'Address Name  is required' : null,
-                        style: new TextStyle(
-                          fontFamily: "Poppins",
-                        ),
+                      Column(
+                        children: [
+                          SelectState(
+                            onCountryChanged: (value) {
+                              setState(() {
+                                print(value);
+                                ownerCountry = value;
+                              });
+                            },
+                            onStateChanged: (value) {
+                              setState(() {
+                                ownerState = value;
+                              });
+                            },
+                            onCityChanged: (value) {
+                              setState(() {
+                                ownerCity = value;
+                              });
+                            },
+                          ),
+                          TextFormField(
+                            maxLines: 2,
+                            decoration: new InputDecoration(
+                              labelText: "Colony OR Society",
+                              fillColor: Colors.white,
+                              contentPadding: const EdgeInsets.only(
+                                  top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                            ),
+                            onChanged: (String value) {
+                              ownerAddres = value;
+                            },
+                            validator: (value) =>
+                                value.isEmpty ? 'Address  is required' : null,
+                            style: new TextStyle(
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                          TextFormField(
+                            keyboardType: TextInputType.phone,
+                            maxLength: 10,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              icon: Icon(
+                                FontAwesomeIcons.phoneAlt,
+                                size: 25,
+                              ),
+                              labelText: 'Contact No. :',
+                              alignLabelWithHint: true,
+                            ),
+                            onChanged: (value) {
+                              ownerContact = value;
+                            },
+                          ),
+                          TextFormField(
+                            keyboardType: TextInputType.name,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              icon: Icon(
+                                FontAwesomeIcons.user,
+                                size: 25,
+                              ),
+                              labelText: 'Name :',
+                              alignLabelWithHint: true,
+                            ),
+                            onChanged: (value) {
+                              ownerName = value;
+                            },
+                          ),
+                        ],
                       ),
                       Align(
                           alignment: Alignment.bottomRight,
@@ -1631,11 +1677,6 @@ class AddImages extends StatelessWidget {
 }
 
 void createRecord(context, uid) async {
-  var address = {
-    'city': _city,
-    'state': _state,
-    'society': _colony,
-  };
   var overview = {
     'bathroom': _bath,
     'room': _beds,
@@ -1644,22 +1685,25 @@ void createRecord(context, uid) async {
     'preferedType': _preferedType
   };
   Firestore.instance.collection("RoomDetails").document(userId).setData({
-    'city': _city,
-    'state': _state,
-    'colony': _colony,
+    'PropertyCountry': propertyCountry,
+    'PropertyState': propertyState,
+    'PropertyCity': propertyCity,
+    'PropertyColoney': propertyColoney,
     'Date Created': DateTime.now(),
     'Date Updated': DateTime.now(),
     'Facilities': _filters,
     'Overview': overview,
-    'favourite': 0,
     'houseImages': imageDataPath,
     'builtUpArea': _buildup,
     'depositAmount': _deposit,
     'monthlyRent': _monthly,
     'Members': _members,
-    'OwnerName': __ownerName,
-    'OwnerAdd': _ownerAdd,
-    'OwnerPhone': _ownerPhone,
+    'OwnerName': ownerName,
+    'OwnerAdd': ownerAddres,
+    'OwnerPhone': ownerContact,
+    'OwnerCountry': ownerCountry,
+    'OwnerState': ownerState,
+    'OwnerCity': ownerCity,
     'status': 'Available'
   });
   Navigator.pop(context);

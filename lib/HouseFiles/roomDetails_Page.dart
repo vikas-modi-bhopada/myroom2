@@ -121,7 +121,7 @@ class _HouseDetailState extends State<HouseDetail> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['Address']['city']}',
+                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['OwnerCity']}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -134,7 +134,7 @@ class _HouseDetailState extends State<HouseDetail> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'At ${documentSnapshot['Address']['society']}',
+                                'At ${documentSnapshot['OwnerAdd']}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 13,
@@ -1292,7 +1292,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address']['society'] + ',',
+                        documentSnapshot['PropertyColoney'] + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1303,7 +1303,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address']['city'] + ',',
+                        documentSnapshot['PropertyCity'] + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1314,7 +1314,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address']['state'] + ',',
+                        documentSnapshot['PropertyState'] + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1425,7 +1425,7 @@ class _HouseDetailState extends State<HouseDetail> {
                             size: size.getWidthPx(16),
                             color: Colors.grey,
                           ),
-                          Text("${documentSnapshot.data["OwnerAdd"]}",
+                          Text("${documentSnapshot.data["OwnerCity"]}",
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: size.getWidthPx(16))),

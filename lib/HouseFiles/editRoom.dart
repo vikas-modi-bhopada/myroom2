@@ -19,6 +19,7 @@ import 'package:roomi/user_data/user_profile_data.dart';
 
 import 'UplodRoomDetails.dart';
 
+bool uplodingORnot = false;
 String _userUid;
 String _email;
 String _farnistatus;
@@ -53,7 +54,6 @@ class EditRoom extends StatefulWidget {
 }
 
 class _EditRoomState extends State<EditRoom> {
-  DateTime selectedDate = DateTime.now();
   DocumentSnapshot documentSnapshot;
   _EditRoomState();
 
@@ -159,7 +159,7 @@ class _EditRoomState extends State<EditRoom> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['Address']['city']}',
+                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['city']}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -172,7 +172,7 @@ class _EditRoomState extends State<EditRoom> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'At ${documentSnapshot['Address']['society']}',
+                                'At ${documentSnapshot['colony']}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 13,
@@ -881,7 +881,7 @@ class _EditRoomState extends State<EditRoom> {
                                           Text(
                                             DateFormat('dd/MM/yyyy')
                                                 .format((documentSnapshot[
-                                                            'Date Created']
+                                                            'Date Updated']
                                                         as Timestamp)
                                                     .toDate())
                                                 .toString(),
@@ -1133,7 +1133,7 @@ class _EditRoomState extends State<EditRoom> {
           onTap: () {
             Alert(
                 context: context,
-                title: "PROPERTY ADDRESS",
+                title: "FACILITIES",
                 content: Center(
                   child: FacilitiesFilter(),
                 ),
@@ -1514,7 +1514,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          documentSnapshot['Address']['society'] + ',',
+                          " ${documentSnapshot['PropertyColoney']}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1525,7 +1525,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          documentSnapshot['Address']['city'] + ',',
+                          " ${documentSnapshot['PropertyCity']}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1536,7 +1536,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          documentSnapshot['Address']['state'] + ',',
+                          "${documentSnapshot['PropertyState']}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1609,22 +1609,23 @@ class _EditRoomState extends State<EditRoom> {
                 buttons: [
                   DialogButton(
                     onPressed: () {
-                      print(
-                          "$countryValue // $stateValue  // $cityValue // $addres");
-                      // Navigator.pop(context);
-                      // Firestore.instance
-                      //     .collection("RoomDetails")
-                      //     .document(_userUid)
-                      //     .updateData({
-                      //   'Overview.preferedType': _preferedType,
-                      // });
-                      // UserData()
-                      //     .getPerticularRoomDetails(_userUid)
-                      //     .then((value) {
-                      //   setState(() {
-                      //     documentSnapshot = value;
-                      //   });
-                      // });
+                      Navigator.pop(context);
+                      Firestore.instance
+                          .collection("RoomDetails")
+                          .document(_userUid)
+                          .updateData({
+                        'PropertyCountry': countryValue,
+                        'PropertyState': stateValue,
+                        'PropertyCity': cityValue,
+                        'PropertyColoney': addres,
+                      });
+                      UserData()
+                          .getPerticularRoomDetails(_userUid)
+                          .then((value) {
+                        setState(() {
+                          documentSnapshot = value;
+                        });
+                      });
                     },
                     child: Text(
                       "UPDATE",
@@ -2318,6 +2319,7 @@ class _DateState extends State<Date> {
   }
 }
 
+// ignore: must_be_immutable
 class DropDownDemo extends StatefulWidget {
   String st;
   DropDownDemo({Key key, @required this.st}) : super(key: key);
@@ -2448,53 +2450,73 @@ class _AddImageState extends State<AddImage> {
           ),
           body: Stack(
             children: [
-              Container(
-                padding: EdgeInsets.all(4),
-                child: GridView.builder(
-                    itemCount: imageDataPath.length + 1,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3),
-                    itemBuilder: (context, index) {
-                      return index == 0
-                          ? Center(
-                              child: IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () =>
-                                      !uploading ? chooseImage() : null),
-                            )
-                          : Card(
-                              clipBehavior: Clip.antiAlias,
-                              child: Stack(
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                imageDataPath[index - 1]),
-                                            fit: BoxFit.cover)),
-                                  ),
-                                  Positioned(
-                                    right: 20,
-                                    top: 5,
-                                    child: InkWell(
-                                      child: Icon(
-                                        Icons.remove_circle,
-                                        size: 25,
-                                        color: Colors.red,
-                                      ),
-                                      onTap: () {
-                                        setState(() {
-                                          imageDataPath.removeAt(index - 1);
-                                        });
-                                      },
+              uplodingORnot
+                  ? Center(
+                      child: Container(
+                          width: 80,
+                          height: 80,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey.withAlpha(100),
+                                    offset: Offset(2, 4),
+                                    blurRadius: 8,
+                                    spreadRadius: 2)
+                              ],
+                              color: Colors.white),
+                          child: CircularProgressIndicator()))
+                  : Container(
+                      padding: EdgeInsets.all(4),
+                      child: GridView.builder(
+                          itemCount: imageDataPath.length + 1,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (context, index) {
+                            return index == 0
+                                ? Center(
+                                    child: IconButton(
+                                        icon: Icon(Icons.add),
+                                        onPressed: () =>
+                                            !uploading ? chooseImage() : null),
+                                  )
+                                : Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      imageDataPath[index - 1]),
+                                                  fit: BoxFit.cover)),
+                                        ),
+                                        Positioned(
+                                          right: 20,
+                                          top: 5,
+                                          child: InkWell(
+                                            child: Icon(
+                                              Icons.remove_circle,
+                                              size: 25,
+                                              color: Colors.red,
+                                            ),
+                                            onTap: () {
+                                              setState(() {
+                                                imageDataPath
+                                                    .removeAt(index - 1);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                    }),
-              ),
+                                  );
+                          }),
+                    ),
               imageDataPath.length != 0
                   ? Align(
                       child: RawMaterialButton(
@@ -2502,23 +2524,25 @@ class _AddImageState extends State<AddImage> {
                         splashColor: Colors.greenAccent,
                         child: Padding(
                           padding: EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const <Widget>[
-                              Icon(
-                                Icons.cloud_upload_outlined,
-                                color: Colors.black,
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                "UPDATE IMAGES",
-                                maxLines: 1,
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
+                          child: !uplodingORnot
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.cloud_upload_outlined,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Text(
+                                      "UPDATE IMAGES",
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                )
+                              : Text("LOADING IMAGE...."),
                         ),
                         shape: const StadiumBorder(),
                         onPressed: () {
@@ -2584,10 +2608,12 @@ class _AddImageState extends State<AddImage> {
         .ref()
         .child('$_email/image_NO_${DateTime.now()}');
     StorageUploadTask task = storageReference.putFile(_image);
+    uplodingORnot = task.isInProgress;
     StorageTaskSnapshot storageTaskSnapshot = await task.onComplete;
     String url = await storageTaskSnapshot.ref.getDownloadURL();
     print("\nUploaded: " + url);
     setState(() {
+      uplodingORnot = false;
       imageDataPath.add(url);
     });
   }
