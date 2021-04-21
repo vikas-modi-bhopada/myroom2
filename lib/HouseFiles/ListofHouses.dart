@@ -141,11 +141,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
                     SizedBox(
                       height: 12,
                     ),
-                    secondRowOfListView(index),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    thirdRowOfListView(index)
                   ],
                 ),
               ),
@@ -160,7 +155,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
   }
 
   firstRowOfListView(int index) {
-    listOfAddress = querySnapshot.documents[index].data["Address"];
     return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Stack(
         children: [
