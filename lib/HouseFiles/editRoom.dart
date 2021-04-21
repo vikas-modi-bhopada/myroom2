@@ -67,9 +67,10 @@ class _EditRoomState extends State<EditRoom> {
       UserData().getPerticularRoomDetails(_userUid).then((value) {
         setState(() {
           documentSnapshot = value;
-          if (value.exists == false)
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => NoRoomUploaded()));
+          if (value.exists)
+            documentExists = true;
+          else
+            documentExists = false;
         });
       });
     });
@@ -118,26 +119,31 @@ class _EditRoomState extends State<EditRoom> {
               elevation: 0,
             ),
           ),
-          body: documentSnapshot != null
-              ? Container(
-                  child: SingleChildScrollView(child: getCards()),
-                )
+          body: documentExists
+              ? documentSnapshot != null
+                  ? Container(
+                      child: SingleChildScrollView(child: getCards()),
+                    )
+                  : Center(
+                      child: Container(
+                          width: 80,
+                          height: 80,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey.withAlpha(100),
+                                    offset: Offset(2, 4),
+                                    blurRadius: 8,
+                                    spreadRadius: 2)
+                              ],
+                              color: Colors.white),
+                          child: CircularProgressIndicator()))
               : Center(
-                  child: Container(
-                      width: 80,
-                      height: 80,
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.withAlpha(100),
-                                offset: Offset(2, 4),
-                                blurRadius: 8,
-                                spreadRadius: 2)
-                          ],
-                          color: Colors.white),
-                      child: CircularProgressIndicator()))),
+                  child: Text("You have not uploaded any room yet"),
+                )),
     );
   }
 
