@@ -46,6 +46,7 @@ String ownerCity;
 String ownerState;
 String ownerContact;
 String ownerAddres;
+bool documentExists = true;
 List<String> _filters = <String>[];
 
 class EditRoom extends StatefulWidget {
@@ -65,6 +66,7 @@ class _EditRoomState extends State<EditRoom> {
       UserData().getPerticularRoomDetails(_userUid).then((value) {
         setState(() {
           documentSnapshot = value;
+          documentExists = value.exists;
         });
       });
     });
@@ -91,49 +93,53 @@ class _EditRoomState extends State<EditRoom> {
         Navigator.pop(context);
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(65.0),
-          child: AppBar(
-            centerTitle: true,
-            automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(65.0),
+            child: AppBar(
+              centerTitle: true,
+              automaticallyImplyLeading: true,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text(
+                'Details',
+              ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xfffbb448), Color(0xffe46b10)])),
+              ),
+              elevation: 0,
             ),
-            title: Text(
-              'Details',
-            ),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xfffbb448), Color(0xffe46b10)])),
-            ),
-            elevation: 0,
           ),
-        ),
-        body: documentSnapshot != null
-            ? Container(
-                child: SingleChildScrollView(child: getCards()),
-              )
-            : Center(
-                child: Container(
-                    width: 80,
-                    height: 80,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.grey.withAlpha(100),
-                              offset: Offset(2, 4),
-                              blurRadius: 8,
-                              spreadRadius: 2)
-                        ],
-                        color: Colors.white),
-                    child: CircularProgressIndicator())),
-      ),
+          body: documentSnapshot != null
+              ? Container(
+                  child: SingleChildScrollView(child: getCards()),
+                )
+              : documentExists
+                  ? Center(
+                      child: Container(
+                          width: 80,
+                          height: 80,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey.withAlpha(100),
+                                    offset: Offset(2, 4),
+                                    blurRadius: 8,
+                                    spreadRadius: 2)
+                              ],
+                              color: Colors.white),
+                          child: CircularProgressIndicator()))
+                  : Center(
+                      child: Text("You have not uploaded any room yet"),
+                    )),
     );
   }
 
