@@ -1475,7 +1475,7 @@ class _EditRoomState extends State<EditRoom> {
 
   // ignore: missing_retur
   Widget getSeventhCard() {
-    List  listOfAddress = documentSnapshot.data["Address"];
+    List listOfAddress = documentSnapshot.data["Address"];
     return Stack(children: [
       Center(
         child: Card(
@@ -1515,7 +1515,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          listOfAddress.elementAt(3) + ',',
+                          " ${documentSnapshot['Address'].elementAt(3)}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1526,7 +1526,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          listOfAddress.elementAt(2) + ',',
+                          " ${documentSnapshot['Address'].elementAt(2)}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1537,7 +1537,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          listOfAddress.elementAt(1) + ',',
+                          "${documentSnapshot['Address'].elementAt(1)}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1612,7 +1612,7 @@ class _EditRoomState extends State<EditRoom> {
                     onPressed: () {
                       List listOfAddress = new List();
                       listOfAddress.add(countryValue.toUpperCase());
-                      listOfAddress.add( stateValue.toUpperCase());
+                      listOfAddress.add(stateValue.toUpperCase());
                       listOfAddress.add(cityValue.toUpperCase());
                       listOfAddress.add(addres.toUpperCase());
 
@@ -1620,9 +1620,7 @@ class _EditRoomState extends State<EditRoom> {
                       Firestore.instance
                           .collection("RoomDetails")
                           .document(_userUid)
-                          .updateData({
-                        'Address' : listOfAddress
-                      });
+                          .updateData({'Address': listOfAddress});
                       UserData()
                           .getPerticularRoomDetails(_userUid)
                           .then((value) {
@@ -2498,7 +2496,7 @@ class _AddImageState extends State<AddImage> {
                                                   fit: BoxFit.cover)),
                                         ),
                                         Positioned(
-                                          right: 20,
+                                          right: 5,
                                           top: 5,
                                           child: InkWell(
                                             child: Icon(

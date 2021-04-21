@@ -186,7 +186,8 @@ class _ListOfHouseState extends State<ListOfHouse> {
                     height: MediaQuery.of(context).size.height * 0.25,
                     color: Colors.grey,
                     child: Image.network(
-                        querySnapshot.documents[index].data['houseImages'][0],
+                        querySnapshot.documents[index].data['houseImages']
+                            .elementAt(0),
                         fit: BoxFit.fill),
                   ),
                 ),
