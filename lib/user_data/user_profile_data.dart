@@ -46,6 +46,5 @@ class UserData {
 
     Firestore.instance.collection("users").document(str).delete();
     Firestore.instance.collection("RoomDetails").document(str).delete();
-    user.delete();
   }
 }
