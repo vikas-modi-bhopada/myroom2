@@ -24,7 +24,7 @@ class UserData {
         .get();
   }
 
-  updateRoomDetails(RoomDetails roomDetails, String userUid) {
+  /*updateRoomDetails(RoomDetails roomDetails, String userUid) {
     print(roomDetails.getMapOfAddress(roomDetails));
     Firestore.instance.collection('RoomDetails').document(userUid).updateData({
       "Address": roomDetails.getMapOfAddress(roomDetails),
@@ -38,7 +38,7 @@ class UserData {
       "depositAmount": roomDetails.getDepositAmout(),
       "monthlyRent": roomDetails.getMonthlyRent(),
     });
-  }
+  }*/
 
   deleteUserAccountInformation() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();

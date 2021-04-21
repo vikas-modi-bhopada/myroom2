@@ -5,9 +5,10 @@ class RoomDetails {
   String _furnishingStatus;
   String _tenantType;
   String _propertyType;
-
+  List<dynamic> _address;
   List<dynamic> _facilities;
   String _monthlyRent;
+  String _country;
   String _depositAmount;
   String _noOfBedRooms;
   String _noOFMembers;
@@ -17,8 +18,8 @@ class RoomDetails {
   String _ownerName;
   String _ownerContactNo;
   String _ownerAddress;
-  void setImage(var x){
-    images=x;
+  void setImage(var x) {
+    images = x;
   }
 
   void setTenantType(String tenantType) {
@@ -41,13 +42,8 @@ class RoomDetails {
     _colony = colony;
   }
 
-  dynamic getMapOfAddress(RoomDetails roomDetails) {
-    var mapOfAdderess = {
-      "city": roomDetails.getCity(),
-      "state": roomDetails.getState(),
-      "society": roomDetails.getColony(),
-    };
-    return mapOfAdderess;
+  void setCountry(String country) {
+    _country = country;
   }
 
   dynamic getMapOfOverView(RoomDetails roomDetails) {
@@ -191,22 +187,14 @@ class RoomDetails {
     return _colony;
   }
 
-  void setStateCityColony(Map map) {
-    map.forEach((key, value) {
-      switch (key) {
-        case 'city':
-          _city = value;
-          print(_city);
-          break;
-        case 'society':
-          _colony = value;
-          print(_colony);
-          break;
-        case 'state':
-          _state = value;
-          print(_state);
-          break;
-      }
-    });
+  String getCountry(){
+    return _country;
+  }
+
+  void setAddress(RoomDetails roomDetails, List address) {
+    roomDetails.setCountry(address.elementAt(0));
+    roomDetails.setstate(address.elementAt(1));
+    roomDetails.setCity(address.elementAt(2));
+    roomDetails.setColony(address.elementAt(3));
   }
 }

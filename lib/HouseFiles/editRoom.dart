@@ -19,6 +19,7 @@ import 'package:roomi/user_data/user_profile_data.dart';
 
 import 'UplodRoomDetails.dart';
 import 'noRoomUploaded.dart';
+import 'roomDetails.dart';
 
 bool uplodingORnot = false;
 String _userUid;
@@ -59,6 +60,8 @@ class _EditRoomState extends State<EditRoom> {
   DocumentSnapshot documentSnapshot;
   _EditRoomState();
 
+  static RoomDetails roomDetails = new RoomDetails();
+
   @override
   void initState() {
     FirebaseAuth.instance.currentUser().then((value) {
@@ -67,9 +70,11 @@ class _EditRoomState extends State<EditRoom> {
       UserData().getPerticularRoomDetails(_userUid).then((value) {
         setState(() {
           documentSnapshot = value;
-          if (value.exists)
+          if (value.exists) {
             documentExists = true;
-          else
+
+            roomDetails.setAddress(roomDetails, value.data['Address']);
+          } else
             documentExists = false;
         });
       });
@@ -1584,16 +1589,20 @@ class _EditRoomState extends State<EditRoom> {
                           setState(() {
                             print(value);
                             countryValue = value;
+
+                            if (value != null) roomDetails.setCountry(value);
                           });
                         },
                         onStateChanged: (value) {
                           setState(() {
                             stateValue = value;
+                            if (value != null) roomDetails.setstate(value);
                           });
                         },
                         onCityChanged: (value) {
                           setState(() {
                             cityValue = value;
+                            if (value != null) roomDetails.setCity(value);
                           });
                         },
                       ),
@@ -1607,6 +1616,7 @@ class _EditRoomState extends State<EditRoom> {
                         ),
                         onChanged: (String value) {
                           addres = value;
+                          roomDetails.setColony(value);
                         },
                         validator: (value) =>
                             value.isEmpty ? 'Address  is required' : null,
@@ -1621,13 +1631,15 @@ class _EditRoomState extends State<EditRoom> {
                   DialogButton(
                     onPressed: () {
                       List listOfAddress = new List();
-                      listOfAddress.add(countryValue.toUpperCase());
-                      listOfAddress.add(stateValue.toUpperCase());
-                      listOfAddress.add(cityValue.toUpperCase());
-                      listOfAddress.add(addres.toUpperCase());
-                      List listofColony = addres.toUpperCase().split(' ');
+                      listOfAddress.add(roomDetails.getCountry().toUpperCase());
+                      listOfAddress.add(roomDetails.getState().toUpperCase());
+                      listOfAddress.add(roomDetails.getCity().toUpperCase());
+                      listOfAddress.add(roomDetails.getColony().toUpperCase());
+                      List listofColony =
+                          roomDetails.getColony().toUpperCase().split(' ');
                       listOfAddress.addAll(listofColony);
-                      List listOfState = stateValue.toUpperCase().split(" ");
+                      List listOfState =
+                          roomDetails.getState().toUpperCase().split(" ");
                       listOfAddress.addAll(listOfState);
 
                       Navigator.pop(context);
