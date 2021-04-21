@@ -18,6 +18,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:roomi/user_data/user_profile_data.dart';
 
 import 'UplodRoomDetails.dart';
+import 'noRoomUploaded.dart';
 
 bool uplodingORnot = false;
 String _userUid;
@@ -66,7 +67,9 @@ class _EditRoomState extends State<EditRoom> {
       UserData().getPerticularRoomDetails(_userUid).then((value) {
         setState(() {
           documentSnapshot = value;
-          documentExists = value.exists;
+          if (value.exists == false)
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NoRoomUploaded()));
         });
       });
     });
@@ -119,27 +122,22 @@ class _EditRoomState extends State<EditRoom> {
               ? Container(
                   child: SingleChildScrollView(child: getCards()),
                 )
-              : documentExists
-                  ? Center(
-                      child: Container(
-                          width: 80,
-                          height: 80,
-                          padding: EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.grey.withAlpha(100),
-                                    offset: Offset(2, 4),
-                                    blurRadius: 8,
-                                    spreadRadius: 2)
-                              ],
-                              color: Colors.white),
-                          child: CircularProgressIndicator()))
-                  : Center(
-                      child: Text("You have not uploaded any room yet"),
-                    )),
+              : Center(
+                  child: Container(
+                      width: 80,
+                      height: 80,
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.grey.withAlpha(100),
+                                offset: Offset(2, 4),
+                                blurRadius: 8,
+                                spreadRadius: 2)
+                          ],
+                          color: Colors.white),
+                      child: CircularProgressIndicator()))),
     );
   }
 
