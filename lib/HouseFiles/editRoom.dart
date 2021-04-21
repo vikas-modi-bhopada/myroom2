@@ -159,7 +159,7 @@ class _EditRoomState extends State<EditRoom> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['PropertyCity']}',
+                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['Address'][2]}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -172,7 +172,7 @@ class _EditRoomState extends State<EditRoom> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'At ${documentSnapshot['PropertyColoney']}',
+                                'At ${documentSnapshot['Address'][3]}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 13,
