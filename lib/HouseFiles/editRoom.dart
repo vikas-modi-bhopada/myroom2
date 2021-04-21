@@ -1521,7 +1521,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          listOfAddress.elementAt(3) + ',',
+                          " ${documentSnapshot['Address'].elementAt(3)}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1532,7 +1532,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          listOfAddress.elementAt(2) + ',',
+                          " ${documentSnapshot['Address'].elementAt(2)}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -1543,7 +1543,7 @@ class _EditRoomState extends State<EditRoom> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          listOfAddress.elementAt(1) + ',',
+                          "${documentSnapshot['Address'].elementAt(1)}" + ',',
                           style: TextStyle(
                             fontFamily: 'Ex02',
                             color: Colors.black.withOpacity(0.6),
@@ -2504,7 +2504,7 @@ class _AddImageState extends State<AddImage> {
                                                   fit: BoxFit.cover)),
                                         ),
                                         Positioned(
-                                          right: 20,
+                                          right: 5,
                                           top: 5,
                                           child: InkWell(
                                             child: Icon(

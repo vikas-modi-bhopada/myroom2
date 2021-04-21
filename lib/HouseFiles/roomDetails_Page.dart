@@ -1291,7 +1291,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address'].elementAt(2) + ',',
+                        documentSnapshot['Address'].elementAt(3) + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
@@ -1313,7 +1313,7 @@ class _HouseDetailState extends State<HouseDetail> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        documentSnapshot['Address'].elementAt(2) + ',',
+                        documentSnapshot['Address'].elementAt(1) + ',',
                         style: TextStyle(
                           fontFamily: 'Ex02',
                           color: Colors.black.withOpacity(0.6),
