@@ -1475,7 +1475,7 @@ class _EditRoomState extends State<EditRoom> {
 
   // ignore: missing_retur
   Widget getSeventhCard() {
-    List  listOfAddress = documentSnapshot.data["Address"];
+    List listOfAddress = documentSnapshot.data["Address"];
     return Stack(children: [
       Center(
         child: Card(
@@ -1612,17 +1612,17 @@ class _EditRoomState extends State<EditRoom> {
                     onPressed: () {
                       List listOfAddress = new List();
                       listOfAddress.add(countryValue.toUpperCase());
-                      listOfAddress.add( stateValue.toUpperCase());
+                      listOfAddress.add(stateValue.toUpperCase());
                       listOfAddress.add(cityValue.toUpperCase());
                       listOfAddress.add(addres.toUpperCase());
+                      List listofColony = addres.toUpperCase().split(' ');
+                      listOfAddress.addAll(listofColony);
 
                       Navigator.pop(context);
                       Firestore.instance
                           .collection("RoomDetails")
                           .document(_userUid)
-                          .updateData({
-                        'Address' : listOfAddress
-                      });
+                          .updateData({'Address': listOfAddress});
                       UserData()
                           .getPerticularRoomDetails(_userUid)
                           .then((value) {

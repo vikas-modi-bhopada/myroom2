@@ -298,6 +298,7 @@ class _SignUpPageState extends State<SignUpPage> {
         _entryField("Username"),
         _entryField("Email id"),
         _entryField("Password", isPassword: true),
+        _entryField("Confirm Password", isPassword: true),
       ],
     );
   }
