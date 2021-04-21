@@ -111,6 +111,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return Expanded(
         child: Container(
       padding: EdgeInsets.only(left: 16, right: 16),
+      color: Colors.grey[100],
       child: listViewForRoomList(),
     ));
   }
@@ -120,10 +121,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
       print(querySnapshot.documents.length);
       return ListView.separated(
           itemBuilder: (context, index) {
-            _documentSnapshot = querySnapshot.documents[index];
             return Container(
               child: GestureDetector(
                 onTap: () {
+                  print(index);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -140,6 +141,11 @@ class _ListOfHouseState extends State<ListOfHouse> {
                     SizedBox(
                       height: 12,
                     ),
+                    secondRowOfListView(index),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    thirdRowOfListView(index)
                   ],
                 ),
               ),
