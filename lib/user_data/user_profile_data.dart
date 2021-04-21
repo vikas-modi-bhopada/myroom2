@@ -4,7 +4,7 @@ import 'package:roomi/HouseFiles/roomDetails.dart';
 
 class UserData {
   Future<QuerySnapshot> getData(dynamic searchbarData) async {
-    List searchLocationList = searchbarData.toString().toUpperCase().split(' ');
+    List searchLocationList = searchbarData.toString().split(' ');
     print(searchLocationList);
     return await Firestore.instance
         .collection("RoomDetails")
@@ -39,36 +39,6 @@ class UserData {
       "monthlyRent": roomDetails.getMonthlyRent(),
     });
   }
-
-  /*updateDetails(
-    String docId,
-    String location,
-    String price,
-    String members,
-    String beds,
-    String bathroom,
-    String phoneNo,
-    String imageUrl1,
-    String imageUrl2,
-    String imageUrl3,
-    String imageUrl4,
-  ) {
-
-    List<String> listOfLocation = location.split(" ");
-
-    Firestore.instance.collection("RoomDetails").document(docId).updateData({
-      "Location": listOfLocation,
-      "Price": price,
-      "Members": members,
-      "Beds": beds,
-      "BathRooms": bathroom,
-      "Mobile": phoneNo,
-      "image1": imageUrl1,
-      "image2": imageUrl2,
-      "image3": imageUrl3,
-      "image4": imageUrl4,
-    });
-  }*/
 
   deleteUserAccountInformation() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();

@@ -101,7 +101,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
             hintText: "Search Location",
             focusColor: Colors.green),
         onChanged: (value) {
-          searchbarData = value;
+          searchbarData = value.toUpperCase();
         },
       ),
     );

@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   String password;
   bool loading = false;
   final focus = FocusNode();
+  bool _visibility = true;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -271,10 +272,28 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField textFormFieldForPassword() {
     return TextFormField(
       focusNode: focus,
-      obscureText: true,
+      obscureText: _visibility,
       textInputAction: TextInputAction.done,
       inputFormatters: [],
       decoration: InputDecoration(
+        suffixIcon: _visibility
+            ? GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _visibility = false;
+                  });
+                },
+                child: Icon(
+                  Icons.visibility_off,
+                ),
+              )
+            : GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _visibility = true;
+                  });
+                },
+                child: Icon(Icons.visibility)),
         prefixIcon: Icon(Icons.lock),
         hintText: 'Enter Password',
         border: InputBorder.none,
@@ -315,7 +334,6 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField textFormFieldForEmail() {
     return TextFormField(
-      
       textInputAction: TextInputAction.next,
       autofocus: true,
       obscureText: false,
