@@ -1686,6 +1686,8 @@ void createRecord(context, uid) async {
   listOfAddress.add(propertyColoney.toUpperCase());
   List listofColony = propertyColoney.toUpperCase().split(' ');
   listOfAddress.addAll(listofColony);
+  List listOfState =  propertyState.toUpperCase().split(" ");
+  listOfAddress.addAll(listOfState);
 
   var overview = {
     'bathroom': _bath,

@@ -1627,6 +1627,8 @@ class _EditRoomState extends State<EditRoom> {
                       listOfAddress.add(addres.toUpperCase());
                       List listofColony = addres.toUpperCase().split(' ');
                       listOfAddress.addAll(listofColony);
+                      List listOfState = stateValue.toUpperCase().split(" ");
+                      listOfAddress.addAll(listOfState);
 
                       Navigator.pop(context);
                       Firestore.instance
