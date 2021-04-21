@@ -120,7 +120,7 @@ class _HouseDetailState extends State<HouseDetail> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['OwnerCity']}',
+                                '${documentSnapshot['Overview']['room']} BHK in ${documentSnapshot['Address'].elementAt(2)}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -133,7 +133,7 @@ class _HouseDetailState extends State<HouseDetail> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'At ${documentSnapshot['OwnerAdd']}',
+                                'At ${documentSnapshot['Address'].elementAt(3)}',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 13,

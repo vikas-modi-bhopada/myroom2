@@ -111,7 +111,6 @@ class _ListOfHouseState extends State<ListOfHouse> {
     return Expanded(
         child: Container(
       padding: EdgeInsets.only(left: 16, right: 16),
-      color: Colors.grey[100],
       child: listViewForRoomList(),
     ));
   }
@@ -121,10 +120,10 @@ class _ListOfHouseState extends State<ListOfHouse> {
       print(querySnapshot.documents.length);
       return ListView.separated(
           itemBuilder: (context, index) {
+            _documentSnapshot = querySnapshot.documents[index];
             return Container(
               child: GestureDetector(
                 onTap: () {
-                  print(index);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -146,7 +145,8 @@ class _ListOfHouseState extends State<ListOfHouse> {
               ),
             );
           },
-          separatorBuilder: (context, index) => Divider(),
+          separatorBuilder: (context, index) =>
+              Divider(thickness: 1.0, color: Colors.black),
           itemCount: querySnapshot.documents.length);
     } else {
       print("query snapshot is null");
@@ -155,6 +155,7 @@ class _ListOfHouseState extends State<ListOfHouse> {
   }
 
   firstRowOfListView(int index) {
+    listOfAddress = querySnapshot.documents[index].data["Address"];
     return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Stack(
         children: [
@@ -380,6 +381,25 @@ class _ListOfHouseState extends State<ListOfHouse> {
       color: Colors.white,
       child: Center(
         child: Image.asset('assets/images/nodatafound.jpg'),
+      ),
+    );
+  }
+
+  Widget result() {
+    return Container(
+      margin: EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            querySnapshot.documents.length.toString() + " results",
+            style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold),
+          ),
+          Divider(
+            thickness: 1.0,
+          ),
+        ],
       ),
     );
   }
