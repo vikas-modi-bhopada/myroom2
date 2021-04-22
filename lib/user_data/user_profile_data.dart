@@ -46,5 +46,6 @@ class UserData {
 
     Firestore.instance.collection("users").document(str).delete();
     Firestore.instance.collection("RoomDetails").document(str).delete();
+    FirebaseAuth.instance.currentUser().then((value) => {value.delete()});
   }
 }
